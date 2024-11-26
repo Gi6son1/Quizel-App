@@ -1,3 +1,5 @@
 <resources>
     <string name="app_name">Quizel</string>
+    <string name="nav_bar_question_bank_label">Question Bank</string>
+    <string name="nav_bar_take_quiz_label">Take Quiz</string>
 </resources>
