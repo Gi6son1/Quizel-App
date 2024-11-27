@@ -17,6 +17,7 @@ import androidx.compose.material3.NavigationBar
 import androidx.compose.material3.NavigationBarItem
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.getValue
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.shadow
 import androidx.compose.ui.graphics.Color
@@ -24,49 +25,63 @@ import androidx.compose.ui.graphics.RectangleShape
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
+import androidx.navigation.NavController
+import androidx.navigation.NavGraph.Companion.findStartDestination
+import androidx.navigation.compose.currentBackStackEntryAsState
+import androidx.navigation.compose.rememberNavController
 import com.cs31620.quizel.R
+import com.cs31620.quizel.ui.navigation.Screen
+import com.cs31620.quizel.ui.navigation.screens
 import com.cs31620.quizel.ui.theme.QuizelTheme
 
 @Composable
-fun MainPageNavigationBar() {
-    val icons = listOf(
-        IconGroup(
+fun MainPageNavigationBar(
+    navController: NavController,
+) {
+    val icons = mapOf(
+        Screen.QuestionBank to IconGroup(
             filledIcon = Icons.AutoMirrored.Filled.FormatListBulleted,
             outlinedIcon = Icons.AutoMirrored.Outlined.FormatListBulleted,
             label = stringResource(R.string.nav_bar_question_bank_label)
         ),
-        IconGroup(
+        Screen.TakeQuiz to IconGroup(
             filledIcon = Icons.Filled.BorderColor,
             outlinedIcon = Icons.Outlined.BorderColor,
             label = stringResource(R.string.nav_bar_take_quiz_label)
         )
     )
 
-    NavigationBar(
-        modifier =
-        Modifier.border(
-            border = BorderStroke(2.dp, Color.Black),
-            shape = RoundedCornerShape(15)
-        )
-    ) {
-        icons.forEach { iconGroup ->
-            val isSelected = false
-            val labelText = iconGroup.label
+    NavigationBar{
+        val navBackStackEntry by navController.currentBackStackEntryAsState()
+        val currentDestination = navBackStackEntry?.destination
+
+        screens.forEach { screen ->
+            val isSelected = currentDestination?.route == screen.route
+            val labelText = icons[screen]!!.label
+
             NavigationBarItem(
                 icon = {
                     Icon(
                         imageVector = (
                                 if (isSelected)
-                                    iconGroup.filledIcon
+                                    icons[screen]!!.filledIcon
                                 else
-                                    iconGroup.outlinedIcon
+                                    icons[screen]!!.outlinedIcon
                                 ),
                         contentDescription = labelText
                     )
                 },
                 label = { Text(labelText) },
                 selected = isSelected,
-                onClick = { /*TODO*/ }
+                onClick = {
+                    navController.navigate(screen.route) {
+                        popUpTo(navController.graph.findStartDestination().id) {
+                            saveState = true
+                        }
+                        launchSingleTop = true
+                        restoreState = true
+                    }
+                }
             )
         }
     }
@@ -76,7 +91,7 @@ fun MainPageNavigationBar() {
 @Composable
 fun MainPageNavigationBarPreview() {
     QuizelTheme {
-        MainPageNavigationBar()
+        MainPageNavigationBar(navController = rememberNavController())
     }
 
 }

@@ -2,6 +2,8 @@ package com.cs31620.quizel.ui.theme
 
 import android.app.Activity
 import android.os.Build
+import android.view.View
+import android.view.WindowInsetsController
 import androidx.compose.foundation.isSystemInDarkTheme
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.lightColorScheme
@@ -16,6 +18,8 @@ import androidx.compose.ui.graphics.toArgb
 import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.platform.LocalView
 import androidx.core.view.WindowCompat
+import androidx.core.view.WindowInsetsCompat
+import androidx.core.view.WindowInsetsControllerCompat
 
 private val lightScheme = lightColorScheme(
     primary = primaryLight,
@@ -273,18 +277,29 @@ fun QuizelTheme(
         darkTheme -> darkScheme
         else -> lightScheme
     }
-    ////TODO - Fix depreciated code
+    val view = LocalView.current
+    val window = (view.context as Activity).window
+    val controller = WindowCompat.getInsetsController(window, view)
 
+    WindowCompat.setDecorFitsSystemWindows(window, false)
+    controller.isAppearanceLightStatusBars = darkTheme
+    controller.hide(WindowInsetsCompat.Type.navigationBars())
+    controller.systemBarsBehavior = WindowInsetsControllerCompat.BEHAVIOR_SHOW_TRANSIENT_BARS_BY_SWIPE
+
+
+    ////TODO is this code needed below?
+    /*
     val view = LocalView.current
     if (!view.isInEditMode) {
         SideEffect {
             val window = (view.context as Activity).window
             WindowCompat.setDecorFitsSystemWindows(window, false)
-            window.statusBarColor = colorScheme.primary.toArgb()
             WindowCompat.getInsetsController(window, view)
                 .isAppearanceLightStatusBars = darkTheme
         }
-    }
+        }
+     */
+
 
 
     MaterialTheme(
