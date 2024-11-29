@@ -10,6 +10,7 @@ activityCompose = "1.9.3"
 composeBom = "2024.11.00"
 uiTextGoogleFonts = "1.7.5"
 composeNavigation = "2.8.4"
+constraintLayout = "1.1.0"
 
 [libraries]
 androidx-core-ktx = { group = "androidx.core", name = "core-ktx", version.ref = "coreKtx" }
@@ -29,6 +30,7 @@ androidx-material3 = { group = "androidx.compose.material3", name = "material3" 
 androidx-material-icons-extended = {group = "androidx.compose.material", name = "material-icons-extended"}
 androidx-ui-text-google-fonts = { group = "androidx.compose.ui", name = "ui-text-google-fonts", version.ref = "uiTextGoogleFonts" }
 androidx-navigation-compose = { group = "androidx.navigation", name = "navigation-compose", version.ref = "composeNavigation"}
+androidx-constraint-layout = { group = "androidx.constraintlayout", name = "constraintlayout-compose", version.ref = "constraintLayout"}
 
 [plugins]
 android-application = { id = "com.android.application", version.ref = "agp" }
