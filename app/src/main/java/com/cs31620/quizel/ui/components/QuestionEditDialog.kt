@@ -26,6 +26,7 @@ import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.unit.dp
+import androidx.compose.ui.unit.sp
 import androidx.compose.ui.window.Dialog
 import androidx.compose.ui.window.DialogProperties
 import androidx.constraintlayout.compose.ConstraintLayout
@@ -133,7 +134,7 @@ fun QuestionEditDialog(
                         modifier = modifier,
                         colors = ButtonDefaults.buttonColors(containerColor = MaterialTheme.colorScheme.error)
                     ) {
-                        Text(text = "Discard Changes")
+                        Text(text = "Discard Changes", fontSize = 21.sp)
                     }
                 },
                 actionDialogMessage = "Are you sure you want to discard any changes?",
