@@ -10,6 +10,8 @@ import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.padding
 import androidx.compose.material3.AlertDialog
 import androidx.compose.material3.Button
+import androidx.compose.material3.ButtonColors
+import androidx.compose.material3.ButtonDefaults
 import androidx.compose.material3.Card
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Surface
@@ -123,9 +125,19 @@ fun QuestionEditDialog(
                 }
             }
 
-            DiscardChangesDialog(dialogIsOpen = showDiscardQuestionDialog,
+            ActionCheckDialog(dialogIsOpen = showDiscardQuestionDialog,
                 dialogOpen = { isOpen -> showDiscardQuestionDialog = isOpen },
-                closeQuestionDialog = {closeQuestionDialog -> dialogOpen(closeQuestionDialog)})
+                mainActionButton = { onClick, modifier ->
+                    Button(
+                        onClick = onClick,
+                        modifier = modifier,
+                        colors = ButtonDefaults.buttonColors(containerColor = MaterialTheme.colorScheme.error)
+                    ) {
+                        Text(text = "Discard Changes")
+                    }
+                },
+                actionDialogMessage = "Are you sure you want to discard any changes?",
+                performMainAction = { closeQuestionDialog -> dialogOpen(closeQuestionDialog) })
         }
     }
 }
