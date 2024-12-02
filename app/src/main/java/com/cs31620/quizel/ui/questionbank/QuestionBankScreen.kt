@@ -120,6 +120,7 @@ fun QuestionBankScreen(navController: NavHostController) {
             }
 
             QuestionEditDialog(
+                id = 0,
                 title = questionTitle,
                 question = questionDescription,
                 answers = potentialAnswers,

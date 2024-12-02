@@ -1,23 +1,29 @@
 package com.cs31620.quizel.ui.components
 
-class Question(questionId: Int) {
-    var id = questionId
+
+class Question(
+    questionId: Int,
+    _title: String = "",
+    _description: String = "",
+    _answers: MutableList<Answer> = mutableListOf()
+) {
+    var questionId = questionId
         get() = field
 
-    var title: String = ""
+    var title = _title
         get() = field
         set(value) {
             field = value
         }
 
 
-    var description: String = ""
+    var description = _description
         get() = field
         set(value) {
             field = value
         }
 
-    var answers: MutableList<Answer> = mutableListOf()
+    var answers = _answers
         get() = field
         set(value) {
             field = value
