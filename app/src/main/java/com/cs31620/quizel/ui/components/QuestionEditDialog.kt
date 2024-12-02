@@ -30,15 +30,10 @@ import androidx.constraintlayout.compose.ConstraintLayout
 
 @Composable
 fun QuestionEditDialog(
-    id: Int,
-    title: String,
-    question: String,
-    answers: MutableList<Answer>,
+    question: Question,
     dialogIsOpen: Boolean,
     dialogOpen: (Boolean) -> Unit = {},
 ) {
-    val question = Question(id, title, question, answers)
-
     var title by rememberSaveable { mutableStateOf(question.title) }
 
     var description by rememberSaveable { mutableStateOf(question.description) }
@@ -48,9 +43,12 @@ fun QuestionEditDialog(
             onDismissRequest = {},
             properties = DialogProperties(usePlatformDefaultWidth = false)
         ) {
-            Card(modifier = Modifier
-                .fillMaxSize()
-                .padding(start = 10.dp, end = 10.dp)
+            var showDiscardQuestionDialog by rememberSaveable { mutableStateOf(false) }
+
+            Card(
+                modifier = Modifier
+                    .fillMaxSize()
+                    .padding(start = 10.dp, end = 10.dp)
             ) {
                 Column(
                     modifier = Modifier
@@ -106,20 +104,28 @@ fun QuestionEditDialog(
                             .weight(1f)
                     ) {
                         Button(
-                            onClick = {},
-                            modifier = Modifier.weight(1f).fillMaxHeight()
+                            onClick = { showDiscardQuestionDialog = true },
+                            modifier = Modifier
+                                .weight(1f)
+                                .fillMaxHeight()
                         ) {
                             Text(text = "Discard Changes")
                         }
                         Button(
                             onClick = {},
-                            modifier = Modifier.weight(1f).fillMaxHeight()
+                            modifier = Modifier
+                                .weight(1f)
+                                .fillMaxHeight()
                         ) {
                             Text(text = "Save Changes")
                         }
                     }
                 }
             }
+
+            DiscardChangesDialog(dialogIsOpen = showDiscardQuestionDialog,
+                dialogOpen = { isOpen -> showDiscardQuestionDialog = isOpen },
+                closeQuestionDialog = {closeQuestionDialog -> dialogOpen(closeQuestionDialog)})
         }
     }
 }

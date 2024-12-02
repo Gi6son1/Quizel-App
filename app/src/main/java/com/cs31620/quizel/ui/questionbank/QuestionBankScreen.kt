@@ -1,7 +1,6 @@
 package com.cs31620.quizel.ui.questionbank
 
 import android.annotation.SuppressLint
-import androidx.annotation.StringRes
 import androidx.compose.foundation.border
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Column
@@ -22,7 +21,6 @@ import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.res.stringResource
-import androidx.compose.ui.text.PlatformTextStyle
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
@@ -31,8 +29,7 @@ import androidx.constraintlayout.compose.Dimension
 import androidx.navigation.NavHostController
 import androidx.navigation.compose.rememberNavController
 import com.cs31620.quizel.R
-import com.cs31620.quizel.ui.components.Answer
-import com.cs31620.quizel.ui.components.MainPageTopAppBar
+import com.cs31620.quizel.ui.components.Question
 import com.cs31620.quizel.ui.components.QuestionEditDialog
 import com.cs31620.quizel.ui.components.TopLevelScaffold
 
@@ -51,9 +48,7 @@ fun QuestionBankScreen(navController: NavHostController) {
             val (title, selectDelete, questionBankArea) = createRefs()
             var showQuestionDialog by rememberSaveable { mutableStateOf(false) }
 
-            var questionTitle = ""
-            var questionDescription = ""
-            var potentialAnswers: MutableList<Answer> = mutableListOf()
+            val questionObject = Question(-1)
 
             Text(
                 modifier = Modifier
@@ -120,11 +115,9 @@ fun QuestionBankScreen(navController: NavHostController) {
             }
 
             QuestionEditDialog(
-                id = 0,
-                title = questionTitle,
-                question = questionDescription,
-                answers = potentialAnswers,
-                dialogIsOpen = showQuestionDialog)
+                question = questionObject,
+                dialogIsOpen = showQuestionDialog,
+                dialogOpen = { isOpen -> showQuestionDialog = !isOpen })
         }
     }
 }
