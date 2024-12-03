@@ -1,6 +1,7 @@
 package com.cs31620.quizel.ui.components
 
 import android.util.Log
+import androidx.compose.foundation.background
 import androidx.compose.foundation.border
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Column
@@ -9,6 +10,8 @@ import androidx.compose.foundation.layout.fillMaxHeight
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.padding
+import androidx.compose.foundation.rememberScrollState
+import androidx.compose.foundation.verticalScroll
 import androidx.compose.material3.AlertDialog
 import androidx.compose.material3.Button
 import androidx.compose.material3.ButtonColors
@@ -107,11 +110,12 @@ fun QuestionEditDialog(
                         Column {
                             Row {
                                 Text(text = "Potential Answers", modifier = Modifier.weight(1f))
-                                Button(onClick = {showAddAnswerDialog = true}, modifier = Modifier.weight(1f)) {
+                                Button(onClick = {showAddAnswerDialog = true}, modifier = Modifier.weight(1f), enabled = answers.size < 10) {
                                     Text(text = "Add Answer")
                                 }
                             }
-                            answers.forEachIndexed { index, answer ->
+                            Column(modifier = Modifier.fillMaxSize().background(Color.Blue).verticalScroll(rememberScrollState()) ) {
+                                answers.forEachIndexed { index, answer ->
                                 Button(onClick = { setCorrectAnswer(answers, index) }) {
                                     Text(text = answer.text)
                                     Text(text = if (answer.isCorrect) "Correct" else "Incorrect")
@@ -119,7 +123,8 @@ fun QuestionEditDialog(
                                         Text(text = "Delete")
                                     }
                                 }
-                            }
+                            } }
+
                         }
                     }
                     Row(
@@ -181,7 +186,7 @@ fun setCorrectAnswer(answers: SnapshotStateList<Answer>, answerIndex: Int) {
 }
 
 fun addAnswerToAnswerList(answers: SnapshotStateList<Answer>, answer: Answer) {
-    if (answers.size <= 10){
+    if (answers.size < 10){
         answers.add(answer)
         if (answer.isCorrect){
             setCorrectAnswer(answers, answers.size-1)
