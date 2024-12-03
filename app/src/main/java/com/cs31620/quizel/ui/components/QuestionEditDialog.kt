@@ -19,7 +19,9 @@ import androidx.compose.material3.Text
 import androidx.compose.material3.TextField
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.getValue
+import androidx.compose.runtime.mutableStateListOf
 import androidx.compose.runtime.mutableStateOf
+import androidx.compose.runtime.remember
 import androidx.compose.runtime.saveable.rememberSaveable
 import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
@@ -41,12 +43,15 @@ fun QuestionEditDialog(
 
     var description by rememberSaveable { mutableStateOf(question.description) }
 
+    var answers = remember { mutableStateListOf(*question.answers.toTypedArray()) }
+
     if (dialogIsOpen) {
         Dialog(
             onDismissRequest = {},
             properties = DialogProperties(usePlatformDefaultWidth = false)
         ) {
             var showDiscardQuestionDialog by rememberSaveable { mutableStateOf(false) }
+            var showAddAnswerDialog by rememberSaveable { mutableStateOf(false) }
 
             Card(
                 modifier = Modifier
@@ -97,7 +102,22 @@ fun QuestionEditDialog(
                             .weight(8f),
                         color = Color.Gray
                     ) {
-                        Text(text = "Answers")
+                        Column {
+                            Row {
+                                Text(text = "Potential Answers", modifier = Modifier.weight(1f))
+                                Button(onClick = {showAddAnswerDialog = true}, modifier = Modifier.weight(1f)) {
+                                    Text(text = "Add Answer")
+                                }
+                            }
+                            answers.forEach { answer ->
+                                Card {
+                                    Text(text = answer.text)
+                                    Button(onClick = { answers.remove(answer) }) {
+                                        Text(text = "Delete")
+                                    }
+                                }
+                            }
+                        }
                     }
                     Row(
                         horizontalArrangement = Arrangement.spacedBy(5.dp),
@@ -125,6 +145,10 @@ fun QuestionEditDialog(
                     }
                 }
             }
+
+            AddAnswerDialog(dialogIsOpen = showAddAnswerDialog,
+                dialogOpen = { isOpen -> showAddAnswerDialog = isOpen },
+                answer = { answer -> answers.add(answer) })
 
             ActionCheckDialog(dialogIsOpen = showDiscardQuestionDialog,
                 dialogOpen = { isOpen -> showDiscardQuestionDialog = isOpen },

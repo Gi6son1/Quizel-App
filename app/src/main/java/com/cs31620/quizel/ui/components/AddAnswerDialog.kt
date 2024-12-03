@@ -14,30 +14,34 @@ import androidx.compose.material3.ButtonDefaults
 import androidx.compose.material3.Card
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Text
+import androidx.compose.material3.TextField
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.getValue
+import androidx.compose.runtime.mutableStateOf
+import androidx.compose.runtime.saveable.rememberSaveable
+import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
-import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import androidx.compose.ui.window.Dialog
 import androidx.compose.ui.window.DialogProperties
 
-
 @Composable
-fun ActionCheckDialog(
+fun AddAnswerDialog(
     dialogIsOpen: Boolean,
     dialogOpen: (Boolean) -> Unit = {},
-    actionDialogMessage: String,
-    mainActionButton: @Composable (onClick: () -> Unit, modifier: Modifier) -> Unit,
-    performMainAction: (Boolean) -> Unit = {},
+    answer: (Answer) -> Unit = {}
 ) {
     if (dialogIsOpen) {
         Dialog(
             onDismissRequest = {},
             properties = DialogProperties(usePlatformDefaultWidth = false)
         ) {
+            var inputText by rememberSaveable { mutableStateOf("") }
+            var toggleState = rememberSaveable { mutableStateOf(false) }
+
             Column(
                 modifier = Modifier
                     .fillMaxWidth()
@@ -48,37 +52,43 @@ fun ActionCheckDialog(
                     modifier = Modifier
                         .align(Alignment.CenterHorizontally)
                         .weight(1.1f)
+                        .border(3.dp, Color.Black)
                 ) {
-                    Text(text = actionDialogMessage,
-                        fontSize = 30.sp,
-                        textAlign = TextAlign.Center,
+                    TextField(
+                        value = inputText,
+                        onValueChange = { inputText = it },
                         modifier = Modifier
-                            .fillMaxHeight()
+                            .fillMaxWidth()
                             .wrapContentHeight()
                     )
                 }
-                Row(horizontalArrangement = Arrangement.spacedBy(5.dp),
+                Row(
+                    horizontalArrangement = Arrangement.spacedBy(5.dp),
                     modifier = Modifier
                         .padding(top = 25.dp)
                         .weight(1f)
                 ) {
                     Button(
                         onClick = { dialogOpen(false) },
-                        modifier = Modifier.weight(1f).fillMaxHeight(),
+                        modifier = Modifier
+                            .weight(1f)
+                            .fillMaxHeight(),
                         colors = ButtonDefaults.buttonColors(containerColor = MaterialTheme.colorScheme.tertiary)
                     ) {
                         Text(text = "Cancel", fontSize = 21.sp)
                     }
-
-                    mainActionButton(
-                        {
+                    Button(
+                        onClick = {
                             dialogOpen(false)
-                            performMainAction(true)
+                            answer(Answer(text = inputText, isCorrect = toggleState.value))
                         },
-                        Modifier
+                        modifier = Modifier
                             .weight(1f)
-                            .fillMaxHeight()
-                    )
+                            .fillMaxHeight(),
+                        colors = ButtonDefaults.buttonColors(containerColor = MaterialTheme.colorScheme.secondary)
+                    ) {
+                        Text(text = "Save", fontSize = 21.sp)
+                    }
                 }
             }
         }
