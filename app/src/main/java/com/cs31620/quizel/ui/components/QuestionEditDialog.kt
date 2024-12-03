@@ -1,5 +1,6 @@
 package com.cs31620.quizel.ui.components
 
+import android.util.Log
 import androidx.compose.foundation.border
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Column
@@ -24,6 +25,7 @@ import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
 import androidx.compose.runtime.saveable.rememberSaveable
 import androidx.compose.runtime.setValue
+import androidx.compose.runtime.snapshots.SnapshotStateList
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
@@ -109,9 +111,10 @@ fun QuestionEditDialog(
                                     Text(text = "Add Answer")
                                 }
                             }
-                            answers.forEach { answer ->
-                                Card {
+                            answers.forEachIndexed { index, answer ->
+                                Button(onClick = { setCorrectAnswer(answers, index) }) {
                                     Text(text = answer.text)
+                                    Text(text = if (answer.isCorrect) "Correct" else "Incorrect")
                                     Button(onClick = { answers.remove(answer) }) {
                                         Text(text = "Delete")
                                     }
@@ -148,7 +151,7 @@ fun QuestionEditDialog(
 
             AddAnswerDialog(dialogIsOpen = showAddAnswerDialog,
                 dialogOpen = { isOpen -> showAddAnswerDialog = isOpen },
-                answer = { answer -> answers.add(answer) })
+                answer = { answer -> addAnswerToAnswerList(answers, answer) })
 
             ActionCheckDialog(dialogIsOpen = showDiscardQuestionDialog,
                 dialogOpen = { isOpen -> showDiscardQuestionDialog = isOpen },
@@ -163,6 +166,25 @@ fun QuestionEditDialog(
                 },
                 actionDialogMessage = "Are you sure you want to discard any changes?",
                 performMainAction = { closeQuestionDialog -> dialogOpen(closeQuestionDialog) })
+        }
+    }
+
+}
+
+fun setCorrectAnswer(answers: SnapshotStateList<Answer>, answerIndex: Int) {
+    val answer = answers[answerIndex]
+    answers.forEach { it.isCorrect = false }
+    val index = answers.indexOf(answer) // Find the index of the answer
+    if (index != -1) {
+        answers[answerIndex] = answer.copy(isCorrect = true)
+    }
+}
+
+fun addAnswerToAnswerList(answers: SnapshotStateList<Answer>, answer: Answer) {
+    if (answers.size <= 10){
+        answers.add(answer)
+        if (answer.isCorrect){
+            setCorrectAnswer(answers, answers.size-1)
         }
     }
 }
