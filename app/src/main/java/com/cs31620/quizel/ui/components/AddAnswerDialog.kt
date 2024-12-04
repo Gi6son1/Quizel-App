@@ -87,7 +87,9 @@ fun AddAnswerDialog(
                     Button(
                         onClick = {
                             dialogOpen(false)
-                            answer(Answer(text = inputText, isCorrect = toggleState.value))
+                            if (inputText.isNotBlank()) {
+                                answer(Answer(text = inputText, isCorrect = toggleState.value))
+                            }
                         },
                         modifier = Modifier
                             .weight(1f)

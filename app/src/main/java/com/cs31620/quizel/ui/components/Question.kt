@@ -2,7 +2,7 @@ package com.cs31620.quizel.ui.components
 
 
 class Question(
-    questionId: Int,
+    questionId: Int = -1,
     _title: String = "",
     _description: String = "",
     _answers: MutableList<Answer> = mutableListOf()

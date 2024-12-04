@@ -48,7 +48,7 @@ fun QuestionEditDialog(
 
     var description by rememberSaveable { mutableStateOf(question.description) }
 
-    var answers = remember { mutableStateListOf(*question.answers.toTypedArray()) }
+    val answers = remember { mutableStateListOf(*question.answers.toTypedArray()) }
 
     if (dialogIsOpen) {
         Dialog(
@@ -57,6 +57,10 @@ fun QuestionEditDialog(
         ) {
             var showDiscardQuestionDialog by rememberSaveable { mutableStateOf(false) }
             var showAddAnswerDialog by rememberSaveable { mutableStateOf(false) }
+            var showInvalidInfoDialog by rememberSaveable { mutableStateOf(false) }
+
+            var invalidInfoDialogTitle by rememberSaveable { mutableStateOf("") }
+            var invalidInfoDialogDescription by rememberSaveable { mutableStateOf("") }
 
             Card(
                 modifier = Modifier
@@ -110,20 +114,30 @@ fun QuestionEditDialog(
                         Column {
                             Row {
                                 Text(text = "Potential Answers", modifier = Modifier.weight(1f))
-                                Button(onClick = {showAddAnswerDialog = true}, modifier = Modifier.weight(1f), enabled = answers.size < 10) {
+                                Button(
+                                    onClick = { showAddAnswerDialog = true },
+                                    modifier = Modifier.weight(1f),
+                                    enabled = answers.size < 10
+                                ) {
                                     Text(text = "Add Answer")
                                 }
                             }
-                            Column(modifier = Modifier.fillMaxSize().background(Color.Blue).verticalScroll(rememberScrollState()) ) {
+                            Column(
+                                modifier = Modifier
+                                    .fillMaxSize()
+                                    .background(Color.Blue)
+                                    .verticalScroll(rememberScrollState())
+                            ) {
                                 answers.forEachIndexed { index, answer ->
-                                Button(onClick = { setCorrectAnswer(answers, index) }) {
-                                    Text(text = answer.text)
-                                    Text(text = if (answer.isCorrect) "Correct" else "Incorrect")
-                                    Button(onClick = { answers.remove(answer) }) {
-                                        Text(text = "Delete")
+                                    Button(onClick = { setCorrectAnswer(answers, index) }) {
+                                        Text(text = answer.text)
+                                        Text(text = if (answer.isCorrect) "Correct" else "Incorrect")
+                                        Button(onClick = { answers.remove(answer) }) {
+                                            Text(text = "Delete")
+                                        }
                                     }
                                 }
-                            } }
+                            }
 
                         }
                     }
@@ -143,10 +157,24 @@ fun QuestionEditDialog(
                             Text(text = "Discard Changes")
                         }
                         Button(
-                            onClick = {},
+                            onClick = {
+                                if (description.isBlank()) {
+                                    invalidInfoDialogTitle = "No Question Inputted"
+                                    invalidInfoDialogDescription = "Please enter a question"
+                                    showInvalidInfoDialog = true
+                                    return@Button
+                                }
+
+                                answers.forEach { answer -> if (answer.isCorrect) dialogOpen(false) }
+                                invalidInfoDialogTitle = "No Correct Answer Selected"
+                                invalidInfoDialogDescription = "A question but have one correct answer. Either add a new answer or tap an " +
+                                        "existing answer to set it as correct"
+                                showInvalidInfoDialog = true
+                            },
                             modifier = Modifier
                                 .weight(1f)
-                                .fillMaxHeight()
+                                .fillMaxHeight(),
+                            enabled = answers.size > 0
                         ) {
                             Text(text = "Save Changes")
                         }
@@ -170,26 +198,35 @@ fun QuestionEditDialog(
                     }
                 },
                 actionDialogMessage = "Are you sure you want to discard any changes?",
-                performMainAction = { closeQuestionDialog -> dialogOpen(closeQuestionDialog) })
-        }
-    }
+                performMainAction = { closeQuestionDialog -> dialogOpen(!closeQuestionDialog) }
+            )
 
+            InvalidInformationDialog(dialogIsOpen = showInvalidInfoDialog,
+                dialogOpen = { isOpen -> showInvalidInfoDialog = isOpen },
+                title = invalidInfoDialogTitle,
+                description = invalidInfoDialogDescription)
+        }
+    } else {
+        title = ""
+        description = ""
+        answers.clear()
+    }
 }
 
 fun setCorrectAnswer(answers: SnapshotStateList<Answer>, answerIndex: Int) {
     val answer = answers[answerIndex]
     answers.forEach { it.isCorrect = false }
-    val index = answers.indexOf(answer) // Find the index of the answer
+    val index = answers.indexOf(answer)
     if (index != -1) {
         answers[answerIndex] = answer.copy(isCorrect = true)
     }
 }
 
 fun addAnswerToAnswerList(answers: SnapshotStateList<Answer>, answer: Answer) {
-    if (answers.size < 10){
+    if (answers.size < 10) {
         answers.add(answer)
-        if (answer.isCorrect){
-            setCorrectAnswer(answers, answers.size-1)
+        if (answer.isCorrect) {
+            setCorrectAnswer(answers, answers.size - 1)
         }
     }
 }

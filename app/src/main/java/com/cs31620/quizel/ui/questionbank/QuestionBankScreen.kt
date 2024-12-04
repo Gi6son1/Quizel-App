@@ -48,7 +48,7 @@ fun QuestionBankScreen(navController: NavHostController) {
             val (title, selectDelete, questionBankArea) = createRefs()
             var showQuestionDialog by rememberSaveable { mutableStateOf(false) }
 
-            val questionObject = Question(-1)
+            var questionObject = Question()
 
             Text(
                 modifier = Modifier
@@ -117,7 +117,7 @@ fun QuestionBankScreen(navController: NavHostController) {
             QuestionEditDialog(
                 question = questionObject,
                 dialogIsOpen = showQuestionDialog,
-                dialogOpen = { isOpen -> showQuestionDialog = !isOpen })
+                dialogOpen = { isOpen -> showQuestionDialog = isOpen })
         }
     }
 }
