@@ -278,29 +278,18 @@ fun QuizelTheme(
         else -> lightScheme
     }
     val view = LocalView.current
-    val window = (view.context as Activity).window
-    val controller = WindowCompat.getInsetsController(window, view)
-
-    WindowCompat.setDecorFitsSystemWindows(window, false)
-    controller.isAppearanceLightStatusBars = darkTheme
-    controller.hide(WindowInsetsCompat.Type.navigationBars())
-    controller.systemBarsBehavior = WindowInsetsControllerCompat.BEHAVIOR_SHOW_TRANSIENT_BARS_BY_SWIPE
-
-
-    ////TODO is this code needed below?
-    /*
-    val view = LocalView.current
     if (!view.isInEditMode) {
         SideEffect {
             val window = (view.context as Activity).window
+            val controller = WindowCompat.getInsetsController(window, view)
+
             WindowCompat.setDecorFitsSystemWindows(window, false)
-            WindowCompat.getInsetsController(window, view)
-                .isAppearanceLightStatusBars = darkTheme
+            controller.isAppearanceLightStatusBars = darkTheme
+            controller.hide(WindowInsetsCompat.Type.navigationBars())
+            controller.systemBarsBehavior =
+                WindowInsetsControllerCompat.BEHAVIOR_SHOW_TRANSIENT_BARS_BY_SWIPE
         }
-        }
-     */
-
-
+    }
 
     MaterialTheme(
         colorScheme = colorScheme,
