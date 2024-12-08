@@ -15,8 +15,10 @@ import androidx.compose.material3.Card
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.SideEffect
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.draw.shadow
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.unit.dp
@@ -38,6 +40,15 @@ fun ActionCheckDialog(
             onDismissRequest = {},
             properties = DialogProperties(usePlatformDefaultWidth = false)
         ) {
+
+            val dialogWindow = getDialogWindow()
+
+            SideEffect {
+                dialogWindow.let { window ->
+                    window?.setDimAmount(0.8f)
+                }
+            }
+
             Column(
                 modifier = Modifier
                     .fillMaxWidth()
@@ -64,7 +75,8 @@ fun ActionCheckDialog(
                 ) {
                     Button(
                         onClick = { dialogOpen(false) },
-                        modifier = Modifier.weight(1f).fillMaxHeight(),
+                        modifier = Modifier.weight(1f).fillMaxHeight()
+                            .shadow(5.dp, ButtonDefaults.shape),
                         colors = ButtonDefaults.buttonColors(containerColor = MaterialTheme.colorScheme.tertiary)
                     ) {
                         Text(text = "Cancel", fontSize = 21.sp)
@@ -78,6 +90,7 @@ fun ActionCheckDialog(
                         Modifier
                             .weight(1f)
                             .fillMaxHeight()
+                            .shadow(5.dp, ButtonDefaults.shape)
                     )
                 }
             }

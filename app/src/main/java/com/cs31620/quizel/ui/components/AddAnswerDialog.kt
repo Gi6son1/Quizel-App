@@ -1,5 +1,6 @@
 package com.cs31620.quizel.ui.components
 
+import android.view.Window
 import androidx.compose.foundation.background
 import androidx.compose.foundation.border
 import androidx.compose.foundation.layout.Arrangement
@@ -28,6 +29,8 @@ import androidx.compose.material3.Text
 import androidx.compose.material3.TextField
 import androidx.compose.material3.TextFieldDefaults
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.ReadOnlyComposable
+import androidx.compose.runtime.SideEffect
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.saveable.rememberSaveable
@@ -35,13 +38,16 @@ import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.scale
+import androidx.compose.ui.draw.shadow
 import androidx.compose.ui.graphics.Color
+import androidx.compose.ui.platform.LocalView
 import androidx.compose.ui.text.TextStyle
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import androidx.compose.ui.window.Dialog
 import androidx.compose.ui.window.DialogProperties
+import androidx.compose.ui.window.DialogWindowProvider
 
 @Composable
 fun AddAnswerDialog(
@@ -54,6 +60,14 @@ fun AddAnswerDialog(
             onDismissRequest = {},
             properties = DialogProperties(usePlatformDefaultWidth = false)
         ) {
+            val dialogWindow = getDialogWindow()
+
+            SideEffect {
+                dialogWindow.let { window ->
+                    window?.setDimAmount(0.8f)
+                }
+            }
+
             var inputText by rememberSaveable { mutableStateOf("") }
             var toggleState by rememberSaveable { mutableStateOf(false) }
 
@@ -66,6 +80,8 @@ fun AddAnswerDialog(
                     modifier = Modifier
                         .align(Alignment.CenterHorizontally)
                         .weight(1.5f)
+                        .shadow(5.dp, MaterialTheme.shapes.medium),
+
                 ) {
                     Column {
                         TextField(
@@ -76,7 +92,8 @@ fun AddAnswerDialog(
                                 .weight(1.1f)
                                 .wrapContentHeight(align = Alignment.Top),
                             textStyle = TextStyle.Default.copy(fontSize = 23.sp),
-                            placeholder = { Text(text = "Enter Answer", fontSize = 23.sp) }
+                            placeholder = { Text(text = "Enter Answer", fontSize = 23.sp) },
+                            singleLine = true
                         )
                         Row(
                             modifier = Modifier
@@ -118,7 +135,8 @@ fun AddAnswerDialog(
                         onClick = { dialogOpen(false) },
                         modifier = Modifier
                             .weight(1f)
-                            .fillMaxHeight(),
+                            .fillMaxHeight()
+                            .shadow(5.dp, ButtonDefaults.shape),
                         colors = ButtonDefaults.buttonColors(containerColor = MaterialTheme.colorScheme.tertiary)
                     ) {
                         Text(text = "Cancel", fontSize = 21.sp)
@@ -132,7 +150,8 @@ fun AddAnswerDialog(
                         },
                         modifier = Modifier
                             .weight(1f)
-                            .fillMaxHeight(),
+                            .fillMaxHeight()
+                            .shadow(5.dp, ButtonDefaults.shape),
                         colors = ButtonDefaults.buttonColors(containerColor = MaterialTheme.colorScheme.secondary)
                     ) {
                         Text(text = "Save", fontSize = 21.sp)
