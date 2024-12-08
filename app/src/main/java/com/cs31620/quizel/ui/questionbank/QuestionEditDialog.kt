@@ -1,5 +1,6 @@
 package com.cs31620.quizel.ui.questionbank
 
+import android.util.Log
 import android.view.Window
 import androidx.compose.foundation.Image
 import androidx.compose.foundation.layout.Arrangement
@@ -62,21 +63,29 @@ import com.cs31620.quizel.ui.components.Question
 
 @Composable
 fun QuestionEditDialog(
-    question: Question,
+    question: Question?,
     dialogIsOpen: Boolean,
     dialogOpen: (Boolean) -> Unit = {},
 ) {
-    var title by rememberSaveable { mutableStateOf(question.title) }
+    var title by rememberSaveable { mutableStateOf(question?.title ?: "") }
 
-    var description by rememberSaveable { mutableStateOf(question.description) }
+    var description by rememberSaveable { mutableStateOf(question?.description ?: "") }
 
-    val answers = remember { mutableStateListOf(*question.answers.toTypedArray()) }
+    val answers = remember(question) {
+        mutableStateListOf<Answer>().also { list ->
+            question?.answers?.let { answers ->
+                list.addAll(answers)
+            }
+        }
+    }
 
     if (dialogIsOpen) {
         Dialog(
             onDismissRequest = {},
             properties = DialogProperties(usePlatformDefaultWidth = false)
         ) {
+            Log.d("UPDATE", "editing question with title: $title and description: $description")
+
             val dialogWindow = getDialogWindow()
 
             SideEffect {
@@ -189,7 +198,10 @@ fun QuestionEditDialog(
                                     modifier = Modifier
                                         .weight(0.9f)
                                         .fillMaxSize()
-                                        .shadow(if (answers.size < 10) 5.dp else 0.dp, MaterialTheme.shapes.medium),
+                                        .shadow(
+                                            if (answers.size < 10) 5.dp else 0.dp,
+                                            MaterialTheme.shapes.medium
+                                        ),
                                     enabled = answers.size < 10,
                                     shape = MaterialTheme.shapes.medium,
                                     colors = ButtonDefaults.buttonColors(containerColor = MaterialTheme.colorScheme.secondary)
@@ -204,9 +216,11 @@ fun QuestionEditDialog(
                                 }
                             }
                             if (answers.size == 0) {
-                                Box(modifier = Modifier
-                                    .fillMaxSize()
-                                    .weight(8f)) {
+                                Box(
+                                    modifier = Modifier
+                                        .fillMaxSize()
+                                        .weight(8f)
+                                ) {
                                     Text(
                                         text = "Oh no, empty!\nAdd an answer using the\n+ Answer button",
                                         modifier = Modifier
@@ -270,10 +284,9 @@ fun QuestionEditDialog(
                                                 ) {
                                                     Image(
                                                         painter = painterResource(id = R.drawable.bin_icon),
-                                                        contentDescription = "Green Tick",
+                                                        contentDescription = "Bin icon",
                                                         modifier = Modifier
-                                                            .weight(1f)
-                                                            .padding(8.dp)
+                                                            .padding(10.dp)
                                                             .fillMaxSize()
                                                     )
                                                 }
@@ -355,10 +368,6 @@ fun QuestionEditDialog(
                 description = invalidInfoDialogDescription
             )
         }
-    } else {
-        title = ""
-        description = ""
-        answers.clear()
     }
 }
 
