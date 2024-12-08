@@ -29,8 +29,6 @@ class Question(
             field = value
         }
 
-    public fun getNumAnswers() = answers.size
-
     public fun removeAnswer(answer: Answer){
         answers.remove(answer)
     }

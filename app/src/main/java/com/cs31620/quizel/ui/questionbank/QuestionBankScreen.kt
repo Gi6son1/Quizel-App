@@ -28,6 +28,8 @@ import androidx.compose.material.icons.filled.ArrowRight
 import androidx.compose.material.icons.outlined.CheckBox
 import androidx.compose.material3.Button
 import androidx.compose.material3.ButtonDefaults
+import androidx.compose.material3.Checkbox
+import androidx.compose.material3.CheckboxDefaults
 import androidx.compose.material3.Icon
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Surface
@@ -58,6 +60,7 @@ import com.cs31620.quizel.ui.components.Answer
 import com.cs31620.quizel.ui.components.Question
 import com.cs31620.quizel.ui.components.TopLevelScaffold
 
+
 @SuppressLint("UnusedMaterial3ScaffoldPaddingParameter")
 @Composable
 fun QuestionBankScreen(navController: NavHostController) {
@@ -79,11 +82,22 @@ fun QuestionBankScreen(navController: NavHostController) {
             var showDeleteSelectedDialog by rememberSaveable { mutableStateOf(false) }
 
             val questions = mutableListOf(
-                Question(_title = "i'm a title", _description = "i'm a description", _answers = mutableListOf(Answer("yieeeeee", false),Answer("cheese", true))),
-                Question(_description = "i'm a description"),
-                Question(_description = "i'm a description"),
-                Question(_title = "i'm a title", _description = "i'm a description"),
-                Question(_description = "i'm a description", _answers = mutableListOf(Answer("yipee", true),Answer("ydee", false)))
+                Pair(
+                    Question(
+                        _title = "i'm a title",
+                        _description = "i'm a description",
+                        _answers = mutableListOf(Answer("yieeeeee", false), Answer("cheese", true))
+                    ), false
+                ),
+                Pair(Question(_description = "i'm a description"), false),
+                Pair(Question(_description = "i'm a description"), false),
+                Pair(Question(_title = "i'm a title", _description = "i'm a description"), false),
+                Pair(
+                    Question(
+                        _description = "i'm a description",
+                        _answers = mutableListOf(Answer("yipee", true), Answer("ydee", false))
+                    ), false
+                )
             )
 
             Text(
@@ -102,7 +116,7 @@ fun QuestionBankScreen(navController: NavHostController) {
                 )
             Button(
                 onClick = {
-                    if (displaySelectDelete &&  /** TODO **/ true) showDeleteSelectedDialog = true
+                    if (displaySelectDelete && containsSelectedQuestion(questions)) showDeleteSelectedDialog = true
                     displaySelectDelete = !displaySelectDelete
                 },
                 modifier = Modifier
@@ -189,12 +203,13 @@ fun QuestionBankScreen(navController: NavHostController) {
                             .padding(start = 10.dp, end = 10.dp, top = 10.dp)
                             .verticalScroll(rememberScrollState()),
                         verticalArrangement = Arrangement.spacedBy(10.dp)
-                    ){
-                        for (question in questions) {
-                            Button(onClick = {
-                                selectedQuestion = question
-                                showQuestionDialog = true
-                            },
+                    ) {
+                        for (questionPair in questions) {
+                            Button(
+                                onClick = {
+                                    selectedQuestion = questionPair.first
+                                    showQuestionDialog = true
+                                },
                                 modifier = Modifier
                                     .fillMaxWidth()
                                     .shadow(5.dp, MaterialTheme.shapes.medium)
@@ -205,39 +220,62 @@ fun QuestionBankScreen(navController: NavHostController) {
                             )
                             {
                                 Row {
-                                    Button(
-                                        onClick = { /**MIMIMI DO FUNCTION**/ },
-                                        modifier = Modifier
-                                            .fillMaxSize()
-                                            .weight(1f),
-                                        shape = RectangleShape,
-                                        contentPadding = PaddingValues(0.dp),
-                                        colors = ButtonDefaults.buttonColors(
-                                            MaterialTheme.colorScheme.error
-                                        )
-                                    ) {
-                                        Image(
-                                            painter = painterResource(id = R.drawable.bin_icon),
-                                            contentDescription = "Bin icon",
+                                    if (displaySelectDelete){
+                                        Surface(
                                             modifier = Modifier
-                                                .padding(10.dp)
                                                 .fillMaxSize()
-                                        )
+                                                .weight(1f),
+                                            shape = RectangleShape,
+                                            color = MaterialTheme.colorScheme.error
+                                        ) {
+                                            Checkbox(
+                                                checked = questionPair.second,
+                                                onCheckedChange = {
+                                                    //questionPair.second = it
+                                                },
+                                                colors = CheckboxDefaults.colors(checkedColor = Color.White,
+                                                    uncheckedColor = Color.White)
+                                            )
+                                        }
+                                    } else {
+                                        Button(
+                                            onClick = { /**MIMIMI DO FUNCTION**/ },
+                                            modifier = Modifier
+                                                .fillMaxSize()
+                                                .weight(1f),
+                                            shape = RectangleShape,
+                                            contentPadding = PaddingValues(0.dp),
+                                            colors = ButtonDefaults.buttonColors(
+                                                MaterialTheme.colorScheme.error
+                                            )
+                                        ) {
+                                            Image(
+                                                painter = painterResource(id = R.drawable.bin_icon),
+                                                contentDescription = "Bin icon",
+                                                modifier = Modifier
+                                                    .padding(10.dp)
+                                                    .fillMaxSize()
+                                            )
+                                        }
                                     }
-                                    Column(modifier = Modifier
-                                        .weight(6f)
-                                        .fillMaxSize()
-                                        .wrapContentHeight()
-                                        .padding(horizontal = 5.dp, vertical = 5.dp)
-                                    ){
-                                        if (question.title.isNotBlank()){
+                                    Column(
+                                        modifier = Modifier
+                                            .weight(6f)
+                                            .fillMaxSize()
+                                            .wrapContentHeight()
+                                            .padding(horizontal = 5.dp, vertical = 5.dp)
+                                    ) {
+                                        if (questionPair.first.title.isNotBlank()) {
                                             Text(
-                                                text = question.title,
+                                                text = questionPair.first.title,
                                                 style = MaterialTheme.typography.bodyLarge,
                                                 color = Color.Black,
                                             )
                                         }
-                                        Text(text = question.description, color = Color.Black)
+                                        Text(
+                                            text = questionPair.first.description,
+                                            color = Color.Black
+                                        )
                                     }
                                     Icon(
                                         imageVector = Icons.AutoMirrored.Filled.ArrowRight,
@@ -264,9 +302,11 @@ fun QuestionBankScreen(navController: NavHostController) {
             QuestionEditDialog(
                 question = selectedQuestion,
                 dialogIsOpen = showQuestionDialog,
-                dialogOpen = { isOpen -> showQuestionDialog = isOpen
+                dialogOpen = { isOpen ->
+                    showQuestionDialog = isOpen
 
-                    if (!isOpen) selectedQuestion = null})
+                    if (!isOpen) selectedQuestion = null
+                })
 
             ActionCheckDialog(dialogIsOpen = showDeleteSelectedDialog,
                 dialogOpen = { isOpen -> showDeleteSelectedDialog = isOpen },
@@ -280,7 +320,7 @@ fun QuestionBankScreen(navController: NavHostController) {
                     }
                 },
                 actionDialogMessage = "Are you sure you want to delete the selected questions?",
-                performMainAction = { /** TODO deletee questions **/}
+                performMainAction = { /** TODO deletee questions **/ }
             )
         }
     }
@@ -292,3 +332,9 @@ fun QuestionBankScreenPreview() {
     QuestionBankScreen(navController = rememberNavController())
 }
 
+fun containsSelectedQuestion(questions: MutableList<Pair<Question, Boolean>>): Boolean {
+    questions.forEach { question ->
+        if (question.second ) return true
+    }
+    return false
+}
