@@ -67,9 +67,9 @@ fun QuestionEditDialog(
     dialogIsOpen: Boolean,
     dialogOpen: (Boolean) -> Unit = {},
 ) {
-    var title by rememberSaveable { mutableStateOf(question?.title ?: "") }
+    var title by rememberSaveable(question) { mutableStateOf(question?.title ?: "") }
 
-    var description by rememberSaveable { mutableStateOf(question?.description ?: "") }
+    var description by rememberSaveable(question) { mutableStateOf(question?.description ?: "") }
 
     val answers = remember(question) {
         mutableStateListOf<Answer>().also { list ->
@@ -84,8 +84,6 @@ fun QuestionEditDialog(
             onDismissRequest = {},
             properties = DialogProperties(usePlatformDefaultWidth = false)
         ) {
-            Log.d("UPDATE", "editing question with title: $title and description: $description")
-
             val dialogWindow = getDialogWindow()
 
             SideEffect {

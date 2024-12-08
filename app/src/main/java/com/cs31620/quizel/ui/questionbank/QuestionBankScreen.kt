@@ -54,6 +54,7 @@ import androidx.navigation.NavHostController
 import androidx.navigation.compose.rememberNavController
 import com.cs31620.quizel.R
 import com.cs31620.quizel.ui.components.ActionCheckDialog
+import com.cs31620.quizel.ui.components.Answer
 import com.cs31620.quizel.ui.components.Question
 import com.cs31620.quizel.ui.components.TopLevelScaffold
 
@@ -78,14 +79,12 @@ fun QuestionBankScreen(navController: NavHostController) {
             var showDeleteSelectedDialog by rememberSaveable { mutableStateOf(false) }
 
             val questions = mutableListOf(
-                Question(_title = "i'm a title", _description = "i'm a description"),
+                Question(_title = "i'm a title", _description = "i'm a description", _answers = mutableListOf(Answer("yieeeeee", false),Answer("cheese", true))),
                 Question(_description = "i'm a description"),
                 Question(_description = "i'm a description"),
                 Question(_title = "i'm a title", _description = "i'm a description"),
-                Question(_description = "i'm a description")
+                Question(_description = "i'm a description", _answers = mutableListOf(Answer("yipee", true),Answer("ydee", false)))
             )
-
-
 
             Text(
                 modifier = Modifier
@@ -194,7 +193,6 @@ fun QuestionBankScreen(navController: NavHostController) {
                         for (question in questions) {
                             Button(onClick = {
                                 selectedQuestion = question
-                                Log.d("UPDATE", "Selected question with title: ${selectedQuestion?.title} and description: ${selectedQuestion?.description} ")
                                 showQuestionDialog = true
                             },
                                 modifier = Modifier
@@ -267,6 +265,7 @@ fun QuestionBankScreen(navController: NavHostController) {
                 question = selectedQuestion,
                 dialogIsOpen = showQuestionDialog,
                 dialogOpen = { isOpen -> showQuestionDialog = isOpen
+
                     if (!isOpen) selectedQuestion = null})
 
             ActionCheckDialog(dialogIsOpen = showDeleteSelectedDialog,
