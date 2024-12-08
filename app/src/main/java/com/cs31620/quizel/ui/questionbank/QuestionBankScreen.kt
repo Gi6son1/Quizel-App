@@ -80,6 +80,7 @@ fun QuestionBankScreen(navController: NavHostController) {
 
             var displaySelectDelete by rememberSaveable { mutableStateOf(false) }
             var showDeleteSelectedDialog by rememberSaveable { mutableStateOf(false) }
+            var showDeleteQuestionDialog by rememberSaveable { mutableStateOf(false) }
 
             val questions = mutableListOf(
                 Pair(
@@ -239,7 +240,7 @@ fun QuestionBankScreen(navController: NavHostController) {
                                         }
                                     } else {
                                         Button(
-                                            onClick = { /**MIMIMI DO FUNCTION**/ },
+                                            onClick = { showDeleteQuestionDialog = true },
                                             modifier = Modifier
                                                 .fillMaxSize()
                                                 .weight(1f),
@@ -321,6 +322,21 @@ fun QuestionBankScreen(navController: NavHostController) {
                 },
                 actionDialogMessage = "Are you sure you want to delete the selected questions?",
                 performMainAction = { /** TODO deletee questions **/ }
+            )
+
+            ActionCheckDialog(dialogIsOpen = showDeleteQuestionDialog,
+                dialogOpen = { isOpen -> showDeleteQuestionDialog = isOpen },
+                mainActionButton = { onClick, modifier ->
+                    Button(
+                        onClick = onClick,
+                        modifier = modifier,
+                        colors = ButtonDefaults.buttonColors(containerColor = MaterialTheme.colorScheme.error)
+                    ) {
+                        Text(text = "Delete", fontSize = 19.sp)
+                    }
+                },
+                actionDialogMessage = "Are you sure you want to delete this question?",
+                performMainAction = { /** TODO delete questions **/ }
             )
         }
     }
