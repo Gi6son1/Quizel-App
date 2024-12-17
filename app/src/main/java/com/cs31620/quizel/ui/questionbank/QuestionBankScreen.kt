@@ -18,6 +18,9 @@ import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.layout.width
 import androidx.compose.foundation.layout.wrapContentHeight
 import androidx.compose.foundation.layout.wrapContentSize
+import androidx.compose.foundation.lazy.LazyColumn
+import androidx.compose.foundation.lazy.items
+import androidx.compose.foundation.lazy.itemsIndexed
 import androidx.compose.foundation.rememberScrollState
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.foundation.verticalScroll
@@ -37,7 +40,9 @@ import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.getValue
+import androidx.compose.runtime.mutableStateListOf
 import androidx.compose.runtime.mutableStateOf
+import androidx.compose.runtime.remember
 import androidx.compose.runtime.saveable.rememberSaveable
 import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
@@ -61,6 +66,8 @@ import com.cs31620.quizel.ui.components.Question
 import com.cs31620.quizel.ui.components.TopLevelScaffold
 
 
+
+
 @SuppressLint("UnusedMaterial3ScaffoldPaddingParameter")
 @Composable
 fun QuestionBankScreen(navController: NavHostController) {
@@ -82,7 +89,23 @@ fun QuestionBankScreen(navController: NavHostController) {
             var showDeleteSelectedDialog by rememberSaveable { mutableStateOf(false) }
             var showDeleteQuestionDialog by rememberSaveable { mutableStateOf(false) }
 
-            val questions = mutableListOf(
+            val questions = remember { mutableStateListOf(
+                Pair(
+                    Question(
+                        _title = "i'm a title",
+                        _description = "i'm a description",
+                        _answers = mutableListOf(Answer("yieeeeee", false), Answer("cheese", true))
+                    ), false
+                ),
+                Pair(Question(_description = "i'm a description"), false),
+                Pair(Question(_description = "i'm a description"), false),
+                Pair(Question(_title = "i'm a title", _description = "i'm a description"), false),
+                Pair(
+                    Question(
+                        _description = "i'm a description",
+                        _answers = mutableListOf(Answer("yipee", true), Answer("ydee", false))
+                    ), false
+                ),
                 Pair(
                     Question(
                         _title = "i'm a title",
@@ -99,7 +122,8 @@ fun QuestionBankScreen(navController: NavHostController) {
                         _answers = mutableListOf(Answer("yipee", true), Answer("ydee", false))
                     ), false
                 )
-            )
+            ) }
+
 
             Text(
                 modifier = Modifier
@@ -198,17 +222,16 @@ fun QuestionBankScreen(navController: NavHostController) {
                     shape = MaterialTheme.shapes.medium
 
                 ) {
-                    Column(
+                    LazyColumn(
                         modifier = Modifier
                             .fillMaxSize()
-                            .padding(start = 10.dp, end = 10.dp, top = 10.dp)
-                            .verticalScroll(rememberScrollState()),
+                            .padding(start = 10.dp, end = 10.dp, top = 10.dp),
                         verticalArrangement = Arrangement.spacedBy(10.dp)
                     ) {
-                        for (questionPair in questions) {
+                        itemsIndexed(questions){ index, (question, isSelected) ->
                             Button(
                                 onClick = {
-                                    selectedQuestion = questionPair.first
+                                    selectedQuestion = question
                                     showQuestionDialog = true
                                 },
                                 modifier = Modifier
@@ -230,12 +253,13 @@ fun QuestionBankScreen(navController: NavHostController) {
                                             color = MaterialTheme.colorScheme.error
                                         ) {
                                             Checkbox(
-                                                checked = questionPair.second,
+                                                checked = isSelected,
                                                 onCheckedChange = {
-                                                    //questionPair.second = it
+                                                        isChecked ->
+                                                    questions[index] = question to isChecked
                                                 },
                                                 colors = CheckboxDefaults.colors(checkedColor = Color.White,
-                                                    uncheckedColor = Color.White)
+                                                    uncheckedColor = Color.White, checkmarkColor = Color.Black)
                                             )
                                         }
                                     } else {
@@ -266,15 +290,15 @@ fun QuestionBankScreen(navController: NavHostController) {
                                             .wrapContentHeight()
                                             .padding(horizontal = 5.dp, vertical = 5.dp)
                                     ) {
-                                        if (questionPair.first.title.isNotBlank()) {
+                                        if (question.title.isNotBlank()) {
                                             Text(
-                                                text = questionPair.first.title,
+                                                text = question.title,
                                                 style = MaterialTheme.typography.bodyLarge,
                                                 color = Color.Black,
                                             )
                                         }
                                         Text(
-                                            text = questionPair.first.description,
+                                            text = question.description,
                                             color = Color.Black
                                         )
                                     }

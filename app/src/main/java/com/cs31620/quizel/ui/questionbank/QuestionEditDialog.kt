@@ -1,6 +1,5 @@
 package com.cs31620.quizel.ui.questionbank
 
-import android.util.Log
 import android.view.Window
 import androidx.compose.foundation.Image
 import androidx.compose.foundation.layout.Arrangement
