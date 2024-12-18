@@ -14,9 +14,7 @@ class QuizelRepository(application: Application) {
         questionDao.insertMultipleQuestions(questions)
     }
 
-    suspend fun getAllQuestions(): List<Question> {
-        return questionDao.getAllQuestions()
-    }
+    fun getAllQuestions() = questionDao.getAllQuestions()
 
     suspend fun updateQuestion(question: Question) {
         questionDao.updateQuestion(question)

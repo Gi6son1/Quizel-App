@@ -1,5 +1,6 @@
 package com.cs31620.quizel.model
 
+import androidx.lifecycle.LiveData
 import androidx.room.Dao
 import androidx.room.Delete
 import androidx.room.Insert
@@ -26,5 +27,5 @@ interface QuestionDao {
     suspend fun deleteQuestionsByIds(questionIds: List<Int>)
 
     @Query("SELECT * FROM questions")
-    suspend fun getAllQuestions(): List<Question>
+    fun getAllQuestions(): LiveData<List<Question>>
 }

@@ -84,6 +84,12 @@ fun QuestionBankScreenTopLevel(
         questionList = questionsList,
         deleteSelectedQuestion = {selectedQuestion ->
             questionsViewModel.deleteSelectedQuestion(selectedQuestion)
+        },
+        addNewQuestion = { question ->
+            questionsViewModel.addNewQuestion(question)
+        },
+        updateQuestion = { question ->
+            questionsViewModel.updateSelectedQuestion(question)
         }
     )
 }
@@ -93,7 +99,9 @@ fun QuestionBankScreenTopLevel(
 fun QuestionBankScreen(
     navController: NavHostController,
     questionList: List<Question>,
-    deleteSelectedQuestion: (Question?) -> Unit = {}
+    deleteSelectedQuestion: (Question?) -> Unit = {},
+    updateQuestion: (Question?) -> Unit = {},
+    addNewQuestion: (Question?) -> Unit = {}
 ) {
     TopLevelScaffold(
         navController = navController
@@ -184,7 +192,6 @@ fun QuestionBankScreen(
             ) {
                 Button(
                     onClick = {
-                        selectedQuestion = Question()
                         showQuestionDialog = true
                     },
                     modifier = Modifier
@@ -225,6 +232,7 @@ fun QuestionBankScreen(
                                 onClick = {
                                     selectedQuestion = question
                                     showQuestionDialog = true
+                                    Log.d("QuestionBankScreen", "Question ${question.title} selected")
                                 },
                                 modifier = Modifier
                                     .fillMaxWidth()
@@ -314,12 +322,6 @@ fun QuestionBankScreen(
                 }
             }
 
-            LaunchedEffect(selectedQuestion) {
-                if (selectedQuestion != null) {
-                    showQuestionDialog = true
-                }
-            }
-
             QuestionEditDialog(
                 question = selectedQuestion,
                 dialogIsOpen = showQuestionDialog,
@@ -327,7 +329,12 @@ fun QuestionBankScreen(
                     showQuestionDialog = isOpen
 
                     if (!isOpen) selectedQuestion = null
-                })
+                },
+                updateQuestion = { question -> updateQuestion(question)
+                                 Log.d("QuestionBankScreen", "Question ${question?.description} updated")},
+                addNewQuestion = { question -> addNewQuestion(question)
+                Log.d("QuestionBankScreen", "Question ${question?.description} added")}
+                )
 
             ActionCheckDialog(dialogIsOpen = showDeleteSelectedDialog,
                 dialogOpen = { isOpen -> showDeleteSelectedDialog = isOpen },
@@ -358,10 +365,9 @@ fun QuestionBankScreen(
                 actionDialogMessage = "Are you sure you want to delete this question?",
                 performMainAction = { deleteQuestion ->
                     if (deleteQuestion) {
-                        //deleteSelectedQuestion(selectedQuestion)
-                        Log.d("QuestionBankScreen", "Question ${selectedQuestion?.title} deleted")
+                        deleteSelectedQuestion(selectedQuestion)
+                        Log.d("QuestionBankScreen", "Question ${selectedQuestion?.description} deleted")
                     }
-                    else Log.d("QuestionBankScreen", "Question not deleted")
                 }
             )
         }

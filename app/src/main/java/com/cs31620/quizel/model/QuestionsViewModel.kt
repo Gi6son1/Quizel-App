@@ -4,7 +4,6 @@ import android.app.Application
 import android.util.Log
 import androidx.lifecycle.AndroidViewModel
 import androidx.lifecycle.LiveData
-import androidx.lifecycle.liveData
 import androidx.lifecycle.viewModelScope
 import com.cs31620.quizel.datasource.QuizelRepository
 import com.cs31620.quizel.ui.components.Question
@@ -14,17 +13,31 @@ import kotlinx.coroutines.launch
 
 class QuestionsViewModel(application: Application) : AndroidViewModel(application) {
     private val repository: QuizelRepository = QuizelRepository(application)
-    var questionsList: LiveData<List<Question>> = liveData { emit(repository.getAllQuestions()) }
+    var questionsList: LiveData<List<Question>> = repository.getAllQuestions()
         private set
 
     fun deleteSelectedQuestion(question: Question?) {
         viewModelScope.launch(Dispatchers.IO) {
             if (question != null) {
-                Log.d("QuestionsViewModel", "Deleting question: ${question.title}")
+                Log.d("QuestionsViewModel", "Deleting question: ${question.description}")
                 repository.deleteQuestion(question)
             }
-            questionsList = liveData { emit(repository.getAllQuestions()) }
         }
     }
 
+    fun addNewQuestion(question: Question?) {
+        viewModelScope.launch(Dispatchers.IO) {
+            if (question != null) {
+                repository.insert(question)
+            }
+        }
+    }
+
+    fun updateSelectedQuestion(question: Question?) {
+        viewModelScope.launch(Dispatchers.IO) {
+            if (question != null) {
+                repository.updateQuestion(question)
+            }
+        }
+    }
 }

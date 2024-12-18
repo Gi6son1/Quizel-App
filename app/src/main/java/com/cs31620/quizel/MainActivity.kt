@@ -33,7 +33,9 @@ class MainActivity : ComponentActivity() {
 }
 
 @Composable
-private fun BuildNavigationGraph(questionsViewModel: QuestionsViewModel = viewModel()) {
+private fun BuildNavigationGraph(
+    questionsViewModel: QuestionsViewModel = viewModel()
+) {
     val navController = rememberNavController()
 
     NavHost(

@@ -65,6 +65,8 @@ fun QuestionEditDialog(
     question: Question?,
     dialogIsOpen: Boolean,
     dialogOpen: (Boolean) -> Unit = {},
+    addNewQuestion: (Question?) -> Unit = {},
+    updateQuestion: (Question?) -> Unit = {}
 ) {
     var title by rememberSaveable(question) { mutableStateOf(question?.title ?: "") }
 
@@ -319,7 +321,27 @@ fun QuestionEditDialog(
                                     return@Button
                                 }
 
-                                answers.forEach { answer -> if (answer.isCorrect) dialogOpen(false) }
+                                answers.forEach { answer -> if (answer.isCorrect) {
+                                    if (question == null){
+                                        addNewQuestion(
+                                            Question(
+                                                title = title,
+                                                description = description,
+                                                answers = answers
+                                            )
+                                        )
+                                    } else {
+                                        updateQuestion(
+                                            Question(
+                                                id = question.id,
+                                                title = title,
+                                                description = description,
+                                                answers = answers
+                                            )
+                                        )
+                                    }
+                                    dialogOpen(false)
+                                } }
                                 invalidInfoDialogTitle = "No Correct Answer Selected"
                                 invalidInfoDialogDescription =
                                     "A question but have one correct answer. Either add a new answer or tap an " +
@@ -329,8 +351,8 @@ fun QuestionEditDialog(
                             modifier = Modifier
                                 .weight(1f)
                                 .fillMaxHeight()
-                                .shadow(if (answers.size > 0) 5.dp else 0.dp, ButtonDefaults.shape),
-                            enabled = answers.size > 0,
+                                .shadow(if (answers.isNotEmpty()) 5.dp else 0.dp, ButtonDefaults.shape),
+                            enabled = answers.isNotEmpty(),
                             colors = ButtonDefaults.buttonColors(containerColor = MaterialTheme.colorScheme.secondary)
                         ) {
                             Text(text = "Save Changes", fontSize = 18.sp)
