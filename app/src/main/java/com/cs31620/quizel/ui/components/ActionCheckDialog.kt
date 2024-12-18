@@ -1,5 +1,6 @@
 package com.cs31620.quizel.ui.components
 
+import androidx.activity.compose.BackHandler
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Row
@@ -66,6 +67,9 @@ fun ActionCheckDialog(
                             .fillMaxHeight()
                             .wrapContentHeight()
                     )
+                }
+                BackHandler {
+                    dialogOpen(false)
                 }
                 Row(horizontalArrangement = Arrangement.spacedBy(5.dp),
                     modifier = Modifier

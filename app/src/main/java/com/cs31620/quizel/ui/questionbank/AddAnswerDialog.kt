@@ -1,5 +1,6 @@
 package com.cs31620.quizel.ui.questionbank
 
+import androidx.activity.compose.BackHandler
 import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Column
@@ -57,6 +58,10 @@ fun AddAnswerDialog(
 
             var inputText by rememberSaveable { mutableStateOf("") }
             var toggleState by rememberSaveable { mutableStateOf(false) }
+
+            BackHandler {
+                dialogOpen(false)
+            }
 
             Column(
                 modifier = Modifier

@@ -1,6 +1,7 @@
 package com.cs31620.quizel.ui.questionbank
 
 import android.view.Window
+import androidx.activity.compose.BackHandler
 import androidx.compose.foundation.Image
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box
@@ -359,6 +360,10 @@ fun QuestionEditDialog(
                         }
                     }
                 }
+            }
+
+            BackHandler {
+                showDiscardQuestionDialog = true
             }
 
             AddAnswerDialog(dialogIsOpen = showAddAnswerDialog,
