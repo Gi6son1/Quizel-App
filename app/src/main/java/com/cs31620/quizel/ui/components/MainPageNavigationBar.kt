@@ -19,7 +19,7 @@ import androidx.navigation.compose.currentBackStackEntryAsState
 import androidx.navigation.compose.rememberNavController
 import com.cs31620.quizel.R
 import com.cs31620.quizel.ui.navigation.Screen
-import com.cs31620.quizel.ui.navigation.screens
+import com.cs31620.quizel.ui.navigation.navigation_screens
 import com.cs31620.quizel.ui.theme.QuizelTheme
 
 @Composable
@@ -43,7 +43,7 @@ fun MainPageNavigationBar(
         val navBackStackEntry by navController.currentBackStackEntryAsState()
         val currentDestination = navBackStackEntry?.destination
 
-        screens.forEach { screen ->
+        navigation_screens.forEach { screen ->
             val isSelected = currentDestination?.route == screen.route
             val labelText = icons[screen]!!.label
 

@@ -16,6 +16,8 @@ class QuizelRepository(application: Application) {
 
     fun getAllQuestions() = questionDao.getAllQuestions()
 
+    fun getQuestionById(questionId: Int?) = questionDao.getQuestionById(questionId)
+
     suspend fun updateQuestion(question: Question) {
         questionDao.updateQuestion(question)
 

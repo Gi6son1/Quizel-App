@@ -400,7 +400,7 @@ fun QuestionEditDialog(
     }
 }
 
-fun setCorrectAnswer(answers: SnapshotStateList<Answer>, answerIndex: Int) {
+private fun setCorrectAnswer(answers: SnapshotStateList<Answer>, answerIndex: Int) {
     val answer = answers[answerIndex]
     answers.forEach { it.isCorrect = false }
     val index = answers.indexOf(answer)
@@ -409,7 +409,7 @@ fun setCorrectAnswer(answers: SnapshotStateList<Answer>, answerIndex: Int) {
     }
 }
 
-fun addAnswerToAnswerList(answers: SnapshotStateList<Answer>, answer: Answer) {
+private fun addAnswerToAnswerList(answers: SnapshotStateList<Answer>, answer: Answer) {
     if (answers.size < 10) {
         answers.add(answer)
         if (answer.isCorrect) {

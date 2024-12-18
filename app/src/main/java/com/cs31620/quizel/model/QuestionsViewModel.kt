@@ -12,6 +12,7 @@ import kotlinx.coroutines.launch
 
 class QuestionsViewModel(application: Application) : AndroidViewModel(application) {
     private val repository: QuizelRepository = QuizelRepository(application)
+
     var questionsList: LiveData<List<Question>> = repository.getAllQuestions()
         private set
 
@@ -30,6 +31,10 @@ class QuestionsViewModel(application: Application) : AndroidViewModel(applicatio
                 repository.insert(question)
             }
         }
+    }
+
+    fun getQuestionById(questionId: Int?): LiveData<Question?>{
+        return repository.getQuestionById(questionId)
     }
 
     fun updateSelectedQuestion(question: Question?) {

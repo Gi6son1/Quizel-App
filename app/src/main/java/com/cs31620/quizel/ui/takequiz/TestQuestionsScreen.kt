@@ -4,6 +4,7 @@ import android.annotation.SuppressLint
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.padding
 import androidx.compose.material3.Button
+import androidx.compose.material3.Scaffold
 import androidx.compose.material3.Surface
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
@@ -11,33 +12,26 @@ import androidx.compose.runtime.getValue
 import androidx.compose.runtime.livedata.observeAsState
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
-import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.navigation.NavHostController
-import androidx.navigation.compose.rememberNavController
 import com.cs31620.quizel.model.QuestionsViewModel
 import com.cs31620.quizel.ui.components.Question
-import com.cs31620.quizel.ui.components.TopLevelNavigationScaffold
-import com.cs31620.quizel.ui.navigation.Screen
-import com.cs31620.quizel.ui.questionbank.QuestionBankScreen
-import com.cs31620.quizel.ui.theme.QuizelTheme
-
+import com.cs31620.quizel.ui.components.TopLevelBackgroundScaffold
 
 @Composable
-fun TakeQuizScreenTopLevel(
+fun TestQuestionsScreenTopLevel(
     navController: NavHostController,
     questionsViewModel: QuestionsViewModel
 ) {
     val questionsList by questionsViewModel.questionsList.observeAsState(listOf())
-    TakeQuizScreen(navController = navController,
+    TestQuestionsScreen(
         questionList = questionsList)
 }
 
 @SuppressLint("UnusedMaterial3ScaffoldPaddingParameter")
 @Composable
-fun TakeQuizScreen(navController: NavHostController, questionList: List<Question>){
-    TopLevelNavigationScaffold(
-        navController = navController
+fun TestQuestionsScreen(questionList: List<Question>){
+    TopLevelBackgroundScaffold(
     ) { innerPadding ->
         Surface(
             modifier = Modifier
@@ -45,17 +39,7 @@ fun TakeQuizScreen(navController: NavHostController, questionList: List<Question
                 .padding(innerPadding),
             color = Color.Transparent
         ) {
-            Text(text = "Take Quiz Screen", modifier = Modifier.padding(start = 8.dp))
-            Button(
-                onClick = { navController.navigate(Screen.TestQuestions.route) },
-                modifier = Modifier.padding(start = 8.dp)
-            ) { Text(text = "Begin Quiz") }
+            Text(text = "YIPEEEEEEE", modifier = Modifier.padding(start = 8.dp))
         }
     }
-}
-
-@Preview
-@Composable
-fun TakeQuizScreenPreview(){
-    QuizelTheme { TakeQuizScreen(navController = rememberNavController(), questionList = emptyList()) }
 }

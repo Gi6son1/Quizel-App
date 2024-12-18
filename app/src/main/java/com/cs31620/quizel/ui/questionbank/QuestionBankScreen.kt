@@ -64,6 +64,7 @@ import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import androidx.constraintlayout.compose.ConstraintLayout
 import androidx.constraintlayout.compose.Dimension
+import androidx.navigation.NavGraph.Companion.findStartDestination
 import androidx.navigation.NavHostController
 import androidx.navigation.compose.rememberNavController
 import com.cs31620.quizel.R
@@ -72,7 +73,8 @@ import com.cs31620.quizel.model.QuestionsViewModel
 import com.cs31620.quizel.ui.components.ActionCheckDialog
 import com.cs31620.quizel.ui.components.Answer
 import com.cs31620.quizel.ui.components.Question
-import com.cs31620.quizel.ui.components.TopLevelScaffold
+import com.cs31620.quizel.ui.components.TopLevelNavigationScaffold
+import com.cs31620.quizel.ui.navigation.Screen
 import java.time.LocalDateTime
 import kotlin.collections.remove
 
@@ -110,7 +112,7 @@ fun QuestionBankScreen(
     addNewQuestion: (Question?) -> Unit = {},
     deleteQuestionsById: (List<Int>) -> Unit = {}
 ) {
-    TopLevelScaffold(
+    TopLevelNavigationScaffold(
         navController = navController
     ) { innerPadding ->
         ConstraintLayout(
@@ -118,7 +120,7 @@ fun QuestionBankScreen(
                 .padding(innerPadding)
                 .fillMaxSize()
         ) {
-            val (title, selectDelete, questionBankArea) = createRefs()
+            val (selectDelete, questionBankArea) = createRefs()
             var showQuestionDialog by rememberSaveable { mutableStateOf(false) }
 
             var selectedQuestion by rememberSaveable { mutableStateOf<Question?>(null) }
@@ -139,20 +141,6 @@ fun QuestionBankScreen(
 
             val state = rememberLazyListState()
 
-            Text(
-                modifier = Modifier
-                    .constrainAs(title) {
-                        top.linkTo(parent.top)
-                        start.linkTo(parent.start)
-                        end.linkTo(parent.end)
-                        bottom.linkTo(questionBankArea.top)
-
-                    },
-                text = stringResource(R.string.app_name),
-                style = MaterialTheme.typography.titleLarge,
-                fontSize = 90.sp,
-
-                )
             Button(
                 onClick = {
                     if (displaySelectDelete && checkedQuestionStates.containsValue(true)) showDeleteSelectedDialog =
@@ -161,10 +149,9 @@ fun QuestionBankScreen(
                 },
                 modifier = Modifier
                     .constrainAs(selectDelete) {
-                        top.linkTo(parent.top)
-                        start.linkTo(title.end)
-                        end.linkTo(parent.end)
-                        bottom.linkTo(questionBankArea.top)
+                        top.linkTo(parent.top, margin = 25.dp)
+                        end.linkTo(parent.end, margin = 10.dp)
+                        bottom.linkTo(questionBankArea.top, margin = 20.dp)
                     }
                     .height(50.dp)
                     .shadow(10.dp, MaterialTheme.shapes.medium),
@@ -200,16 +187,19 @@ fun QuestionBankScreen(
                 verticalArrangement = Arrangement.SpaceEvenly,
                 horizontalAlignment = Alignment.CenterHorizontally,
                 modifier = Modifier
-                    .padding(start = 10.dp, end = 10.dp, bottom = 10.dp)
+                    .padding(10.dp)
                     .constrainAs(questionBankArea) {
-                        top.linkTo(title.bottom)
+                        top.linkTo(selectDelete.bottom)
                         bottom.linkTo(parent.bottom)
                         height = Dimension.fillToConstraints
                     }
             ) {
                 Button(
                     onClick = {
-                        showQuestionDialog = true
+                        val destination = "${Screen.QuestionEdit.basePath}${0}"
+                        navController.navigate(destination){
+                            launchSingleTop = true
+                        }
                     },
                     modifier = Modifier
                         .fillMaxWidth()
@@ -247,12 +237,10 @@ fun QuestionBankScreen(
                         items(questionList) { question ->
                             Button(
                                 onClick = {
-                                    selectedQuestion = question
-                                    showQuestionDialog = true
-                                    Log.d(
-                                        "QuestionBankScreen",
-                                        "Question ${question.title} selected"
-                                    )
+                                    val destination = "${Screen.QuestionEdit.basePath}${question.id}"
+                                    navController.navigate(destination){
+                                        launchSingleTop = true
+                                    }
                                 },
                                 modifier = Modifier
                                     .fillMaxWidth()

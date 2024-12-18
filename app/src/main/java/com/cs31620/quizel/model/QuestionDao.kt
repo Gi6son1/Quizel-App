@@ -28,4 +28,7 @@ interface QuestionDao {
 
     @Query("SELECT * FROM questions")
     fun getAllQuestions(): LiveData<List<Question>>
+
+    @Query("SELECT * FROM questions WHERE id = :questionId")
+    fun getQuestionById(questionId: Int?): LiveData<Question?>
 }
