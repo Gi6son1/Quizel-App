@@ -33,6 +33,7 @@ import androidx.compose.material.icons.filled.ArrowRight
 import androidx.compose.material.icons.outlined.CheckBox
 import androidx.compose.material3.Button
 import androidx.compose.material3.ButtonDefaults
+import androidx.compose.material3.Card
 import androidx.compose.material3.Checkbox
 import androidx.compose.material3.CheckboxDefaults
 import androidx.compose.material3.Icon
@@ -78,13 +79,22 @@ fun QuestionBankScreenTopLevel(
     questionsViewModel: QuestionsViewModel
 ) {
     val questionsList by questionsViewModel.questionsList.observeAsState(listOf())
-    QuestionBankScreen(navController = navController,
-        questionList = questionsList)
+    QuestionBankScreen(
+        navController = navController,
+        questionList = questionsList,
+        deleteSelectedQuestion = {selectedQuestion ->
+            questionsViewModel.deleteSelectedQuestion(selectedQuestion)
+        }
+    )
 }
 
 @SuppressLint("UnusedMaterial3ScaffoldPaddingParameter")
 @Composable
-fun QuestionBankScreen(navController: NavHostController, questionList: List<Question>) {
+fun QuestionBankScreen(
+    navController: NavHostController,
+    questionList: List<Question>,
+    deleteSelectedQuestion: (Question?) -> Unit = {}
+) {
     TopLevelScaffold(
         navController = navController
     ) { innerPadding ->
@@ -104,16 +114,6 @@ fun QuestionBankScreen(navController: NavHostController, questionList: List<Ques
             var showDeleteQuestionDialog by rememberSaveable { mutableStateOf(false) }
 
             val state = rememberLazyListState()
-
-            val context = LocalContext.current.applicationContext
-            LaunchedEffect(key1 = Unit){
-                val repository = QuizelRepository(context as Application)
-                repository.getAllQuestions().forEach { question ->
-                    Log.d("QuestionBankScreen", "Question: ${question.title}")
-                    Log.d("QuestionBankScreen", "Description: ${question.description}")
-                    Log.d("QuestionBankScreen", "Answers: ${question.answers}")
-                }
-            }
 
             Text(
                 modifier = Modifier
@@ -259,7 +259,8 @@ fun QuestionBankScreen(navController: NavHostController, questionList: List<Ques
                                         }
                                     } else {
                                         Button(
-                                            onClick = { showDeleteQuestionDialog = true },
+                                            onClick = { selectedQuestion = question
+                                                showDeleteQuestionDialog = true },
                                             modifier = Modifier
                                                 .fillMaxSize()
                                                 .weight(1f),
@@ -355,7 +356,13 @@ fun QuestionBankScreen(navController: NavHostController, questionList: List<Ques
                     }
                 },
                 actionDialogMessage = "Are you sure you want to delete this question?",
-                performMainAction = { /** TODO delete questions **/ }
+                performMainAction = { deleteQuestion ->
+                    if (deleteQuestion) {
+                        //deleteSelectedQuestion(selectedQuestion)
+                        Log.d("QuestionBankScreen", "Question ${selectedQuestion?.title} deleted")
+                    }
+                    else Log.d("QuestionBankScreen", "Question not deleted")
+                }
             )
         }
     }
