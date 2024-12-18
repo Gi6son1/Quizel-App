@@ -6,19 +6,34 @@ import androidx.compose.foundation.layout.padding
 import androidx.compose.material3.Surface
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.getValue
+import androidx.compose.runtime.livedata.observeAsState
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.navigation.NavHostController
 import androidx.navigation.compose.rememberNavController
+import com.cs31620.quizel.model.QuestionsViewModel
+import com.cs31620.quizel.ui.components.Question
 import com.cs31620.quizel.ui.components.TopLevelScaffold
 import com.cs31620.quizel.ui.questionbank.QuestionBankScreen
 import com.cs31620.quizel.ui.theme.QuizelTheme
 
+
+@Composable
+fun TakeQuizScreenTopLevel(
+    navController: NavHostController,
+    questionsViewModel: QuestionsViewModel
+) {
+    val questionsList by questionsViewModel.questionsList.observeAsState(listOf())
+    TakeQuizScreen(navController = navController,
+        questionList = questionsList)
+}
+
 @SuppressLint("UnusedMaterial3ScaffoldPaddingParameter")
 @Composable
-fun TakeQuizScreen(navController: NavHostController){
+fun TakeQuizScreen(navController: NavHostController, questionList: List<Question>){
     TopLevelScaffold(
         navController = navController
     ) { innerPadding ->
@@ -36,5 +51,5 @@ fun TakeQuizScreen(navController: NavHostController){
 @Preview
 @Composable
 fun TakeQuizScreenPreview(){
-    QuizelTheme { TakeQuizScreen(navController = rememberNavController()) }
+    QuizelTheme { TakeQuizScreen(navController = rememberNavController(), questionList = emptyList()) }
 }

@@ -22,6 +22,7 @@ import androidx.compose.foundation.layout.wrapContentSize
 import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.foundation.lazy.items
 import androidx.compose.foundation.lazy.itemsIndexed
+import androidx.compose.foundation.lazy.rememberLazyListState
 import androidx.compose.foundation.rememberScrollState
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.foundation.verticalScroll
@@ -41,6 +42,7 @@ import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.getValue
+import androidx.compose.runtime.livedata.observeAsState
 import androidx.compose.runtime.mutableStateListOf
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
@@ -63,16 +65,26 @@ import androidx.navigation.NavHostController
 import androidx.navigation.compose.rememberNavController
 import com.cs31620.quizel.R
 import com.cs31620.quizel.datasource.QuizelRepository
+import com.cs31620.quizel.model.QuestionsViewModel
 import com.cs31620.quizel.ui.components.ActionCheckDialog
 import com.cs31620.quizel.ui.components.Answer
 import com.cs31620.quizel.ui.components.Question
 import com.cs31620.quizel.ui.components.TopLevelScaffold
 import java.time.LocalDateTime
 
+@Composable
+fun QuestionBankScreenTopLevel(
+    navController: NavHostController,
+    questionsViewModel: QuestionsViewModel
+) {
+    val questionsList by questionsViewModel.questionsList.observeAsState(listOf())
+    QuestionBankScreen(navController = navController,
+        questionList = questionsList)
+}
 
 @SuppressLint("UnusedMaterial3ScaffoldPaddingParameter")
 @Composable
-fun QuestionBankScreen(navController: NavHostController) {
+fun QuestionBankScreen(navController: NavHostController, questionList: List<Question>) {
     TopLevelScaffold(
         navController = navController
     ) { innerPadding ->
@@ -91,6 +103,8 @@ fun QuestionBankScreen(navController: NavHostController) {
             var showDeleteSelectedDialog by rememberSaveable { mutableStateOf(false) }
             var showDeleteQuestionDialog by rememberSaveable { mutableStateOf(false) }
 
+            val state = rememberLazyListState()
+
             val context = LocalContext.current.applicationContext
             LaunchedEffect(key1 = Unit){
                 val repository = QuizelRepository(context as Application)
@@ -100,42 +114,6 @@ fun QuestionBankScreen(navController: NavHostController) {
                     Log.d("QuestionBankScreen", "Answers: ${question.answers}")
                 }
             }
-
-            val questions = remember { mutableStateListOf(
-                Pair(
-                    Question(
-                        title = "i'm a title",
-                        description = "i'm a description",
-                        answers = mutableListOf(Answer("yieeeeee", false), Answer("cheese", true))
-                    ), false
-                ),
-                Pair(Question(description = "i'm a description"), false),
-                Pair(Question(description = "i'm a description"), false),
-                Pair(Question(title = "i'm a title", description = "i'm a description"), false),
-                Pair(
-                    Question(
-                        description = "i'm a description",
-                        answers = mutableListOf(Answer("yipee", true), Answer("ydee", false))
-                    ), false
-                ),
-                Pair(
-                    Question(
-                        title = "i'm a title",
-                        description = "i'm a description",
-                        answers = mutableListOf(Answer("yieeeeee", false), Answer("cheese", true))
-                    ), false
-                ),
-                Pair(Question(description = "i'm a description"), false),
-                Pair(Question(description = "i'm a description"), false),
-                Pair(Question(title = "i'm a title", description = "i'm a description"), false),
-                Pair(
-                    Question(
-                        description = "i'm a description",
-                        answers = mutableListOf(Answer("yipee", true), Answer("ydee", false))
-                    ), false
-                )
-            ) }
-
 
             Text(
                 modifier = Modifier
@@ -153,7 +131,7 @@ fun QuestionBankScreen(navController: NavHostController) {
                 )
             Button(
                 onClick = {
-                    if (displaySelectDelete && containsSelectedQuestion(questions)) showDeleteSelectedDialog = true
+                    //TODO FIX THIS if (displaySelectDelete && containsSelectedQuestion(questions)) showDeleteSelectedDialog = true
                     displaySelectDelete = !displaySelectDelete
                 },
                 modifier = Modifier
@@ -234,14 +212,15 @@ fun QuestionBankScreen(navController: NavHostController) {
                     shape = MaterialTheme.shapes.medium
 
                 ) {
-                    /*
+
                     LazyColumn(
                         modifier = Modifier
                             .fillMaxSize()
                             .padding(start = 10.dp, end = 10.dp, top = 10.dp),
-                        verticalArrangement = Arrangement.spacedBy(10.dp)
+                        verticalArrangement = Arrangement.spacedBy(10.dp),
+                        state = state
                     ) {
-                        itemsIndexed(questions){ index, (question, isSelected) ->
+                        itemsIndexed(questionList){ index, question ->
                             Button(
                                 onClick = {
                                     selectedQuestion = question
@@ -265,6 +244,7 @@ fun QuestionBankScreen(navController: NavHostController) {
                                             shape = RectangleShape,
                                             color = MaterialTheme.colorScheme.error
                                         ) {
+                                            /* TODO FIX THIS
                                             Checkbox(
                                                 checked = isSelected,
                                                 onCheckedChange = {
@@ -274,6 +254,8 @@ fun QuestionBankScreen(navController: NavHostController) {
                                                 colors = CheckboxDefaults.colors(checkedColor = Color.White,
                                                     uncheckedColor = Color.White, checkmarkColor = Color.Black)
                                             )
+                                            */
+
                                         }
                                     } else {
                                         Button(
@@ -327,7 +309,7 @@ fun QuestionBankScreen(navController: NavHostController) {
                                 }
                             }
                         }
-                    }*/
+                    }
                 }
             }
 
@@ -382,7 +364,7 @@ fun QuestionBankScreen(navController: NavHostController) {
 @Preview
 @Composable
 fun QuestionBankScreenPreview() {
-    QuestionBankScreen(navController = rememberNavController())
+    QuestionBankScreen(navController = rememberNavController(), emptyList())
 }
 
 fun containsSelectedQuestion(questions: MutableList<Pair<Question, Boolean>>): Boolean {
