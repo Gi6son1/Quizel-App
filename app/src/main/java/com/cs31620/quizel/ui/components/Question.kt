@@ -1,39 +1,18 @@
 package com.cs31620.quizel.ui.components
 
+import androidx.room.ColumnInfo
+import androidx.room.Entity
+import androidx.room.PrimaryKey
+import androidx.room.TypeConverters
+import com.cs31620.quizel.datasource.util.AnswerConverter
 
-class Question(
-    questionId: Int = -1,
-    _title: String = "",
-    _description: String = "",
-    _answers: MutableList<Answer> = mutableListOf()
-) {
-    var questionId = questionId
-        get() = field
+@Entity(tableName = "questions")
+data class Question(
+    @PrimaryKey(autoGenerate = true)
+    var id: Int = 0,
+    var title: String = "",
+    var description: String = "",
 
-    var title = _title
-        get() = field
-        set(value) {
-            field = value
-        }
-
-
-    var description = _description
-        get() = field
-        set(value) {
-            field = value
-        }
-
-    var answers = _answers
-        get() = field
-        set(value) {
-            field = value
-        }
-
-    public fun removeAnswer(answer: Answer){
-        answers.remove(answer)
-    }
-
-    public fun addAnswer(answer: Answer){
-        answers.add(answer)
-    }
-}
+    @TypeConverters(AnswerConverter::class)
+    var answers: MutableList<Answer> = mutableListOf()
+)

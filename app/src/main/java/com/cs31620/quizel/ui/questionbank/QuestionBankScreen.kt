@@ -1,6 +1,7 @@
 package com.cs31620.quizel.ui.questionbank
 
 import android.annotation.SuppressLint
+import android.app.Application
 import android.util.Log
 import androidx.compose.foundation.Image
 import androidx.compose.foundation.border
@@ -50,6 +51,7 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.shadow
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.graphics.RectangleShape
+import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.tooling.preview.Preview
@@ -60,12 +62,12 @@ import androidx.constraintlayout.compose.Dimension
 import androidx.navigation.NavHostController
 import androidx.navigation.compose.rememberNavController
 import com.cs31620.quizel.R
+import com.cs31620.quizel.datasource.QuizelRepository
 import com.cs31620.quizel.ui.components.ActionCheckDialog
 import com.cs31620.quizel.ui.components.Answer
 import com.cs31620.quizel.ui.components.Question
 import com.cs31620.quizel.ui.components.TopLevelScaffold
-
-
+import java.time.LocalDateTime
 
 
 @SuppressLint("UnusedMaterial3ScaffoldPaddingParameter")
@@ -89,37 +91,47 @@ fun QuestionBankScreen(navController: NavHostController) {
             var showDeleteSelectedDialog by rememberSaveable { mutableStateOf(false) }
             var showDeleteQuestionDialog by rememberSaveable { mutableStateOf(false) }
 
+            val context = LocalContext.current.applicationContext
+            LaunchedEffect(key1 = Unit){
+                val repository = QuizelRepository(context as Application)
+                repository.getAllQuestions().forEach { question ->
+                    Log.d("QuestionBankScreen", "Question: ${question.title}")
+                    Log.d("QuestionBankScreen", "Description: ${question.description}")
+                    Log.d("QuestionBankScreen", "Answers: ${question.answers}")
+                }
+            }
+
             val questions = remember { mutableStateListOf(
                 Pair(
                     Question(
-                        _title = "i'm a title",
-                        _description = "i'm a description",
-                        _answers = mutableListOf(Answer("yieeeeee", false), Answer("cheese", true))
+                        title = "i'm a title",
+                        description = "i'm a description",
+                        answers = mutableListOf(Answer("yieeeeee", false), Answer("cheese", true))
                     ), false
                 ),
-                Pair(Question(_description = "i'm a description"), false),
-                Pair(Question(_description = "i'm a description"), false),
-                Pair(Question(_title = "i'm a title", _description = "i'm a description"), false),
+                Pair(Question(description = "i'm a description"), false),
+                Pair(Question(description = "i'm a description"), false),
+                Pair(Question(title = "i'm a title", description = "i'm a description"), false),
                 Pair(
                     Question(
-                        _description = "i'm a description",
-                        _answers = mutableListOf(Answer("yipee", true), Answer("ydee", false))
+                        description = "i'm a description",
+                        answers = mutableListOf(Answer("yipee", true), Answer("ydee", false))
                     ), false
                 ),
                 Pair(
                     Question(
-                        _title = "i'm a title",
-                        _description = "i'm a description",
-                        _answers = mutableListOf(Answer("yieeeeee", false), Answer("cheese", true))
+                        title = "i'm a title",
+                        description = "i'm a description",
+                        answers = mutableListOf(Answer("yieeeeee", false), Answer("cheese", true))
                     ), false
                 ),
-                Pair(Question(_description = "i'm a description"), false),
-                Pair(Question(_description = "i'm a description"), false),
-                Pair(Question(_title = "i'm a title", _description = "i'm a description"), false),
+                Pair(Question(description = "i'm a description"), false),
+                Pair(Question(description = "i'm a description"), false),
+                Pair(Question(title = "i'm a title", description = "i'm a description"), false),
                 Pair(
                     Question(
-                        _description = "i'm a description",
-                        _answers = mutableListOf(Answer("yipee", true), Answer("ydee", false))
+                        description = "i'm a description",
+                        answers = mutableListOf(Answer("yipee", true), Answer("ydee", false))
                     ), false
                 )
             ) }
@@ -222,6 +234,7 @@ fun QuestionBankScreen(navController: NavHostController) {
                     shape = MaterialTheme.shapes.medium
 
                 ) {
+                    /*
                     LazyColumn(
                         modifier = Modifier
                             .fillMaxSize()
@@ -314,7 +327,7 @@ fun QuestionBankScreen(navController: NavHostController) {
                                 }
                             }
                         }
-                    }
+                    }*/
                 }
             }
 
