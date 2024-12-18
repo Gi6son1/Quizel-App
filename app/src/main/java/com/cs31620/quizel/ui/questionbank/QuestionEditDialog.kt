@@ -388,6 +388,11 @@ fun QuestionEditDialog(
             )
         }
     }
+    else {
+        title = ""
+        description = ""
+        answers.clear()
+    }
 }
 
 fun setCorrectAnswer(answers: SnapshotStateList<Answer>, answerIndex: Int) {

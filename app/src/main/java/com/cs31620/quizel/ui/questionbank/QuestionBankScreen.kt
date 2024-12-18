@@ -45,10 +45,12 @@ import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.livedata.observeAsState
 import androidx.compose.runtime.mutableStateListOf
+import androidx.compose.runtime.mutableStateMapOf
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
 import androidx.compose.runtime.saveable.rememberSaveable
 import androidx.compose.runtime.setValue
+import androidx.compose.runtime.toMutableStateMap
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.shadow
@@ -72,6 +74,7 @@ import com.cs31620.quizel.ui.components.Answer
 import com.cs31620.quizel.ui.components.Question
 import com.cs31620.quizel.ui.components.TopLevelScaffold
 import java.time.LocalDateTime
+import kotlin.collections.remove
 
 @Composable
 fun QuestionBankScreenTopLevel(
@@ -82,7 +85,7 @@ fun QuestionBankScreenTopLevel(
     QuestionBankScreen(
         navController = navController,
         questionList = questionsList,
-        deleteSelectedQuestion = {selectedQuestion ->
+        deleteSelectedQuestion = { selectedQuestion ->
             questionsViewModel.deleteSelectedQuestion(selectedQuestion)
         },
         addNewQuestion = { question ->
@@ -90,6 +93,9 @@ fun QuestionBankScreenTopLevel(
         },
         updateQuestion = { question ->
             questionsViewModel.updateSelectedQuestion(question)
+        },
+        deleteQuestionsById = { selectedQuestionIds ->
+            questionsViewModel.deleteQuestionsById(selectedQuestionIds)
         }
     )
 }
@@ -101,7 +107,8 @@ fun QuestionBankScreen(
     questionList: List<Question>,
     deleteSelectedQuestion: (Question?) -> Unit = {},
     updateQuestion: (Question?) -> Unit = {},
-    addNewQuestion: (Question?) -> Unit = {}
+    addNewQuestion: (Question?) -> Unit = {},
+    deleteQuestionsById: (List<Int>) -> Unit = {}
 ) {
     TopLevelScaffold(
         navController = navController
@@ -115,6 +122,15 @@ fun QuestionBankScreen(
             var showQuestionDialog by rememberSaveable { mutableStateOf(false) }
 
             var selectedQuestion by rememberSaveable { mutableStateOf<Question?>(null) }
+
+            val checkedQuestionStates = remember {
+                val questionIds = questionList.map { it.id }
+                val map = mutableStateMapOf<Int, Boolean>()
+                for (id in questionIds) {
+                    map[id] = false
+                }
+                map
+            }
 
 
             var displaySelectDelete by rememberSaveable { mutableStateOf(false) }
@@ -139,7 +155,8 @@ fun QuestionBankScreen(
                 )
             Button(
                 onClick = {
-                    //TODO FIX THIS if (displaySelectDelete && containsSelectedQuestion(questions)) showDeleteSelectedDialog = true
+                    if (displaySelectDelete && checkedQuestionStates.containsValue(true)) showDeleteSelectedDialog =
+                        true
                     displaySelectDelete = !displaySelectDelete
                 },
                 modifier = Modifier
@@ -227,12 +244,15 @@ fun QuestionBankScreen(
                         verticalArrangement = Arrangement.spacedBy(10.dp),
                         state = state
                     ) {
-                        itemsIndexed(questionList){ index, question ->
+                        items(questionList) { question ->
                             Button(
                                 onClick = {
                                     selectedQuestion = question
                                     showQuestionDialog = true
-                                    Log.d("QuestionBankScreen", "Question ${question.title} selected")
+                                    Log.d(
+                                        "QuestionBankScreen",
+                                        "Question ${question.title} selected"
+                                    )
                                 },
                                 modifier = Modifier
                                     .fillMaxWidth()
@@ -244,7 +264,7 @@ fun QuestionBankScreen(
                             )
                             {
                                 Row {
-                                    if (displaySelectDelete){
+                                    if (displaySelectDelete) {
                                         Surface(
                                             modifier = Modifier
                                                 .fillMaxSize()
@@ -252,23 +272,24 @@ fun QuestionBankScreen(
                                             shape = RectangleShape,
                                             color = MaterialTheme.colorScheme.error
                                         ) {
-                                            /* TODO FIX THIS
                                             Checkbox(
-                                                checked = isSelected,
+                                                checked = checkedQuestionStates[question.id] == true,
                                                 onCheckedChange = {
-                                                        isChecked ->
-                                                    questions[index] = question to isChecked
+                                                    checkedQuestionStates[question.id] = it
                                                 },
-                                                colors = CheckboxDefaults.colors(checkedColor = Color.White,
-                                                    uncheckedColor = Color.White, checkmarkColor = Color.Black)
+                                                colors = CheckboxDefaults.colors(
+                                                    checkedColor = Color.White,
+                                                    uncheckedColor = Color.White,
+                                                    checkmarkColor = Color.Black
+                                                )
                                             )
-                                            */
-
                                         }
                                     } else {
                                         Button(
-                                            onClick = { selectedQuestion = question
-                                                showDeleteQuestionDialog = true },
+                                            onClick = {
+                                                selectedQuestion = question
+                                                showDeleteQuestionDialog = true
+                                            },
                                             modifier = Modifier
                                                 .fillMaxSize()
                                                 .weight(1f),
@@ -330,11 +351,15 @@ fun QuestionBankScreen(
 
                     if (!isOpen) selectedQuestion = null
                 },
-                updateQuestion = { question -> updateQuestion(question)
-                                 Log.d("QuestionBankScreen", "Question ${question?.description} updated")},
-                addNewQuestion = { question -> addNewQuestion(question)
-                Log.d("QuestionBankScreen", "Question ${question?.description} added")}
-                )
+                updateQuestion = { question ->
+                    updateQuestion(question)
+                    Log.d("QuestionBankScreen", "Question ${question?.description} updated")
+                },
+                addNewQuestion = { question ->
+                    addNewQuestion(question)
+                    Log.d("QuestionBankScreen", "Question ${question?.description} added")
+                }
+            )
 
             ActionCheckDialog(dialogIsOpen = showDeleteSelectedDialog,
                 dialogOpen = { isOpen -> showDeleteSelectedDialog = isOpen },
@@ -348,7 +373,25 @@ fun QuestionBankScreen(
                     }
                 },
                 actionDialogMessage = "Are you sure you want to delete the selected questions?",
-                performMainAction = { /** TODO deletee questions **/ }
+                performMainAction = { deleteSelectedQuestions ->
+                    if (deleteSelectedQuestions) {
+                        val selectedQuestionIds =
+                            checkedQuestionStates.filter { it.value }.map { it.key }
+                                .also { keysToRemove ->
+                                    checkedQuestionStates.apply {
+                                        keysToRemove.forEach { key ->
+                                            remove(key)
+                                            Log.d("QuestionBankScreen", "Question $key removed from original graph")
+                                        }
+                                    }
+                                }
+                        deleteQuestionsById(selectedQuestionIds)
+                        Log.d(
+                            "QuestionBankScreen",
+                            "Questions with ids $selectedQuestionIds deleted"
+                        )
+                    }
+                }
             )
 
             ActionCheckDialog(dialogIsOpen = showDeleteQuestionDialog,
@@ -366,7 +409,10 @@ fun QuestionBankScreen(
                 performMainAction = { deleteQuestion ->
                     if (deleteQuestion) {
                         deleteSelectedQuestion(selectedQuestion)
-                        Log.d("QuestionBankScreen", "Question ${selectedQuestion?.description} deleted")
+                        Log.d(
+                            "QuestionBankScreen",
+                            "Question ${selectedQuestion?.description} deleted"
+                        )
                     }
                 }
             )
@@ -378,11 +424,4 @@ fun QuestionBankScreen(
 @Composable
 fun QuestionBankScreenPreview() {
     QuestionBankScreen(navController = rememberNavController(), emptyList())
-}
-
-fun containsSelectedQuestion(questions: MutableList<Pair<Question, Boolean>>): Boolean {
-    questions.forEach { question ->
-        if (question.second ) return true
-    }
-    return false
 }

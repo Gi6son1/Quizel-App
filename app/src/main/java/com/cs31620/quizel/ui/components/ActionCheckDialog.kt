@@ -32,7 +32,7 @@ fun ActionCheckDialog(
     dialogOpen: (Boolean) -> Unit = {},
     actionDialogMessage: String,
     mainActionButton: @Composable (onClick: () -> Unit, modifier: Modifier) -> Unit,
-    performMainAction: (Boolean) -> Unit = {},
+    performMainAction: (Boolean) -> Unit = {false},
 ) {
     if (dialogIsOpen) {
         Dialog(

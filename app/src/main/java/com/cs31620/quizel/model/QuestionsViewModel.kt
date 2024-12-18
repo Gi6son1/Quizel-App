@@ -8,7 +8,6 @@ import androidx.lifecycle.viewModelScope
 import com.cs31620.quizel.datasource.QuizelRepository
 import com.cs31620.quizel.ui.components.Question
 import kotlinx.coroutines.Dispatchers
-import kotlinx.coroutines.flow.flow
 import kotlinx.coroutines.launch
 
 class QuestionsViewModel(application: Application) : AndroidViewModel(application) {
@@ -38,6 +37,12 @@ class QuestionsViewModel(application: Application) : AndroidViewModel(applicatio
             if (question != null) {
                 repository.updateQuestion(question)
             }
+        }
+    }
+
+    fun deleteQuestionsById(questionIds: List<Int>) {
+        viewModelScope.launch(Dispatchers.IO) {
+            repository.deleteQuestionsByIds(questionIds)
         }
     }
 }
