@@ -23,6 +23,16 @@ import com.cs31620.quizel.ui.questionbank.QuestionBankScreen
 import com.cs31620.quizel.ui.theme.QuizelTheme
 
 
+/**
+ * THIS PAGE RANDOMISES THE QUESTION IDS
+ *
+ * THE IDS ARE FED INTO THE TESTQUESTIONS SCREEN, FIRST ONE IS SHOWN
+ *
+ * AFTER QUESTION, THE SCREEN IS CALLED AGAIN WITH THE SAME LIST EXCEPT THE HEAD
+ * SCORE IS RECORDED SOMEWHERE WHILE THIS IS HAPPENING
+ */
+
+
 @Composable
 fun TakeQuizScreenTopLevel(
     navController: NavHostController,

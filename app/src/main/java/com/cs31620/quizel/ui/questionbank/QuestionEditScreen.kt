@@ -53,6 +53,7 @@ import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import androidx.navigation.NavController
+import androidx.navigation.NavGraph.Companion.findStartDestination
 import androidx.navigation.NavHostController
 import androidx.navigation.compose.rememberNavController
 import com.cs31620.quizel.R
@@ -62,6 +63,7 @@ import com.cs31620.quizel.ui.components.Answer
 import com.cs31620.quizel.ui.components.InvalidInformationDialog
 import com.cs31620.quizel.ui.components.Question
 import com.cs31620.quizel.ui.components.TopLevelBackgroundScaffold
+import com.cs31620.quizel.ui.navigation.Screen
 
 @Composable
 fun QuestionEditScreenTopLevel(
@@ -121,7 +123,8 @@ fun QuestionEditScreen(
         Column(
             modifier = Modifier
                 .fillMaxSize()
-                .padding(start = 10.dp, end = 10.dp, bottom = 10.dp, top = 120.dp),
+                .padding(innerPadding)
+                .padding(start = 10.dp, end = 10.dp, bottom = 20.dp, top = 100.dp),
             verticalArrangement = Arrangement.spacedBy(8.dp)
         ) {
             OutlinedTextField(
@@ -172,6 +175,7 @@ fun QuestionEditScreen(
                     .align(Alignment.CenterHorizontally)
                     .fillMaxWidth()
                     .weight(8f)
+                    .padding(bottom = 10.dp)
                     .shadow(5.dp, MaterialTheme.shapes.medium),
                 color = Color.LightGray,
                 shape = MaterialTheme.shapes.medium
@@ -342,7 +346,10 @@ fun QuestionEditScreen(
                                         )
                                     )
                                 }
-                                navController.popBackStack()
+                                navController.navigate(Screen.QuestionBank.route) {
+                                    popUpTo(navController.graph.findStartDestination().id)
+                                    launchSingleTop = true
+                                }
                                 return@Button
                             }
                         }
@@ -385,7 +392,10 @@ fun QuestionEditScreen(
                 }
             },
             actionDialogMessage = "Are you sure you want to discard any changes?",
-            performMainAction = { navController.popBackStack() }
+            performMainAction = { navController.navigate(Screen.QuestionBank.route) {
+                popUpTo(navController.graph.findStartDestination().id)
+                launchSingleTop = true
+            } }
         )
 
         InvalidInformationDialog(

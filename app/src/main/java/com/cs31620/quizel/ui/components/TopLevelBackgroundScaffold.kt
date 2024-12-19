@@ -21,7 +21,6 @@ import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import com.cs31620.quizel.R
 
-@SuppressLint("UnusedMaterial3ScaffoldPaddingParameter")
 @Composable
 fun TopLevelBackgroundScaffold(
     pageContent : @Composable (innerPadding : PaddingValues) -> Unit = {}
@@ -45,8 +44,7 @@ fun AppBackground(innerPadding: PaddingValues){
         Image(
             painter = painterResource(id = R.drawable.app_background),
             contentDescription = "Background",
-            contentScale = ContentScale.FillBounds,
-            modifier = Modifier.matchParentSize()
+            contentScale = ContentScale.Crop,
         )
     }
     Text(
