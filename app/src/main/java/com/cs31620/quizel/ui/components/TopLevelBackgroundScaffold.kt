@@ -28,7 +28,7 @@ fun TopLevelBackgroundScaffold(
 ) {
     Scaffold(
         content = { innerPadding ->
-            AppBackground()
+            AppBackground(innerPadding)
             pageContent(innerPadding) }
     )
 }
@@ -40,7 +40,7 @@ fun TopLevelBackgroundScaffoldPreview() {
 }
 
 @Composable
-fun AppBackground(){
+fun AppBackground(innerPadding: PaddingValues){
     Box(modifier = Modifier.fillMaxSize()){
         Image(
             painter = painterResource(id = R.drawable.app_background),
@@ -53,7 +53,7 @@ fun AppBackground(){
         modifier = Modifier
             .fillMaxWidth()
             .wrapContentWidth()
-            .padding(top = 20.dp),
+            .padding(innerPadding),
         text = stringResource(R.string.app_name),
         style = MaterialTheme.typography.titleLarge,
         fontSize = 100.sp,
