@@ -53,7 +53,7 @@ fun AppBackground(){
         modifier = Modifier
             .fillMaxWidth()
             .wrapContentWidth()
-            .padding(top = 30.dp),
+            .padding(top = 20.dp),
         text = stringResource(R.string.app_name),
         style = MaterialTheme.typography.titleLarge,
         fontSize = 100.sp,

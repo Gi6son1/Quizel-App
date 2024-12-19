@@ -141,7 +141,7 @@ fun QuestionBankScreen(
                     .constrainAs(selectDelete) {
                         top.linkTo(parent.top, margin = 25.dp)
                         end.linkTo(parent.end, margin = 10.dp)
-                        bottom.linkTo(questionBankArea.top, margin = 20.dp)
+                        bottom.linkTo(questionBankArea.top, margin = 15.dp)
                     }
                     .height(50.dp)
                     .shadow(10.dp, MaterialTheme.shapes.medium),

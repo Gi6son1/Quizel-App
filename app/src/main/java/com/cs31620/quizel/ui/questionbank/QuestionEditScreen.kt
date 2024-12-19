@@ -121,7 +121,7 @@ fun QuestionEditScreen(
         Column(
             modifier = Modifier
                 .fillMaxSize()
-                .padding(start = 10.dp, end = 10.dp, bottom = 10.dp, top = 100.dp),
+                .padding(start = 10.dp, end = 10.dp, bottom = 10.dp, top = 120.dp),
             verticalArrangement = Arrangement.spacedBy(8.dp)
         ) {
             OutlinedTextField(
@@ -215,7 +215,7 @@ fun QuestionEditScreen(
                             Text(text = "Answer", fontSize = 22.sp)
                         }
                     }
-                    if (answers.size == 0) {
+                    if (answers.isEmpty()) {
                         Box(
                             modifier = Modifier
                                 .fillMaxSize()
