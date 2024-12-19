@@ -90,12 +90,6 @@ fun QuestionBankScreenTopLevel(
         deleteSelectedQuestion = { selectedQuestion ->
             questionsViewModel.deleteSelectedQuestion(selectedQuestion)
         },
-        addNewQuestion = { question ->
-            questionsViewModel.addNewQuestion(question)
-        },
-        updateQuestion = { question ->
-            questionsViewModel.updateSelectedQuestion(question)
-        },
         deleteQuestionsById = { selectedQuestionIds ->
             questionsViewModel.deleteQuestionsById(selectedQuestionIds)
         }
@@ -108,8 +102,6 @@ fun QuestionBankScreen(
     navController: NavHostController,
     questionList: List<Question>,
     deleteSelectedQuestion: (Question?) -> Unit = {},
-    updateQuestion: (Question?) -> Unit = {},
-    addNewQuestion: (Question?) -> Unit = {},
     deleteQuestionsById: (List<Int>) -> Unit = {}
 ) {
     TopLevelNavigationScaffold(
@@ -121,7 +113,6 @@ fun QuestionBankScreen(
                 .fillMaxSize()
         ) {
             val (selectDelete, questionBankArea) = createRefs()
-            var showQuestionDialog by rememberSaveable { mutableStateOf(false) }
 
             var selectedQuestion by rememberSaveable { mutableStateOf<Question?>(null) }
 
@@ -133,7 +124,6 @@ fun QuestionBankScreen(
                 }
                 map
             }
-
 
             var displaySelectDelete by rememberSaveable { mutableStateOf(false) }
             var showDeleteSelectedDialog by rememberSaveable { mutableStateOf(false) }
@@ -330,24 +320,6 @@ fun QuestionBankScreen(
                     }
                 }
             }
-
-            QuestionEditDialog(
-                question = selectedQuestion,
-                dialogIsOpen = showQuestionDialog,
-                dialogOpen = { isOpen ->
-                    showQuestionDialog = isOpen
-
-                    if (!isOpen) selectedQuestion = null
-                },
-                updateQuestion = { question ->
-                    updateQuestion(question)
-                    Log.d("QuestionBankScreen", "Question ${question?.description} updated")
-                },
-                addNewQuestion = { question ->
-                    addNewQuestion(question)
-                    Log.d("QuestionBankScreen", "Question ${question?.description} added")
-                }
-            )
 
             ActionCheckDialog(dialogIsOpen = showDeleteSelectedDialog,
                 dialogOpen = { isOpen -> showDeleteSelectedDialog = isOpen },
