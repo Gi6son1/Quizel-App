@@ -1,6 +1,7 @@
 package com.cs31620.quizel.ui.takequiz
 
 import android.annotation.SuppressLint
+import android.util.Log
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.padding
 import androidx.compose.material3.Button
@@ -57,7 +58,22 @@ fun TakeQuizScreen(navController: NavHostController, questionList: List<Question
         ) {
             Text(text = "Take Quiz Screen", modifier = Modifier.padding(start = 8.dp))
             Button(
-                onClick = { navController.navigate(Screen.TestQuestions.route) },
+                onClick = {
+                    Log.d("TakeQuizScreen", "Question List: $questionList")
+
+                    var randomisedList = questionList.shuffled()
+                    var quizDataString = quizDataToString(
+                        0,
+                        randomisedList.size,
+                        randomisedList.map { it.id.toString() }
+                    )
+                    Log.d("TakeQuizScreen", "Quiz Data String: $quizDataString")
+
+                    val destination = "${Screen.TestQuestions.basePath}${quizDataString}"
+                    navController.navigate(destination) {
+                        launchSingleTop = true
+                    }
+                },
                 modifier = Modifier.padding(start = 8.dp)
             ) { Text(text = "Begin Quiz") }
         }

@@ -186,6 +186,7 @@ fun QuestionBankScreen(
             ) {
                 Button(
                     onClick = {
+                        displaySelectDelete = false
                         val destination = "${Screen.QuestionEdit.basePath}${0}"
                         navController.navigate(destination){
                             launchSingleTop = true
@@ -227,6 +228,7 @@ fun QuestionBankScreen(
                         items(questionList) { question ->
                             Button(
                                 onClick = {
+                                    displaySelectDelete = false
                                     val destination = "${Screen.QuestionEdit.basePath}${question.id}"
                                     navController.navigate(destination){
                                         launchSingleTop = true

@@ -6,7 +6,7 @@ sealed class Screen(
 ) {
     data object QuestionBank : Screen("question_bank")
     data object TakeQuiz : Screen("take_quiz")
-    data object TestQuestions : Screen("test_questions")
+    data object TestQuestions : Screen("test_questions", "quizData")
     data object QuestionEdit : Screen("question_edit", "questionId")
 
     fun routePath() =
