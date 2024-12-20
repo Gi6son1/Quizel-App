@@ -19,7 +19,7 @@ import androidx.navigation.compose.rememberNavController
 @Composable
 fun TopLevelNavigationScaffold(
     navController: NavHostController,
-    pageContent : @Composable (innerPadding : PaddingValues) -> Unit = {}
+    pageContent: @Composable (innerPadding: PaddingValues) -> Unit = {}
 ) {
     Scaffold(
         bottomBar = {
@@ -34,8 +34,10 @@ fun TopLevelNavigationScaffold(
             }
         },
         content = { innerPadding ->
-            TopLevelBackgroundScaffold()
-            pageContent(innerPadding) }
+            TopLevelBackgroundScaffold {
+                pageContent(innerPadding)
+            }
+        }
     )
 }
 

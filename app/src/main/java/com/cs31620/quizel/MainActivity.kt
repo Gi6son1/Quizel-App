@@ -27,6 +27,7 @@ import androidx.compose.runtime.getValue
 import androidx.compose.runtime.setValue
 import androidx.compose.runtime.remember
 import androidx.compose.runtime.mutableIntStateOf
+import com.cs31620.quizel.ui.components.TopLevelBackgroundScaffold
 
 class MainActivity : ComponentActivity() {
     @SuppressLint("UnusedMaterial3ScaffoldPaddingParameter")
@@ -35,7 +36,9 @@ class MainActivity : ComponentActivity() {
         enableEdgeToEdge()
         setContent {
             QuizelTheme(dynamicColor = false) {
-                BuildNavigationGraph()
+                TopLevelBackgroundScaffold{
+                    BuildNavigationGraph()
+                }
             }
         }
     }

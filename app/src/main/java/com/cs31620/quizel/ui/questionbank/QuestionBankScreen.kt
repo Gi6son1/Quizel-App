@@ -96,7 +96,6 @@ fun QuestionBankScreenTopLevel(
     )
 }
 
-@SuppressLint("UnusedMaterial3ScaffoldPaddingParameter")
 @Composable
 fun QuestionBankScreen(
     navController: NavHostController,
