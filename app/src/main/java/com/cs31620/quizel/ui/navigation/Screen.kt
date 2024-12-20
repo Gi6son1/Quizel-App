@@ -8,6 +8,7 @@ sealed class Screen(
     data object TakeQuiz : Screen("take_quiz")
     data object TestQuestions : Screen("test_questions", "quizData")
     data object QuestionEdit : Screen("question_edit", "questionId")
+    data object TestQuesionsNoRecursion : Screen("test_questions_no_recursion", "quizData")
 
     fun routePath() =
         if (argument.isNotBlank())

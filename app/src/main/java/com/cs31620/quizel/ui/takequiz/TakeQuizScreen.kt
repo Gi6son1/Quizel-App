@@ -36,17 +36,14 @@ import com.cs31620.quizel.ui.theme.QuizelTheme
 
 @Composable
 fun TakeQuizScreenTopLevel(
-    navController: NavHostController,
-    questionsViewModel: QuestionsViewModel
+    navController: NavHostController
 ) {
-    val questionsList by questionsViewModel.questionsList.observeAsState(listOf())
-    TakeQuizScreen(navController = navController,
-        questionList = questionsList)
+    TakeQuizScreen(navController = navController)
 }
 
 @SuppressLint("UnusedMaterial3ScaffoldPaddingParameter")
 @Composable
-fun TakeQuizScreen(navController: NavHostController, questionList: List<Question>){
+fun TakeQuizScreen(navController: NavHostController){
     TopLevelNavigationScaffold(
         navController = navController
     ) { innerPadding ->
@@ -59,17 +56,7 @@ fun TakeQuizScreen(navController: NavHostController, questionList: List<Question
             Text(text = "Take Quiz Screen", modifier = Modifier.padding(start = 8.dp))
             Button(
                 onClick = {
-                    Log.d("TakeQuizScreen", "Question List: $questionList")
-
-                    var randomisedList = questionList.shuffled()
-                    var quizDataString = quizDataToString(
-                        0,
-                        randomisedList.size,
-                        randomisedList.map { it.id.toString() }
-                    )
-
-                    val destination = "${Screen.TestQuestions.basePath}${quizDataString}"
-                    navController.navigate(destination) {
+                    navController.navigate(Screen.TestQuesionsNoRecursion.route) {
                         launchSingleTop = true
                     }
                 },
@@ -82,5 +69,5 @@ fun TakeQuizScreen(navController: NavHostController, questionList: List<Question
 @Preview
 @Composable
 fun TakeQuizScreenPreview(){
-    QuizelTheme { TakeQuizScreen(navController = rememberNavController(), questionList = emptyList()) }
+    QuizelTheme { TakeQuizScreen(navController = rememberNavController()) }
 }

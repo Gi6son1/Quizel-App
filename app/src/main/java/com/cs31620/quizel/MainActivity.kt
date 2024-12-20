@@ -21,13 +21,14 @@ import com.cs31620.quizel.ui.questionbank.QuestionBankScreenTopLevel
 import com.cs31620.quizel.ui.questionbank.QuestionEditScreenTopLevel
 import com.cs31620.quizel.ui.takequiz.TakeQuizScreen
 import com.cs31620.quizel.ui.takequiz.TakeQuizScreenTopLevel
-import com.cs31620.quizel.ui.takequiz.TestQuestionsScreenTopLevel
 import com.cs31620.quizel.ui.theme.QuizelTheme
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.setValue
 import androidx.compose.runtime.remember
 import androidx.compose.runtime.mutableIntStateOf
 import com.cs31620.quizel.ui.components.TopLevelBackgroundScaffold
+import com.cs31620.quizel.ui.takequiz.TestQuestionsNoRecursionScreen
+import com.cs31620.quizel.ui.takequiz.TestQuestionsScreenNoRecursionTopLevel
 
 class MainActivity : ComponentActivity() {
     @SuppressLint("UnusedMaterial3ScaffoldPaddingParameter")
@@ -36,9 +37,7 @@ class MainActivity : ComponentActivity() {
         enableEdgeToEdge()
         setContent {
             QuizelTheme(dynamicColor = false) {
-                TopLevelBackgroundScaffold{
-                    BuildNavigationGraph()
-                }
+                BuildNavigationGraph()
             }
         }
     }
@@ -60,21 +59,7 @@ private fun BuildNavigationGraph(
             QuestionBankScreenTopLevel(navController, questionsViewModel)
         }
         composable(Screen.TakeQuiz.route) {
-            TakeQuizScreenTopLevel(navController, questionsViewModel)
-        }
-        composable(Screen.TestQuestions.route) {
-            TestQuestionsScreenTopLevel(navController, questionsViewModel, quizDataAsString)
-        }
-        composable(
-            Screen.TestQuestions.routePath(),
-            arguments = listOf(navArgument(Screen.TestQuestions.argument){type = NavType.StringType})
-        ) { backStackEntry ->
-            backStackEntry.arguments?.let {
-                if (it.containsKey(Screen.TestQuestions.argument)){
-                    quizDataAsString = it.getString(Screen.TestQuestions.argument).toString()
-                }
-                TestQuestionsScreenTopLevel(navController, questionsViewModel, quizDataAsString)
-            }
+            TakeQuizScreenTopLevel(navController)
         }
         composable(Screen.QuestionEdit.route) {
             QuestionEditScreenTopLevel(navController, questionsViewModel, selectedQuestionId)
@@ -90,6 +75,10 @@ private fun BuildNavigationGraph(
                 QuestionEditScreenTopLevel(navController, questionsViewModel, selectedQuestionId)
             }
         }
+        composable(Screen.TestQuesionsNoRecursion.route) {
+            TestQuestionsScreenNoRecursionTopLevel(navController, questionsViewModel)
+        }
+
     }
 }
 

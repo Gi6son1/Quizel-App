@@ -1,7 +1,5 @@
 package com.cs31620.quizel.ui.takequiz
 
-import android.annotation.SuppressLint
-import android.util.Log
 import androidx.compose.foundation.border
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Column
@@ -13,28 +11,23 @@ import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.width
 import androidx.compose.foundation.layout.wrapContentSize
 import androidx.compose.foundation.lazy.grid.GridCells
-import androidx.compose.foundation.lazy.grid.LazyHorizontalGrid
 import androidx.compose.foundation.lazy.grid.LazyVerticalGrid
 import androidx.compose.foundation.lazy.grid.items
 import androidx.compose.material.icons.Icons
-import androidx.compose.material.icons.automirrored.filled.ArrowRight
 import androidx.compose.material.icons.automirrored.filled.Send
-import androidx.compose.material.icons.filled.Send
 import androidx.compose.material3.Button
 import androidx.compose.material3.ButtonDefaults
 import androidx.compose.material3.HorizontalDivider
 import androidx.compose.material3.Icon
 import androidx.compose.material3.LinearProgressIndicator
 import androidx.compose.material3.MaterialTheme
-import androidx.compose.material3.Scaffold
 import androidx.compose.material3.Surface
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.livedata.observeAsState
 import androidx.compose.runtime.mutableStateOf
-import androidx.compose.runtime.remember
-import androidx.compose.runtime.getValue
+import androidx.compose.runtime.mutableIntStateOf
 import androidx.compose.runtime.saveable.rememberSaveable
 import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
@@ -45,67 +38,48 @@ import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import androidx.navigation.NavHostController
-import androidx.navigation.compose.rememberNavController
 import com.cs31620.quizel.model.QuestionsViewModel
 import com.cs31620.quizel.ui.components.ActionCheckDialog
 import com.cs31620.quizel.ui.components.Answer
 import com.cs31620.quizel.ui.components.Question
 import com.cs31620.quizel.ui.components.TopLevelBackgroundScaffold
-import com.cs31620.quizel.ui.navigation.Screen
 
 @Composable
-fun TestQuestionsScreenTopLevel(
+fun TestQuestionsScreenNoRecursionTopLevel(
     navController: NavHostController,
-    questionsViewModel: QuestionsViewModel,
-    quizDataAsList: String?
+    questionsViewModel: QuestionsViewModel
 ) {
-    if (quizDataAsList == null){
-        Log.e("TestQuestionsScreenTopLevel", "Quiz data is null")
-        navController.popBackStack()
-        return
-    }
-    val (currentScore, totalQuestions, questionList) = stringToQuizData(quizDataAsList)
+    val questionList by questionsViewModel.questionsList.observeAsState(listOf())
 
-    val listHead by questionsViewModel.getQuestionById(questionList[0].toInt()).observeAsState(Question())
-
-
-    TestQuestionsScreen(
-        remainingQuestionList = questionList.drop(1),
-        currentQuestion = listHead,
-        currentScore = currentScore,
-        totalQuestions = totalQuestions,
-        navigateToNextQuestion = { dataString ->
-            val destination = "${Screen.TestQuestions.basePath}${dataString}"
-            navController.navigate(destination){
-                launchSingleTop = true
-            }
-        }
+    TestQuestionsNoRecursionScreen(
+        questionList = questionList.shuffled()
     )
 }
 
 @Composable
-fun TestQuestionsScreen(
-    remainingQuestionList: List<String>,
-    currentQuestion: Question?,
-    currentScore: Int,
-    totalQuestions: Int,
-    navigateToNextQuestion: (String) -> Unit = {},
+fun TestQuestionsNoRecursionScreen(
+    questionList: List<Question>
 ) {
     TopLevelBackgroundScaffold { innerPadding ->
-        if (currentQuestion == null){
-            Log.e("TestQuestionsScreen", "Current question is null")
-        }
 
-        if (currentQuestion == null){
-            navigateToNextQuestion(quizDataToString(currentScore, totalQuestions, remainingQuestionList))
-        }
+        var currentQuestion by rememberSaveable { mutableStateOf(questionList.first()) }
+        var currentQuestionNumber by rememberSaveable { mutableIntStateOf(1) }
+        var currentScore by rememberSaveable { mutableIntStateOf(0) }
+        val totalQuestions = questionList.size
 
-
-        var selectedAnswer by rememberSaveable { mutableStateOf<Answer?>(null) }
+        var selectedAnswer by rememberSaveable (currentQuestion) { mutableStateOf<Answer?>(null) }
         var showSkipDialog by rememberSaveable { mutableStateOf(false) }
 
         val shuffledAnswers = rememberSaveable (currentQuestion) {
-            currentQuestion?.answers?.shuffled() ?: emptyList()
+            currentQuestion.answers.shuffled()
+        }
+
+        fun nextQuestion(gotCorrect: Boolean = false) {
+            currentScore = if (gotCorrect) currentScore + 1 else currentScore
+            currentQuestion = questionList[currentQuestionNumber]
+            currentQuestionNumber++
+            selectedAnswer = null
+            showSkipDialog = false
         }
 
         Column(
@@ -120,7 +94,7 @@ fun TestQuestionsScreen(
                 modifier = Modifier
                     .weight(0.25f)
                     .fillMaxWidth(),
-                progress = {1 - remainingQuestionList.size.toFloat()/totalQuestions}
+                progress = {currentQuestionNumber/totalQuestions.toFloat()}
             )
             Surface(
                 modifier = Modifier
@@ -136,9 +110,9 @@ fun TestQuestionsScreen(
                 ) {
                     Text(
                         modifier = Modifier.padding(bottom = 10.dp),
-                        text = if (currentQuestion?.title.isNullOrBlank())
+                        text = if (currentQuestion.title.isBlank())
                         {
-                            "Question ${totalQuestions - remainingQuestionList.size}"
+                            "Question $currentQuestionNumber"
 
                         } else {
                             currentQuestion.title
@@ -146,7 +120,7 @@ fun TestQuestionsScreen(
                     )
                     HorizontalDivider()
                     Text(
-                        text = currentQuestion!!.description
+                        text = currentQuestion.description
                     )
                 }
             }
@@ -203,13 +177,11 @@ fun TestQuestionsScreen(
             if (selectedAnswer != null) {
                 Button(
                     onClick = {
-                        val newScore = if (selectedAnswer!!.isCorrect) currentScore + 1 else currentScore
-                        navigateToNextQuestion(
-                            quizDataToString(
-                                newScore,
-                                totalQuestions,
-                                remainingQuestionList)
-                        )
+                        if (selectedAnswer!!.isCorrect){
+                            nextQuestion(true)
+                        } else {
+                            nextQuestion()
+                        }
                     },
                     modifier = Modifier
                         .fillMaxWidth()
@@ -266,7 +238,7 @@ fun TestQuestionsScreen(
             actionDialogMessage = "Are you sure you want to skip? This will be counted as an incorrect answer",
             performMainAction = { skipQuestion ->
                 if (skipQuestion) {
-                    navigateToNextQuestion(quizDataToString(currentScore, totalQuestions, remainingQuestionList))
+                    nextQuestion()
                 }
             }
         )
@@ -275,7 +247,7 @@ fun TestQuestionsScreen(
 
 @Preview
 @Composable
-fun TestQuestionsScreenPreview() {
+fun TestQuestionsWithoutRecursionScreenPreview() {
     val exampleQuestionWith10Answers = Question(
         title = "France Capital City",
         description = "Select the correct capital of France.",
@@ -291,34 +263,7 @@ fun TestQuestionsScreenPreview() {
             Answer("Dublin", false),
         )
     )
-    TestQuestionsScreen(
-        listOf("1", "2", "3", "4", "5", "6", "7", "8"),
-        currentQuestion = exampleQuestionWith10Answers,
-        currentScore = 2,
-        totalQuestions = 10,
+    TestQuestionsNoRecursionScreen(
+        questionList = listOf(exampleQuestionWith10Answers)
     )
-}
-
-fun quizDataToString(
-    currentScore: Int,
-    totalQuestions: Int,
-    questionList: List<String>
-    ): String {
-    val builder = StringBuilder(3)
-        .append(currentScore)
-        .append(",")
-        .append(totalQuestions)
-        .append(",")
-
-    for(s in questionList){
-        builder.append(s)
-        builder.append(",")
-    }
-
-    return builder.substring(0, builder.length-1).toString()
-}
-
-fun stringToQuizData(dataString: String) : Triple<Int, Int, List<String>>{
-    val dataList = dataString.split(",")
-    return Triple(dataList[0].toInt(), dataList[1].toInt(), dataList.drop(2))
 }
