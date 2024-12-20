@@ -97,7 +97,7 @@ fun QuestionBankScreenTopLevel(
 }
 
 @Composable
-fun QuestionBankScreen(
+private fun QuestionBankScreen(
     navController: NavHostController,
     questionList: List<Question>,
     deleteSelectedQuestion: (Question?) -> Unit = {},

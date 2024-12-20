@@ -89,7 +89,7 @@ fun QuestionEditScreenTopLevel(
 
 @SuppressLint("UnusedMaterial3ScaffoldPaddingParameter")
 @Composable
-fun QuestionEditScreen(
+private fun QuestionEditScreen(
     question: Question?,
     navController: NavHostController,
     addNewQuestion: (Question?) -> Unit = {},

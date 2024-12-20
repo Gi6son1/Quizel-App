@@ -1,46 +1,46 @@
 package com.cs31620.quizel.ui.takequiz
 
 import android.annotation.SuppressLint
-import android.util.Log
+import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.padding
 import androidx.compose.material3.Button
 import androidx.compose.material3.Surface
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
-import androidx.compose.runtime.getValue
-import androidx.compose.runtime.livedata.observeAsState
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.navigation.NavHostController
 import androidx.navigation.compose.rememberNavController
-import com.cs31620.quizel.model.QuestionsViewModel
-import com.cs31620.quizel.ui.components.Question
+import com.cs31620.quizel.ui.components.TopLevelBackgroundScaffold
 import com.cs31620.quizel.ui.components.TopLevelNavigationScaffold
 import com.cs31620.quizel.ui.navigation.Screen
 import com.cs31620.quizel.ui.theme.QuizelTheme
 
 @Composable
-fun TakeQuizScreenTopLevel(
-    navController: NavHostController
+fun QuizResultsScreenTopLevel(
+    navController: NavHostController,
+    quizResults: String
 ) {
-    TakeQuizScreen(navController = navController)
+    QuizResultsScreen(navController = navController, quizResults = quizResults)
 }
 
+@SuppressLint("UnusedMaterial3ScaffoldPaddingParameter")
 @Composable
-private fun TakeQuizScreen(navController: NavHostController){
-    TopLevelNavigationScaffold(
-        navController = navController
-    ) { innerPadding ->
-        Surface(
+private fun QuizResultsScreen(
+    navController: NavHostController,
+    quizResults: String = ""
+) {
+    TopLevelBackgroundScaffold { innerPadding ->
+        Column(
             modifier = Modifier
                 .fillMaxSize()
-                .padding(innerPadding),
-            color = Color.Transparent
+                .padding(innerPadding)
         ) {
-            Text(text = "Take Quiz Screen", modifier = Modifier.padding(start = 8.dp))
+            Text(text = "QuizResultsScreen", modifier = Modifier.padding(start = 8.dp))
+            Text(text = quizResults)
             Button(
                 onClick = {
                     navController.navigate(Screen.TestQuestions.route) {
@@ -55,6 +55,6 @@ private fun TakeQuizScreen(navController: NavHostController){
 
 @Preview
 @Composable
-private fun TakeQuizScreenPreview(){
-    QuizelTheme { TakeQuizScreen(navController = rememberNavController()) }
+private fun TakeQuizScreenPreview() {
+    QuizelTheme { QuizResultsScreen(navController = rememberNavController()) }
 }

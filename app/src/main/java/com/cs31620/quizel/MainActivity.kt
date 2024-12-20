@@ -15,20 +15,17 @@ import androidx.navigation.compose.composable
 import androidx.navigation.compose.rememberNavController
 import androidx.navigation.navArgument
 import com.cs31620.quizel.model.QuestionsViewModel
-import com.cs31620.quizel.ui.questionbank.QuestionBankScreen
 import com.cs31620.quizel.ui.navigation.Screen
 import com.cs31620.quizel.ui.questionbank.QuestionBankScreenTopLevel
 import com.cs31620.quizel.ui.questionbank.QuestionEditScreenTopLevel
-import com.cs31620.quizel.ui.takequiz.TakeQuizScreen
 import com.cs31620.quizel.ui.takequiz.TakeQuizScreenTopLevel
 import com.cs31620.quizel.ui.theme.QuizelTheme
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.setValue
 import androidx.compose.runtime.remember
 import androidx.compose.runtime.mutableIntStateOf
-import com.cs31620.quizel.ui.components.TopLevelBackgroundScaffold
-import com.cs31620.quizel.ui.takequiz.TestQuestionsNoRecursionScreen
-import com.cs31620.quizel.ui.takequiz.TestQuestionsScreenNoRecursionTopLevel
+import com.cs31620.quizel.ui.takequiz.QuizResultsScreenTopLevel
+import com.cs31620.quizel.ui.takequiz.TestQuestionsScreenTopLevel
 
 class MainActivity : ComponentActivity() {
     @SuppressLint("UnusedMaterial3ScaffoldPaddingParameter")
@@ -49,7 +46,7 @@ private fun BuildNavigationGraph(
 ) {
     val navController = rememberNavController()
     var selectedQuestionId by remember { mutableIntStateOf(0) }
-    var quizDataAsString by remember { mutableStateOf("") }
+    var quizScore by remember { mutableStateOf("-1") }
 
     NavHost(
         navController = navController,
@@ -75,8 +72,22 @@ private fun BuildNavigationGraph(
                 QuestionEditScreenTopLevel(navController, questionsViewModel, selectedQuestionId)
             }
         }
-        composable(Screen.TestQuesionsNoRecursion.route) {
-            TestQuestionsScreenNoRecursionTopLevel(navController, questionsViewModel)
+        composable(Screen.TestQuestions.route) {
+            TestQuestionsScreenTopLevel(navController, questionsViewModel)
+        }
+        composable(Screen.QuizResults.route) {
+            QuizResultsScreenTopLevel(navController, quizScore)
+        }
+        composable(
+            Screen.QuizResults.routePath(),
+            arguments = listOf(navArgument(Screen.QuizResults.argument){type = NavType.StringType})
+        ) { backStackEntry ->
+            backStackEntry.arguments?.let {
+                if (it.containsKey(Screen.QuizResults.argument)){
+                    quizScore = it.getString(Screen.QuizResults.argument)?: "-1"
+                }
+                QuizResultsScreenTopLevel(navController, quizScore)
+            }
         }
 
     }

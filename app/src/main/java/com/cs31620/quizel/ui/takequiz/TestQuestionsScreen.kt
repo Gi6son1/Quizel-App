@@ -1,5 +1,6 @@
 package com.cs31620.quizel.ui.takequiz
 
+import android.util.Log
 import androidx.compose.foundation.border
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Column
@@ -43,22 +44,32 @@ import com.cs31620.quizel.ui.components.ActionCheckDialog
 import com.cs31620.quizel.ui.components.Answer
 import com.cs31620.quizel.ui.components.Question
 import com.cs31620.quizel.ui.components.TopLevelBackgroundScaffold
+import com.cs31620.quizel.ui.navigation.Screen
 
 @Composable
-fun TestQuestionsScreenNoRecursionTopLevel(
+fun TestQuestionsScreenTopLevel(
     navController: NavHostController,
     questionsViewModel: QuestionsViewModel
 ) {
     val questionList by questionsViewModel.questionsList.observeAsState(listOf())
+    val shuffledList by rememberSaveable { mutableStateOf(questionList.shuffled()) }
 
-    TestQuestionsNoRecursionScreen(
-        questionList = questionList.shuffled()
+    TestQuestionsScreen(
+        questionList = shuffledList,
+
+        quizResultsScreen = { quizResults ->
+            val destination = "${Screen.QuizResults.basePath}${quizResults}"
+            navController.navigate(destination){
+                launchSingleTop = true
+            }
+        }
     )
 }
 
 @Composable
-fun TestQuestionsNoRecursionScreen(
-    questionList: List<Question>
+private fun TestQuestionsScreen(
+    questionList: List<Question>,
+    quizResultsScreen: (String) -> Unit = {}
 ) {
     TopLevelBackgroundScaffold { innerPadding ->
 
@@ -74,12 +85,18 @@ fun TestQuestionsNoRecursionScreen(
             currentQuestion.answers.shuffled()
         }
 
+        fun transferResultsToString() = "$currentScore,$totalQuestions"
+
         fun nextQuestion(gotCorrect: Boolean = false) {
             currentScore = if (gotCorrect) currentScore + 1 else currentScore
-            currentQuestion = questionList[currentQuestionNumber]
-            currentQuestionNumber++
-            selectedAnswer = null
-            showSkipDialog = false
+            if (currentQuestionNumber == totalQuestions) {
+                quizResultsScreen(transferResultsToString())
+            } else {
+                currentQuestion = questionList[currentQuestionNumber]
+                currentQuestionNumber++
+                selectedAnswer = null
+                showSkipDialog = false
+            }
         }
 
         Column(
@@ -247,7 +264,7 @@ fun TestQuestionsNoRecursionScreen(
 
 @Preview
 @Composable
-fun TestQuestionsWithoutRecursionScreenPreview() {
+private fun TestQuestionsWithoutRecursionScreenPreview() {
     val exampleQuestionWith10Answers = Question(
         title = "France Capital City",
         description = "Select the correct capital of France.",
@@ -263,7 +280,7 @@ fun TestQuestionsWithoutRecursionScreenPreview() {
             Answer("Dublin", false),
         )
     )
-    TestQuestionsNoRecursionScreen(
+    TestQuestionsScreen(
         questionList = listOf(exampleQuestionWith10Answers)
     )
 }
