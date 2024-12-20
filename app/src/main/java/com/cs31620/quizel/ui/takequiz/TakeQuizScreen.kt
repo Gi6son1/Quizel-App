@@ -67,7 +67,6 @@ fun TakeQuizScreen(navController: NavHostController, questionList: List<Question
                         randomisedList.size,
                         randomisedList.map { it.id.toString() }
                     )
-                    Log.d("TakeQuizScreen", "Quiz Data String: $quizDataString")
 
                     val destination = "${Screen.TestQuestions.basePath}${quizDataString}"
                     navController.navigate(destination) {
