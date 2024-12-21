@@ -105,7 +105,7 @@ private fun QuizResultsScreen(
                             .padding(10.dp)
                     ) {
                         Text(
-                            text = "${finalScore / totalQuestions.toFloat() * 100}%",
+                            text = "${(finalScore / totalQuestions.toFloat() * 100).toInt()}%",
                             textAlign = TextAlign.Center,
                             style = MaterialTheme.typography.bodyLarge,
                             modifier = Modifier
