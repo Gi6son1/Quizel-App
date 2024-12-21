@@ -76,9 +76,7 @@ fun TestQuestionsScreenTopLevel(
 
         exitQuiz = { exit ->
             if (exit) {
-                navController.navigate(Screen.TakeQuiz.route) {
-                    launchSingleTop = true
-                }
+                navController.popBackStack(Screen.TakeQuiz.route, inclusive = false)
             }
         },
         showNumberCorrect = showNumberCorrect,
