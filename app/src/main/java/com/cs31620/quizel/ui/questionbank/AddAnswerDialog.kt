@@ -11,9 +11,13 @@ import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.width
 import androidx.compose.foundation.layout.wrapContentHeight
+import androidx.compose.material.icons.Icons
+import androidx.compose.material.icons.filled.Check
+import androidx.compose.material.icons.filled.Close
 import androidx.compose.material3.Button
 import androidx.compose.material3.ButtonDefaults
 import androidx.compose.material3.Card
+import androidx.compose.material3.Icon
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Switch
 import androidx.compose.material3.Text
@@ -36,7 +40,8 @@ import androidx.compose.ui.unit.sp
 import androidx.compose.ui.window.Dialog
 import androidx.compose.ui.window.DialogProperties
 import com.cs31620.quizel.ui.components.Answer
-import com.cs31620.quizel.ui.components.getDialogWindow
+import com.cs31620.quizel.ui.components.customcomposables.QuizelSwitch
+import com.cs31620.quizel.ui.components.customcomposables.getDialogWindow
 
 @Composable
 fun AddAnswerDialog(
@@ -104,7 +109,7 @@ fun AddAnswerDialog(
                                 fontSize = 22.sp,
                                 textAlign = androidx.compose.ui.text.style.TextAlign.Right
                             )
-                            Switch(
+                            QuizelSwitch(
                                 checked = toggleState,
                                 onCheckedChange = {
                                     toggleState = it
@@ -113,7 +118,7 @@ fun AddAnswerDialog(
                                     .weight(1f)
                                     .fillMaxSize()
                                     .scale(1.25f)
-                                    .padding(end = 10.dp),
+                                    .padding(end = 10.dp)
                             )
                         }
                     }

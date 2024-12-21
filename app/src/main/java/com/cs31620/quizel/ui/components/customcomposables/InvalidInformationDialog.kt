@@ -1,6 +1,5 @@
-package com.cs31620.quizel.ui.components
+package com.cs31620.quizel.ui.components.customcomposables
 
-import android.app.AlertDialog
 import androidx.compose.material3.AlertDialog
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Text

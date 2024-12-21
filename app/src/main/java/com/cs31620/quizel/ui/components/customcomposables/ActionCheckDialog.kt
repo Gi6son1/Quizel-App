@@ -1,4 +1,4 @@
-package com.cs31620.quizel.ui.components
+package com.cs31620.quizel.ui.components.customcomposables
 
 import android.view.Window
 import androidx.activity.compose.BackHandler
