@@ -1,25 +1,35 @@
 package com.cs31620.quizel.ui.takequiz
 
 import android.util.Log
+import androidx.compose.foundation.Image
+import androidx.compose.foundation.background
 import androidx.compose.foundation.border
 import androidx.compose.foundation.layout.Arrangement
+import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
+import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.layout.width
 import androidx.compose.foundation.layout.wrapContentSize
 import androidx.compose.foundation.lazy.grid.GridCells
 import androidx.compose.foundation.lazy.grid.LazyVerticalGrid
 import androidx.compose.foundation.lazy.grid.items
 import androidx.compose.material.icons.Icons
+import androidx.compose.material.icons.automirrored.filled.AddToHomeScreen
 import androidx.compose.material.icons.automirrored.filled.Send
+import androidx.compose.material.icons.automirrored.outlined.Send
+import androidx.compose.material.icons.filled.Home
+import androidx.compose.material.icons.outlined.Home
+import androidx.compose.material.icons.outlined.Send
 import androidx.compose.material3.Button
 import androidx.compose.material3.ButtonDefaults
 import androidx.compose.material3.HorizontalDivider
 import androidx.compose.material3.Icon
+import androidx.compose.material3.IconButton
 import androidx.compose.material3.LinearProgressIndicator
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Surface
@@ -33,15 +43,20 @@ import androidx.compose.runtime.saveable.rememberSaveable
 import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.draw.clip
 import androidx.compose.ui.draw.shadow
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.layout.ModifierLocalBeyondBoundsLayout
+import androidx.compose.ui.res.painterResource
+import androidx.compose.ui.text.font.FontWeight
+import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import androidx.constraintlayout.compose.ConstraintLayout
 import androidx.constraintlayout.compose.Dimension
 import androidx.navigation.NavHostController
+import com.cs31620.quizel.R
 import com.cs31620.quizel.model.QuestionsViewModel
 import com.cs31620.quizel.ui.components.ActionCheckDialog
 import com.cs31620.quizel.ui.components.Answer
@@ -83,7 +98,7 @@ private fun TestQuestionsScreen(
     quizResultsScreen: (String) -> Unit = {},
     exitQuiz: (Boolean) -> Unit = {},
 ) {
-    TopLevelBackgroundScaffold { innerPadding ->
+    TopLevelBackgroundScaffold(showTitle = false) { innerPadding ->
 
         var currentQuestion by rememberSaveable { mutableStateOf(questionList.first()) }
         var currentQuestionNumber by rememberSaveable { mutableIntStateOf(1) }
@@ -113,43 +128,54 @@ private fun TestQuestionsScreen(
         }
 
         ConstraintLayout(
-            modifier = Modifier.fillMaxSize()
+            modifier = Modifier
+                .fillMaxSize()
                 .padding(innerPadding)
                 .padding(start = 10.dp, end = 10.dp)
         ) {
             val (questionAnswerSubmitColumn, homeButton, currentScoreText) = createRefs()
 
-            Button(
+            IconButton(
                 onClick =
-                    {
-                        showExitQuizDialog = true
-                    },
+                {
+                    showExitQuizDialog = true
+                },
                 modifier = Modifier
                     .constrainAs(homeButton){
-                        top.linkTo(parent.top, margin = 20.dp)
+                        top.linkTo(parent.top, margin = 25.dp)
                         start.linkTo(parent.start, margin = 20.dp)
+                        bottom.linkTo(questionAnswerSubmitColumn.top)
                     }
+                    .size(70.dp)
             ) {
-                Text("Exit")
+                Image(
+                    painter = painterResource(id = R.drawable.house_outline),
+                    contentDescription = "Green Tick",
+                    modifier = Modifier
+                        .fillMaxSize(),
+                )
             }
 
             Text(
-                text = "Score: $currentScore/$totalQuestions",
+                text = "$currentScore/$totalQuestions Correct",
                 modifier = Modifier
                     .constrainAs(currentScoreText) {
-                        top.linkTo(parent.top, margin = 20.dp)
+                        top.linkTo(parent.top, margin = 50.dp)
                         end.linkTo(parent.end, margin = 20.dp)
-                    }
+                        bottom.linkTo(questionAnswerSubmitColumn.top)
+                    },
+                style = MaterialTheme.typography.titleLarge,
+                fontSize = 50.sp
             )
 
 
             Column(
                 modifier = Modifier
                     .fillMaxSize()
-                    .padding(bottom = 40.dp)
+                    .padding(bottom = 60.dp)
                     .constrainAs(questionAnswerSubmitColumn) {
-                        top.linkTo(homeButton.bottom, margin = 80.dp)
-                        top.linkTo(currentScoreText.bottom, margin = 80.dp)
+                        top.linkTo(homeButton.bottom, margin = 10.dp)
+                        top.linkTo(currentScoreText.bottom, margin = 10.dp)
                         bottom.linkTo(parent.bottom)
                         height = Dimension.fillToConstraints
                     },
@@ -160,39 +186,62 @@ private fun TestQuestionsScreen(
                     modifier = Modifier
                         .weight(0.25f)
                         .fillMaxWidth(),
-                    progress = {currentQuestionNumber/totalQuestions.toFloat()}
+                    progress = {currentQuestionNumber/totalQuestions.toFloat()},
+                    trackColor = MaterialTheme.colorScheme.surface
                 )
                 Surface(
                     modifier = Modifier
                         .weight(11f)
                         .shadow(10.dp, MaterialTheme.shapes.medium),
                     shape = MaterialTheme.shapes.medium,
+                    color = Color.LightGray
                 )
                 {
-                    Column(
+                    ConstraintLayout(
                         modifier = Modifier.fillMaxSize(),
-                        horizontalAlignment = Alignment.CenterHorizontally,
-                        verticalArrangement = Arrangement.spacedBy(4.dp)
                     ) {
+                        val (questionTitle, questionDescription, divider) = createRefs()
                         Text(
-                            modifier = Modifier.padding(bottom = 10.dp),
+                            modifier = Modifier
+                                .constrainAs(questionTitle) {
+                                    top.linkTo(parent.top, margin = 20.dp)
+                                    start.linkTo(parent.start)
+                                    end.linkTo(parent.end)
+                                },
                             text = if (currentQuestion.title.isBlank())
                             {
                                 "Question $currentQuestionNumber"
 
                             } else {
                                 currentQuestion.title
-                            }
+                            },
+                            style = MaterialTheme.typography.bodyLarge,
+                            fontSize = 30.sp
                         )
-                        HorizontalDivider()
+                        HorizontalDivider(modifier = Modifier.constrainAs(divider){
+                            top.linkTo(questionTitle.bottom, margin = 5.dp)
+                            start.linkTo(parent.start)
+                            end.linkTo(parent.end)
+                        }.padding(horizontal = 30.dp),
+                            thickness = 2.dp
+                        )
                         Text(
-                            text = currentQuestion.description
+                            text = currentQuestion.description,
+                            modifier = Modifier.padding(20.dp).constrainAs(questionDescription){
+                                top.linkTo(divider.bottom)
+                                start.linkTo(parent.start)
+                                end.linkTo(parent.end)
+                                bottom.linkTo(parent.bottom, margin = 30.dp)
+                            },
+                            fontSize = 20.sp,
+                            textAlign = TextAlign.Center
                         )
                     }
                 }
-                Surface(modifier = Modifier
-                    .weight(10f)
-                    .shadow(10.dp, MaterialTheme.shapes.medium),
+                Surface(
+                    modifier = Modifier
+                        .weight(10f)
+                        .shadow(10.dp, MaterialTheme.shapes.medium),
                     color = Color.LightGray,
                     shape = MaterialTheme.shapes.medium,
                 )
@@ -234,7 +283,8 @@ private fun TestQuestionsScreen(
                                     } else {
                                         Color.Black
                                     },
-                                    fontSize = 15.sp
+                                    fontSize = 18.sp,
+                                    modifier = Modifier.wrapContentSize()
                                 )
                             }
                         }
@@ -251,7 +301,7 @@ private fun TestQuestionsScreen(
                         },
                         modifier = Modifier
                             .fillMaxWidth()
-                            .weight(2f)
+                            .weight(2.5f)
                             .shadow(10.dp, MaterialTheme.shapes.medium),
                         colors = ButtonDefaults.buttonColors(containerColor = MaterialTheme.colorScheme.primary),
                         shape = MaterialTheme.shapes.medium
@@ -263,16 +313,18 @@ private fun TestQuestionsScreen(
                                 .wrapContentSize(),
                         )
                         Spacer(modifier = Modifier.width(10.dp))
-                        Text(text = "Submit Answer")
+                        Text(text = "Submit Answer",
+                            modifier = Modifier.wrapContentSize(),
+                            fontSize = 20.sp,
+                            fontWeight = FontWeight.Bold)
                     }
                 } else {
                     Button(
                         onClick = { showSkipDialog = true },
                         modifier = Modifier
                             .fillMaxWidth()
-                            .weight(2f)
-                            .shadow(10.dp, MaterialTheme.shapes.medium)
-                            .border(4.dp, Color.LightGray),
+                            .weight(2.5f)
+                            .shadow(10.dp, MaterialTheme.shapes.medium),
                         colors = ButtonDefaults.buttonColors(containerColor = Color.LightGray),
                         shape = MaterialTheme.shapes.medium
                     ) {
@@ -285,7 +337,11 @@ private fun TestQuestionsScreen(
                         )
                         Spacer(modifier = Modifier.width(10.dp))
                         Text(text = "Skip Question",
-                            color = Color.Black)
+                            color = Color.Black,
+                            modifier = Modifier.wrapContentSize(),
+                            fontSize = 20.sp,
+                            fontWeight = FontWeight.Bold
+                        )
                     }
                 }
             }

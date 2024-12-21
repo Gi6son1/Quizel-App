@@ -23,12 +23,15 @@ import com.cs31620.quizel.R
 
 @Composable
 fun TopLevelBackgroundScaffold(
-    pageContent : @Composable (innerPadding : PaddingValues) -> Unit = {}
+    showTitle: Boolean = true,
+    pageContent: @Composable (innerPadding: PaddingValues) -> Unit = {}
 ) {
     Scaffold(
         content = { innerPadding ->
-            AppBackground(innerPadding)
-            pageContent(innerPadding) }
+            AppBackground()
+            if (showTitle) AppTitle(innerPadding)
+            pageContent(innerPadding)
+        }
     )
 }
 
@@ -39,14 +42,18 @@ fun TopLevelBackgroundScaffoldPreview() {
 }
 
 @Composable
-fun AppBackground(innerPadding: PaddingValues){
-    Box(modifier = Modifier.fillMaxSize()){
+fun AppBackground() {
+    Box(modifier = Modifier.fillMaxSize()) {
         Image(
             painter = painterResource(id = R.drawable.app_background),
             contentDescription = "Background",
             contentScale = ContentScale.Crop,
         )
     }
+}
+
+@Composable
+fun AppTitle(innerPadding: PaddingValues){
     Text(
         modifier = Modifier
             .fillMaxWidth()
@@ -55,5 +62,5 @@ fun AppBackground(innerPadding: PaddingValues){
         text = stringResource(R.string.app_name),
         style = MaterialTheme.typography.titleLarge,
         fontSize = 100.sp,
-        )
+    )
 }
