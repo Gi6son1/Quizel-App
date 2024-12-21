@@ -43,9 +43,7 @@ private fun QuizResultsScreen(
             Text(text = quizResults)
             Button(
                 onClick = {
-                    navController.navigate(Screen.TestQuestions.route) {
-                        launchSingleTop = true
-                    }
+                    navController.popBackStack(Screen.TakeQuiz.route, inclusive = false)
                 },
                 modifier = Modifier.padding(start = 8.dp)
             ) { Text(text = "Begin Quiz") }

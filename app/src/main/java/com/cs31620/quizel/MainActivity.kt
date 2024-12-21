@@ -47,6 +47,7 @@ private fun BuildNavigationGraph(
     val navController = rememberNavController()
     var selectedQuestionId by remember { mutableIntStateOf(0) }
     var quizScore by remember { mutableStateOf("-1") }
+    var quizSettings by remember { mutableStateOf("") }
 
     NavHost(
         navController = navController,
@@ -73,7 +74,18 @@ private fun BuildNavigationGraph(
             }
         }
         composable(Screen.TestQuestions.route) {
-            TestQuestionsScreenTopLevel(navController, questionsViewModel)
+            TestQuestionsScreenTopLevel(navController, questionsViewModel, quizSettings)
+        }
+        composable(
+            Screen.TestQuestions.routePath(),
+            arguments = listOf(navArgument(Screen.TestQuestions.argument){type = NavType.StringType})
+        ) { backStackEntry ->
+            backStackEntry.arguments?.let {
+                if (it.containsKey(Screen.TestQuestions.argument)){
+                    quizSettings = it.getString(Screen.TestQuestions.argument)?: "11"
+                }
+                TestQuestionsScreenTopLevel(navController, questionsViewModel, quizSettings)
+            }
         }
         composable(Screen.QuizResults.route) {
             QuizResultsScreenTopLevel(navController, quizScore)

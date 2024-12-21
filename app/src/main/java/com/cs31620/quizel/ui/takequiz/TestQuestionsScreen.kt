@@ -43,6 +43,7 @@ import androidx.compose.runtime.saveable.rememberSaveable
 import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.draw.alpha
 import androidx.compose.ui.draw.clip
 import androidx.compose.ui.draw.shadow
 import androidx.compose.ui.graphics.Color
@@ -67,10 +68,13 @@ import com.cs31620.quizel.ui.navigation.Screen
 @Composable
 fun TestQuestionsScreenTopLevel(
     navController: NavHostController,
-    questionsViewModel: QuestionsViewModel
+    questionsViewModel: QuestionsViewModel,
+    quizViewParameters: String
 ) {
     val questionList by questionsViewModel.questionsList.observeAsState(listOf())
     val shuffledList by rememberSaveable { mutableStateOf(questionList.shuffled()) }
+
+    val (showProgressBar, showNumberCorrect) = quizViewParameters.split(",").map { it == "1" }
 
     TestQuestionsScreen(
         questionList = shuffledList,
@@ -88,7 +92,9 @@ fun TestQuestionsScreenTopLevel(
                     launchSingleTop = true
                 }
             }
-        }
+        },
+        showNumberCorrect = showNumberCorrect,
+        showProgressBar = showProgressBar
     )
 }
 
@@ -97,8 +103,10 @@ private fun TestQuestionsScreen(
     questionList: List<Question>,
     quizResultsScreen: (String) -> Unit = {},
     exitQuiz: (Boolean) -> Unit = {},
+    showNumberCorrect: Boolean = true,
+    showProgressBar: Boolean = true
 ) {
-    TopLevelBackgroundScaffold(showTitle = false) { innerPadding ->
+    TopLevelBackgroundScaffold(showTitle = !showNumberCorrect) { innerPadding ->
 
         var currentQuestion by rememberSaveable { mutableStateOf(questionList.first()) }
         var currentQuestionNumber by rememberSaveable { mutableIntStateOf(1) }
@@ -165,7 +173,8 @@ private fun TestQuestionsScreen(
                         bottom.linkTo(questionAnswerSubmitColumn.top)
                     },
                 style = MaterialTheme.typography.titleLarge,
-                fontSize = 50.sp
+                fontSize = 50.sp,
+                color = if (showNumberCorrect) Color.Black else Color.Transparent
             )
 
 
@@ -182,13 +191,15 @@ private fun TestQuestionsScreen(
                 horizontalAlignment = Alignment.CenterHorizontally,
                 verticalArrangement = Arrangement.spacedBy(20.dp)
             ) {
-                LinearProgressIndicator(
-                    modifier = Modifier
-                        .weight(0.25f)
-                        .fillMaxWidth(),
-                    progress = {currentQuestionNumber/totalQuestions.toFloat()},
-                    trackColor = MaterialTheme.colorScheme.surface
-                )
+                if (showProgressBar){
+                    LinearProgressIndicator(
+                        modifier = Modifier
+                            .weight(0.25f)
+                            .fillMaxWidth(),
+                        progress = {currentQuestionNumber/totalQuestions.toFloat()},
+                        trackColor = MaterialTheme.colorScheme.surface
+                    )
+                }
                 Surface(
                     modifier = Modifier
                         .weight(11f)
