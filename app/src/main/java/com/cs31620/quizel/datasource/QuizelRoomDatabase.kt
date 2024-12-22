@@ -44,9 +44,9 @@ abstract class QuizelRoomDatabase : RoomDatabase() {
                 override fun onCreate(db: SupportSQLiteDatabase) {
                     super.onCreate(db)
 
-                    coroutineScope.launch {
+                    /*coroutineScope.launch {
                         populateDatabase(context, getDatabase(context)!!)
-                    }
+                    }*/
                 }
             }
         }

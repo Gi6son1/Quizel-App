@@ -11,15 +11,8 @@ import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.width
 import androidx.compose.foundation.layout.wrapContentHeight
-import androidx.compose.material.icons.Icons
-import androidx.compose.material.icons.filled.Check
-import androidx.compose.material.icons.filled.Close
-import androidx.compose.material3.Button
-import androidx.compose.material3.ButtonDefaults
 import androidx.compose.material3.Card
-import androidx.compose.material3.Icon
 import androidx.compose.material3.MaterialTheme
-import androidx.compose.material3.Switch
 import androidx.compose.material3.Text
 import androidx.compose.material3.TextField
 import androidx.compose.runtime.Composable
@@ -40,6 +33,7 @@ import androidx.compose.ui.unit.sp
 import androidx.compose.ui.window.Dialog
 import androidx.compose.ui.window.DialogProperties
 import com.cs31620.quizel.ui.components.Answer
+import com.cs31620.quizel.ui.components.customcomposables.QuizelSimpleButton
 import com.cs31620.quizel.ui.components.customcomposables.QuizelSwitch
 import com.cs31620.quizel.ui.components.customcomposables.getDialogWindow
 
@@ -80,7 +74,7 @@ fun AddAnswerDialog(
                         .weight(1.5f)
                         .shadow(5.dp, MaterialTheme.shapes.medium),
 
-                ) {
+                    ) {
                     Column {
                         TextField(
                             value = inputText,
@@ -129,31 +123,27 @@ fun AddAnswerDialog(
                         .padding(top = 25.dp)
                         .weight(1f)
                 ) {
-                    Button(
+                    QuizelSimpleButton(
                         onClick = { dialogOpen(false) },
+                        text = Pair("Cancel", 20),
                         modifier = Modifier
                             .weight(1f)
-                            .fillMaxHeight()
-                            .shadow(5.dp, ButtonDefaults.shape),
-                        colors = ButtonDefaults.buttonColors(containerColor = MaterialTheme.colorScheme.tertiary)
-                    ) {
-                        Text(text = "Cancel", fontSize = 21.sp)
-                    }
-                    Button(
+                            .fillMaxHeight(),
+                        colour = MaterialTheme.colorScheme.tertiary
+                    )
+                    QuizelSimpleButton(
                         onClick = {
                             dialogOpen(false)
                             if (inputText.isNotBlank()) {
                                 answer(Answer(text = inputText, isCorrect = toggleState))
                             }
                         },
+                        text = Pair("Save", 20),
                         modifier = Modifier
                             .weight(1f)
-                            .fillMaxHeight()
-                            .shadow(5.dp, ButtonDefaults.shape),
-                        colors = ButtonDefaults.buttonColors(containerColor = MaterialTheme.colorScheme.secondary)
-                    ) {
-                        Text(text = "Save", fontSize = 21.sp)
-                    }
+                            .fillMaxHeight(),
+                        colour = MaterialTheme.colorScheme.secondary
+                    )
                 }
             }
         }

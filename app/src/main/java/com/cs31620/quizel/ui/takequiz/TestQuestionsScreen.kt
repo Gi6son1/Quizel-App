@@ -51,6 +51,7 @@ import com.cs31620.quizel.ui.components.customcomposables.ActionCheckDialog
 import com.cs31620.quizel.ui.components.Answer
 import com.cs31620.quizel.ui.components.Question
 import com.cs31620.quizel.ui.components.TopLevelBackgroundScaffold
+import com.cs31620.quizel.ui.components.customcomposables.QuizelSimpleButton
 import com.cs31620.quizel.ui.navigation.Screen
 
 @Composable
@@ -252,7 +253,7 @@ private fun TestQuestionsScreen(
                         verticalArrangement = Arrangement.spacedBy(5.dp)
                     ) {
                         items(shuffledAnswers) { answer ->
-                            Button(
+                            QuizelSimpleButton(
                                 onClick = {
                                     selectedAnswer = if (selectedAnswer != answer) {
                                         answer
@@ -263,32 +264,17 @@ private fun TestQuestionsScreen(
                                 modifier = Modifier
                                     .fillMaxWidth()
                                     .weight(1f)
-                                    .height(80.dp)
-                                    .shadow(10.dp, MaterialTheme.shapes.medium),
+                                    .height(80.dp),
                                 shape = MaterialTheme.shapes.medium,
-                                colors = ButtonDefaults.buttonColors(
-                                    containerColor = if (selectedAnswer == answer) {
-                                        MaterialTheme.colorScheme.primary
-                                    } else {
-                                        MaterialTheme.colorScheme.surfaceContainer
-                                    }
-                                )
-                            ) {
-                                Text(text = answer.text,
-                                    color = if (selectedAnswer == answer){
-                                        Color.White
-                                    } else {
-                                        Color.Black
-                                    },
-                                    fontSize = 18.sp,
-                                    modifier = Modifier.wrapContentSize()
-                                )
-                            }
+                                colour = if (selectedAnswer == answer) MaterialTheme.colorScheme.primary
+                                             else  MaterialTheme.colorScheme.surfaceContainer,
+                                text = Pair(answer.text, 20),
+                            )
                         }
                     }
                 }
                 if (selectedAnswer != null) {
-                    Button(
+                    QuizelSimpleButton(
                         onClick = {
                             if (selectedAnswer!!.isCorrect){
                                 nextQuestion(true)
@@ -298,48 +284,23 @@ private fun TestQuestionsScreen(
                         },
                         modifier = Modifier
                             .fillMaxWidth()
-                            .weight(2.5f)
-                            .shadow(10.dp, MaterialTheme.shapes.medium),
-                        colors = ButtonDefaults.buttonColors(containerColor = MaterialTheme.colorScheme.primary),
-                        shape = MaterialTheme.shapes.medium
-                    ) {
-                        Icon(
-                            imageVector = Icons.AutoMirrored.Filled.Send,
-                            contentDescription = "Submit icon",
-                            modifier = Modifier
-                                .wrapContentSize(),
-                        )
-                        Spacer(modifier = Modifier.width(10.dp))
-                        Text(text = "Submit Answer",
-                            modifier = Modifier.wrapContentSize(),
-                            fontSize = 20.sp,
-                            fontWeight = FontWeight.Bold)
-                    }
+                            .weight(2.5f),
+                        colour = MaterialTheme.colorScheme.primary,
+                        shape = MaterialTheme.shapes.medium,
+                        text = Pair("Submit Answer", 20),
+                        icon = Icons.AutoMirrored.Filled.Send,
+                    )
                 } else {
-                    Button(
+                    QuizelSimpleButton(
                         onClick = { showSkipDialog = true },
                         modifier = Modifier
                             .fillMaxWidth()
-                            .weight(2.5f)
-                            .shadow(10.dp, MaterialTheme.shapes.medium),
-                        colors = ButtonDefaults.buttonColors(containerColor = Color.LightGray),
-                        shape = MaterialTheme.shapes.medium
-                    ) {
-                        Icon(
-                            imageVector = Icons.AutoMirrored.Filled.Send,
-                            contentDescription = "Submit icon",
-                            modifier = Modifier
-                                .wrapContentSize(),
-                            tint = Color.Black
-                        )
-                        Spacer(modifier = Modifier.width(10.dp))
-                        Text(text = "Skip Question",
-                            color = Color.Black,
-                            modifier = Modifier.wrapContentSize(),
-                            fontSize = 20.sp,
-                            fontWeight = FontWeight.Bold
-                        )
-                    }
+                            .weight(2.5f),
+                        colour = Color.LightGray,
+                        shape = MaterialTheme.shapes.medium,
+                        text = Pair("Skip Question", 20),
+                        icon = Icons.AutoMirrored.Filled.Send,
+                    )
                 }
             }
         }

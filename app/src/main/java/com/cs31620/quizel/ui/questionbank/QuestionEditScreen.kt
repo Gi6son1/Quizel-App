@@ -9,13 +9,11 @@ import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.PaddingValues
 import androidx.compose.foundation.layout.Row
-import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.fillMaxHeight
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
-import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.layout.wrapContentHeight
 import androidx.compose.foundation.layout.wrapContentSize
 import androidx.compose.foundation.rememberScrollState
@@ -24,7 +22,6 @@ import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.Add
 import androidx.compose.material3.Button
 import androidx.compose.material3.ButtonDefaults
-import androidx.compose.material3.Icon
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.OutlinedTextField
 import androidx.compose.material3.OutlinedTextFieldDefaults
@@ -60,6 +57,7 @@ import com.cs31620.quizel.ui.components.Answer
 import com.cs31620.quizel.ui.components.customcomposables.InvalidInformationDialog
 import com.cs31620.quizel.ui.components.Question
 import com.cs31620.quizel.ui.components.TopLevelBackgroundScaffold
+import com.cs31620.quizel.ui.components.customcomposables.QuizelSimpleButton
 import com.cs31620.quizel.ui.navigation.Screen
 
 @Composable
@@ -72,7 +70,6 @@ fun QuestionEditScreenTopLevel(
     Log.d("QuestionEditScreenTopLevel", "QuestionId: $questionId")
     QuestionEditScreen(
         question = retrievedQuestion,
-        navController = navController,
         addNewQuestion = { question ->
             questionsViewModel.addNewQuestion(question)
             Log.d("QuestionBankScreen", "Question ${question?.description} added")
@@ -80,7 +77,15 @@ fun QuestionEditScreenTopLevel(
         updateQuestion = { question ->
             questionsViewModel.updateSelectedQuestion(question)
             Log.d("QuestionBankScreen", "Question ${question?.description} updated")
-        }
+        },
+        returnToBank = { doReturn ->
+            if (doReturn){
+                navController.navigate(Screen.QuestionBank.route){
+                    popUpTo(navController.graph.findStartDestination().id)
+                    launchSingleTop = true
+                }
+            }
+            }
     )
 }
 
@@ -88,9 +93,9 @@ fun QuestionEditScreenTopLevel(
 @Composable
 private fun QuestionEditScreen(
     question: Question?,
-    navController: NavHostController,
     addNewQuestion: (Question?) -> Unit = {},
-    updateQuestion: (Question?) -> Unit = {}
+    updateQuestion: (Question?) -> Unit = {},
+    returnToBank: (Boolean) -> Unit = {}
 ) {
     TopLevelBackgroundScaffold { innerPadding ->
         var title by rememberSaveable(question) { mutableStateOf(question?.title ?: "") }
@@ -194,27 +199,16 @@ private fun QuestionEditScreen(
                             fontSize = 43.sp
 
                         )
-                        Button(
+                        QuizelSimpleButton(
                             onClick = { showAddAnswerDialog = true },
-                            modifier = Modifier
-                                .weight(0.9f)
-                                .fillMaxSize()
-                                .shadow(
-                                    if (answers.size < 10) 5.dp else 0.dp,
-                                    MaterialTheme.shapes.medium
-                                ),
+                            colour = MaterialTheme.colorScheme.secondary,
                             enabled = answers.size < 10,
                             shape = MaterialTheme.shapes.medium,
-                            colors = ButtonDefaults.buttonColors(containerColor = MaterialTheme.colorScheme.secondary)
-                        ) {
-                            Icon(
-                                imageVector = Icons.Filled.Add,
-                                contentDescription = "Add Answer",
-                                modifier = Modifier.size(25.dp)
-                            )
-                            Spacer(modifier = Modifier.size(10.dp))
-                            Text(text = "Answer", fontSize = 22.sp)
-                        }
+                            modifier = Modifier.weight(0.9f)
+                                .fillMaxSize(),
+                            icon = Icons.Filled.Add,
+                            text = Pair("Answer", 22)
+                        )
                     }
                     if (answers.isEmpty()) {
                         Box(
@@ -247,8 +241,8 @@ private fun QuestionEditScreen(
                                     shape = MaterialTheme.shapes.medium,
                                     modifier = Modifier
                                         .fillMaxWidth()
-                                        .height(60.dp)
-                                        .shadow(5.dp, MaterialTheme.shapes.medium),
+                                        .height(60.dp),
+                                    elevation = ButtonDefaults.buttonElevation(10.dp),
                                     contentPadding = PaddingValues(0.dp),
                                     colors = ButtonDefaults.buttonColors(Color.White)
                                 ) {
@@ -304,23 +298,19 @@ private fun QuestionEditScreen(
                     .fillMaxWidth()
                     .weight(1f)
             ) {
-                Button(
+                QuizelSimpleButton(
                     onClick = { showDiscardQuestionDialog = true },
-                    modifier = Modifier
-                        .weight(1f)
-                        .fillMaxHeight()
-                        .shadow(5.dp, ButtonDefaults.shape),
-                    colors = ButtonDefaults.buttonColors(containerColor = MaterialTheme.colorScheme.error)
-                ) {
-                    Text(text = "Discard Changes", fontSize = 18.sp)
-                }
-                Button(
+                    modifier = Modifier.weight(1f).fillMaxHeight(),
+                    colour = MaterialTheme.colorScheme.error,
+                    text = Pair("Discard Changes", 18)
+                )
+                QuizelSimpleButton(
                     onClick = {
                         if (description.isBlank()) {
                             invalidInfoDialogTitle = "No Question Inputted"
                             invalidInfoDialogDescription = "Please enter a question"
                             showInvalidInfoDialog = true
-                            return@Button
+                            return@QuizelSimpleButton
                         }
 
                         answers.forEach { answer ->
@@ -343,11 +333,8 @@ private fun QuestionEditScreen(
                                         )
                                     )
                                 }
-                                navController.navigate(Screen.QuestionBank.route) {
-                                    popUpTo(navController.graph.findStartDestination().id)
-                                    launchSingleTop = true
-                                }
-                                return@Button
+                                returnToBank(true)
+                                return@QuizelSimpleButton
                             }
                         }
                         invalidInfoDialogTitle = "No Correct Answer Selected"
@@ -358,13 +345,11 @@ private fun QuestionEditScreen(
                     },
                     modifier = Modifier
                         .weight(1f)
-                        .fillMaxHeight()
-                        .shadow(if (answers.isNotEmpty()) 5.dp else 0.dp, ButtonDefaults.shape),
+                        .fillMaxHeight(),
                     enabled = answers.isNotEmpty(),
-                    colors = ButtonDefaults.buttonColors(containerColor = MaterialTheme.colorScheme.secondary)
-                ) {
-                    Text(text = "Save Changes", fontSize = 18.sp)
-                }
+                    colour = MaterialTheme.colorScheme.secondary,
+                text = Pair("Save Changes", 18)
+                )
             }
         }
 
@@ -380,19 +365,16 @@ private fun QuestionEditScreen(
         ActionCheckDialog(dialogIsOpen = showDiscardQuestionDialog,
             dialogOpen = { isOpen -> showDiscardQuestionDialog = isOpen },
             mainActionButton = { onClick, modifier ->
-                Button(
+                QuizelSimpleButton(
                     onClick = onClick,
                     modifier = modifier,
-                    colors = ButtonDefaults.buttonColors(containerColor = MaterialTheme.colorScheme.error)
-                ) {
-                    Text(text = "Discard Changes", fontSize = 19.sp)
-                }
+                    colour = MaterialTheme.colorScheme.error,
+                    text = Pair("Discard Changes", 19)
+                )
             },
             actionDialogMessage = "Are you sure you want to discard any changes?",
-            performMainAction = { navController.navigate(Screen.QuestionBank.route) {
-                popUpTo(navController.graph.findStartDestination().id)
-                launchSingleTop = true
-            } }
+            performMainAction = { returnToBank(true) }
+
         )
 
         InvalidInformationDialog(
@@ -425,5 +407,5 @@ private fun addAnswerToAnswerList(answers: SnapshotStateList<Answer>, answer: An
 @Preview
 @Composable
 fun QuestionEditScreenPreview() {
-    QuestionEditScreen(question = Question(), navController = rememberNavController())
+    QuestionEditScreen(question = Question())
 }

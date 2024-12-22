@@ -40,6 +40,7 @@ import androidx.navigation.NavHostController
 import androidx.navigation.compose.rememberNavController
 import com.cs31620.quizel.ui.components.TopLevelBackgroundScaffold
 import com.cs31620.quizel.ui.components.TopLevelNavigationScaffold
+import com.cs31620.quizel.ui.components.customcomposables.QuizelSimpleButton
 import com.cs31620.quizel.ui.components.customcomposables.QuizelSwitch
 import com.cs31620.quizel.ui.navigation.Screen
 import com.cs31620.quizel.ui.theme.QuizelTheme
@@ -54,7 +55,7 @@ fun QuizResultsScreenTopLevel(
     QuizResultsScreen(totalQuestions = totalQuestions, finalScore = finalScore,
         restartQuiz = { restart ->
             if (restart) {
-                navController.navigate(Screen.TestQuestions.route){
+                navController.navigate(Screen.TestQuestions.route) {
                     launchSingleTop = true
                 }
             }
@@ -95,10 +96,14 @@ private fun QuizResultsScreen(
                 verticalArrangement = Arrangement.spacedBy(10.dp)
             ) {
 
-                Text(text = "Your Quiz Results",
-                    modifier = Modifier.fillMaxWidth().wrapContentWidth(),
+                Text(
+                    text = "Your Quiz Results",
+                    modifier = Modifier
+                        .fillMaxWidth()
+                        .wrapContentWidth(),
                     fontSize = 80.sp,
-                    style = MaterialTheme.typography.displayLarge)
+                    style = MaterialTheme.typography.displayLarge
+                )
                 Card(modifier = Modifier.shadow(10.dp, MaterialTheme.shapes.medium)) {
                     Column(
                         modifier = Modifier
@@ -126,7 +131,7 @@ private fun QuizResultsScreen(
 
                     }
                 }
-                Button(
+                QuizelSimpleButton(
                     onClick = {
                         restartQuiz(true)
                     },
@@ -134,23 +139,13 @@ private fun QuizResultsScreen(
                         .fillMaxWidth()
                         .height(70.dp)
                         .shadow(10.dp, MaterialTheme.shapes.medium),
-                    shape = MaterialTheme.shapes.medium
-                ) {
-                    Icon(
-                        imageVector = Icons.AutoMirrored.Filled.KeyboardReturn,
-                        contentDescription = "Retry icon",
-                        modifier = Modifier
-                            .wrapContentSize()
-                    )
-                    Spacer(modifier = Modifier.width(10.dp))
-                    Text(
-                        text = "Retry Quiz",
-                        modifier = Modifier.wrapContentSize(),
-                        fontSize = 25.sp,
-                        fontWeight = FontWeight.Bold
-                    )
-                }
-                Button(
+                    shape = MaterialTheme.shapes.medium,
+                    colour = MaterialTheme.colorScheme.primary,
+                    text = Pair("Retry Quiz", 25),
+                    icon = Icons.AutoMirrored.Filled.KeyboardReturn
+                )
+
+                QuizelSimpleButton(
                     onClick = {
                         goHome(true)
                     },
@@ -158,22 +153,11 @@ private fun QuizResultsScreen(
                         .fillMaxWidth()
                         .height(70.dp)
                         .shadow(10.dp, MaterialTheme.shapes.medium),
-                    shape = MaterialTheme.shapes.medium
-                ) {
-                    Icon(
-                        imageVector = Icons.Filled.Menu,
-                        contentDescription = "Menu icon",
-                        modifier = Modifier
-                            .wrapContentSize()
-                    )
-                    Spacer(modifier = Modifier.width(10.dp))
-                    Text(
-                        text = "Return to Home",
-                        modifier = Modifier.wrapContentSize(),
-                        fontSize = 25.sp,
-                        fontWeight = FontWeight.Bold
-                    )
-                }
+                    shape = MaterialTheme.shapes.medium,
+                    colour = MaterialTheme.colorScheme.primary,
+                    text = Pair("Return to Home", 25),
+                    icon = Icons.Filled.Menu
+                )
             }
         }
     }

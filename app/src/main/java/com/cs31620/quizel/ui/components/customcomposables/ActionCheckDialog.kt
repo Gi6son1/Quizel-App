@@ -10,7 +10,6 @@ import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.wrapContentHeight
-import androidx.compose.material3.Button
 import androidx.compose.material3.ButtonDefaults
 import androidx.compose.material3.Card
 import androidx.compose.material3.MaterialTheme
@@ -79,14 +78,12 @@ fun ActionCheckDialog(
                         .padding(top = 25.dp)
                         .weight(1f)
                 ) {
-                    Button(
+                    QuizelSimpleButton(
                         onClick = { dialogOpen(false) },
-                        modifier = Modifier.weight(1f).fillMaxHeight()
-                            .shadow(5.dp, ButtonDefaults.shape),
-                        colors = ButtonDefaults.buttonColors(containerColor = MaterialTheme.colorScheme.tertiary)
-                    ) {
-                        Text(text = "Cancel", fontSize = 21.sp)
-                    }
+                        modifier = Modifier.weight(1f).fillMaxHeight(),
+                        colour = MaterialTheme.colorScheme.tertiary,
+                        text = Pair("Cancel", 20)
+                    )
 
                     mainActionButton(
                         {

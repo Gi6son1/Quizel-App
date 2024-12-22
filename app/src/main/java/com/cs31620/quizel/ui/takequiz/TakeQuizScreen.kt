@@ -49,6 +49,7 @@ import androidx.navigation.compose.rememberNavController
 import com.cs31620.quizel.model.QuestionsViewModel
 import com.cs31620.quizel.ui.components.Question
 import com.cs31620.quizel.ui.components.TopLevelNavigationScaffold
+import com.cs31620.quizel.ui.components.customcomposables.QuizelSimpleButton
 import com.cs31620.quizel.ui.components.customcomposables.QuizelSwitch
 import com.cs31620.quizel.ui.navigation.Screen
 import com.cs31620.quizel.ui.theme.QuizelTheme
@@ -57,11 +58,18 @@ import com.cs31620.quizel.ui.theme.QuizelTheme
 fun TakeQuizScreenTopLevel(
     navController: NavHostController
 ) {
-    TakeQuizScreen(navController = navController)
+    TakeQuizScreen(navController = navController,
+        beginQuiz = { quizSettingsString ->
+            val destination = "${Screen.TestQuestions.basePath}${quizSettingsString}"
+            navController.navigate(destination) {
+                launchSingleTop = true
+            }
+            })
 }
 
 @Composable
-private fun TakeQuizScreen(navController: NavHostController) {
+private fun TakeQuizScreen(navController: NavHostController,
+                           beginQuiz: (String) -> Unit = {}) {
     TopLevelNavigationScaffold(
         navController = navController
     ) { innerPadding ->
@@ -123,39 +131,21 @@ private fun TakeQuizScreen(navController: NavHostController) {
 
                     }
                 }
-                Button(
+                QuizelSimpleButton(
                     onClick = {
                         val quizSettingsString =
                             "${if (showProgressBar) "1" else "0"},${if (showCurrentScore) "1" else "0"}"
 
-
-                        val destination = "${Screen.TestQuestions.basePath}${quizSettingsString}"
-                        navController.navigate(destination) {
-                            launchSingleTop = true
-                        }
+                        beginQuiz(quizSettingsString)
                     },
-                    modifier = Modifier.fillMaxWidth().height(70.dp).shadow(10.dp, MaterialTheme.shapes.medium),
-                    shape = MaterialTheme.shapes.medium
-                ) {
-                    Icon(
-                        imageVector = Icons.AutoMirrored.Filled.Send,
-                        contentDescription = "Submit icon",
-                        modifier = Modifier
-                            .wrapContentSize()
-                    )
-                    Spacer(modifier = Modifier.width(10.dp))
-                    Text(text = "Begin Quiz",
-                        modifier = Modifier.wrapContentSize(),
-                        fontSize = 25.sp,
-                        fontWeight = FontWeight.Bold
-                    )
-                }
+                    modifier = Modifier.fillMaxWidth().height(70.dp),
+                    shape = MaterialTheme.shapes.medium,
+                    colour = MaterialTheme.colorScheme.primary,
+                    text = Pair("Begin Quiz", 25),
+                    icon = Icons.AutoMirrored.Filled.Send
+                )
             }
-
-
         }
-
-
     }
 }
 

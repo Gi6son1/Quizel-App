@@ -6,13 +6,10 @@ import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.PaddingValues
 import androidx.compose.foundation.layout.Row
-import androidx.compose.foundation.layout.Spacer
-import androidx.compose.foundation.layout.fillMaxHeight
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
-import androidx.compose.foundation.layout.width
 import androidx.compose.foundation.layout.wrapContentHeight
 import androidx.compose.foundation.layout.wrapContentSize
 import androidx.compose.foundation.lazy.LazyColumn
@@ -57,6 +54,7 @@ import com.cs31620.quizel.model.QuestionsViewModel
 import com.cs31620.quizel.ui.components.customcomposables.ActionCheckDialog
 import com.cs31620.quizel.ui.components.Question
 import com.cs31620.quizel.ui.components.TopLevelNavigationScaffold
+import com.cs31620.quizel.ui.components.customcomposables.QuizelSimpleButton
 import com.cs31620.quizel.ui.navigation.Screen
 
 @Composable
@@ -111,47 +109,25 @@ private fun QuestionBankScreen(
 
             val state = rememberLazyListState()
 
-            Button(
+            QuizelSimpleButton(
                 onClick = {
                     if (displaySelectDelete && checkedQuestionStates.containsValue(true)) showDeleteSelectedDialog =
                         true
                     displaySelectDelete = !displaySelectDelete
                 },
-                modifier = Modifier
-                    .constrainAs(selectDelete) {
-                        top.linkTo(parent.top, margin = 25.dp)
-                        end.linkTo(parent.end, margin = 10.dp)
-                        bottom.linkTo(questionBankArea.top, margin = 15.dp)
-                    }
-                    .height(50.dp)
-                    .shadow(10.dp, MaterialTheme.shapes.medium),
+                colour = MaterialTheme.colorScheme.error,
+                text = if (!displaySelectDelete) Pair("Delete", 20) else null,
+                modifier = Modifier.constrainAs(selectDelete) {
+                    top.linkTo(parent.top, margin = 25.dp)
+                    end.linkTo(parent.end, margin = 10.dp)
+                    bottom.linkTo(questionBankArea.top, margin = 15.dp)
+                }
+                    .height(50.dp),
                 shape = MaterialTheme.shapes.medium,
                 contentPadding = PaddingValues(10.dp),
-                colors = ButtonDefaults.buttonColors(containerColor = MaterialTheme.colorScheme.error)
-            ) {
-                if (displaySelectDelete) {
-                    Image(
-                        painter = painterResource(id = R.drawable.bin_icon),
-                        contentDescription = "Bin icon",
-                    )
-                } else {
-                    Row {
-                        Icon(
-                            imageVector = Icons.Outlined.CheckBox,
-                            contentDescription = "Select Icon",
-                        )
-                        Spacer(modifier = Modifier.width(10.dp))
-                        Text(
-                            text = "Delete",
-                            fontSize = 16.sp,
-                            modifier = Modifier
-                                .fillMaxHeight()
-                                .wrapContentSize()
-                        )
-                    }
-                }
-            }
-
+                icon = if (!displaySelectDelete) Icons.Outlined.CheckBox else null,
+                image = if (displaySelectDelete) Pair(painterResource(id = R.drawable.bin_icon), 0) else null
+            )
 
             Column(
                 verticalArrangement = Arrangement.SpaceEvenly,
@@ -164,29 +140,23 @@ private fun QuestionBankScreen(
                         height = Dimension.fillToConstraints
                     }
             ) {
-                Button(
+                QuizelSimpleButton(
+                    colour = MaterialTheme.colorScheme.secondary,
+                    text = Pair("New Question", 20),
                     onClick = {
                         displaySelectDelete = false
                         val destination = "${Screen.QuestionEdit.basePath}${0}"
-                        navController.navigate(destination){
+                        navController.navigate(destination) {
                             launchSingleTop = true
                         }
                     },
                     modifier = Modifier
                         .fillMaxWidth()
-                        .weight(1.1f)
-                        .shadow(5.dp, RoundedCornerShape(35)),
+                        .weight(1.1f),
                     shape = RoundedCornerShape(35),
-                    colors = ButtonDefaults.buttonColors(containerColor = MaterialTheme.colorScheme.secondary)
+                    icon = Icons.Filled.Add
                 )
-                {
-                    Icon(
-                        imageVector = Icons.Filled.Add,
-                        contentDescription = "Add question"
-                    )
-                    Spacer(modifier = Modifier.width(10.dp))
-                    Text(text = "New Question", fontSize = 25.sp)
-                }
+
                 Surface(
                     Modifier
                         .padding(top = 8.dp)
@@ -216,11 +186,11 @@ private fun QuestionBankScreen(
                                 },
                                 modifier = Modifier
                                     .fillMaxWidth()
-                                    .shadow(5.dp, MaterialTheme.shapes.medium)
                                     .height(70.dp),
                                 shape = MaterialTheme.shapes.medium,
                                 colors = ButtonDefaults.buttonColors(containerColor = MaterialTheme.colorScheme.surfaceContainer),
-                                contentPadding = PaddingValues(0.dp)
+                                contentPadding = PaddingValues(0.dp),
+                                elevation = ButtonDefaults.buttonElevation(10.dp)
                             )
                             {
                                 Row {

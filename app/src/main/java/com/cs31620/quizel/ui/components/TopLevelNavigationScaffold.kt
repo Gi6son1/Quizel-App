@@ -27,7 +27,6 @@ fun TopLevelNavigationScaffold(
                 modifier = Modifier
                     .padding(start = 10.dp, end = 10.dp, bottom = 10.dp)
                     .clip(RoundedCornerShape(15))
-                    .background(Color.Black)
             )
             {
                 MainPageNavigationBar(navController)
