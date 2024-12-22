@@ -41,7 +41,9 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.shadow
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.graphics.RectangleShape
+import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.res.painterResource
+import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.TextStyle
 import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.tooling.preview.Preview
@@ -99,6 +101,7 @@ private fun QuestionEditScreen(
 ) {
     TopLevelBackgroundScaffold { innerPadding ->
         var title by rememberSaveable(question) { mutableStateOf(question?.title ?: "") }
+        val context = LocalContext.current
 
         var description by rememberSaveable(question) {
             mutableStateOf(
@@ -143,7 +146,7 @@ private fun QuestionEditScreen(
                 ),
                 placeholder = {
                     Text(
-                        text = "Enter title (Optional)",
+                        text = stringResource(R.string.enter_title_optional),
                         textAlign = TextAlign.Center,
                         modifier = Modifier.fillMaxWidth(),
                         fontSize = 22.sp
@@ -164,7 +167,7 @@ private fun QuestionEditScreen(
                     .weight(2f)
                     .fillMaxWidth()
                     .shadow(5.dp, MaterialTheme.shapes.medium),
-                placeholder = { Text(text = "Enter question", fontSize = 18.sp) },
+                placeholder = { Text(text = stringResource(R.string.enter_question), fontSize = 18.sp) },
                 textStyle = TextStyle.Default.copy(fontSize = 18.sp),
                 colors = OutlinedTextFieldDefaults.colors(
                     focusedContainerColor = Color.White,
@@ -189,7 +192,7 @@ private fun QuestionEditScreen(
                             .padding(5.dp)
                     ) {
                         Text(
-                            text = "Potential Answers",
+                            text = stringResource(R.string.potential_answers),
                             modifier = Modifier
                                 .weight(1.1f)
                                 .fillMaxSize()
@@ -204,10 +207,11 @@ private fun QuestionEditScreen(
                             colour = MaterialTheme.colorScheme.secondary,
                             enabled = answers.size < 10,
                             shape = MaterialTheme.shapes.medium,
-                            modifier = Modifier.weight(0.9f)
+                            modifier = Modifier
+                                .weight(0.9f)
                                 .fillMaxSize(),
                             icon = Icons.Filled.Add,
-                            text = Pair("Answer", 22)
+                            text = Pair(stringResource(R.string.answer), 22)
                         )
                     }
                     if (answers.isEmpty()) {
@@ -217,7 +221,7 @@ private fun QuestionEditScreen(
                                 .weight(8f)
                         ) {
                             Text(
-                                text = "Oh no, empty!\nAdd an answer using the\n+ Answer button",
+                                text = stringResource(R.string.oh_no_empty_potential_answers),
                                 modifier = Modifier
                                     .fillMaxSize()
                                     .padding(40.dp)
@@ -252,7 +256,7 @@ private fun QuestionEditScreen(
                                     ) {
                                         Image(
                                             painter = painterResource(id = R.drawable.green_tick),
-                                            contentDescription = "Green Tick",
+                                            contentDescription = stringResource(R.string.correct_answer_icon),
                                             modifier = Modifier
                                                 .weight(1f)
                                                 .fillMaxSize(),
@@ -279,7 +283,7 @@ private fun QuestionEditScreen(
                                         ) {
                                             Image(
                                                 painter = painterResource(id = R.drawable.bin_icon),
-                                                contentDescription = "Bin icon",
+                                                contentDescription = stringResource(R.string.delete_icon),
                                                 modifier = Modifier
                                                     .padding(10.dp)
                                                     .fillMaxSize()
@@ -300,15 +304,19 @@ private fun QuestionEditScreen(
             ) {
                 QuizelSimpleButton(
                     onClick = { showDiscardQuestionDialog = true },
-                    modifier = Modifier.weight(1f).fillMaxHeight(),
+                    modifier = Modifier
+                        .weight(1f)
+                        .fillMaxHeight(),
                     colour = MaterialTheme.colorScheme.error,
-                    text = Pair("Discard Changes", 18)
+                    text = Pair(stringResource(R.string.discard_changes), 18)
                 )
                 QuizelSimpleButton(
                     onClick = {
                         if (description.isBlank()) {
-                            invalidInfoDialogTitle = "No Question Inputted"
-                            invalidInfoDialogDescription = "Please enter a question"
+                            invalidInfoDialogTitle =
+                                context.getString(R.string.no_question_inputted)
+                            invalidInfoDialogDescription =
+                                context.getString(R.string.please_enter_a_question)
                             showInvalidInfoDialog = true
                             return@QuizelSimpleButton
                         }
@@ -337,10 +345,10 @@ private fun QuestionEditScreen(
                                 return@QuizelSimpleButton
                             }
                         }
-                        invalidInfoDialogTitle = "No Correct Answer Selected"
+                        invalidInfoDialogTitle =
+                            context.getString(R.string.no_correct_answer_selected)
                         invalidInfoDialogDescription =
-                            "A question but have one correct answer. Either add a new answer or tap an " +
-                                    "existing answer to set it as correct"
+                            context.getString(R.string.correct_answer_instructions)
                         showInvalidInfoDialog = true
                     },
                     modifier = Modifier
@@ -348,7 +356,7 @@ private fun QuestionEditScreen(
                         .fillMaxHeight(),
                     enabled = answers.isNotEmpty(),
                     colour = MaterialTheme.colorScheme.secondary,
-                text = Pair("Save Changes", 18)
+                text = Pair(stringResource(R.string.save_changes), 18)
                 )
             }
         }
@@ -369,10 +377,10 @@ private fun QuestionEditScreen(
                     onClick = onClick,
                     modifier = modifier,
                     colour = MaterialTheme.colorScheme.error,
-                    text = Pair("Discard Changes", 19)
+                    text = Pair(stringResource(R.string.discard_changes), 19)
                 )
             },
-            actionDialogMessage = "Are you sure you want to discard any changes?",
+            actionDialogMessage = stringResource(R.string.discard_any_changes_check),
             performMainAction = { returnToBank(true) }
 
         )

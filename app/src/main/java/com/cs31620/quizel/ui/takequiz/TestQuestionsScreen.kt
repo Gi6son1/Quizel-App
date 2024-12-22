@@ -37,6 +37,7 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.shadow
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.res.painterResource
+import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.tooling.preview.Preview
@@ -136,7 +137,7 @@ private fun TestQuestionsScreen(
                     showExitQuizDialog = true
                 },
                 modifier = Modifier
-                    .constrainAs(homeButton){
+                    .constrainAs(homeButton) {
                         top.linkTo(parent.top, margin = 25.dp)
                         start.linkTo(parent.start, margin = 20.dp)
                         bottom.linkTo(questionAnswerSubmitColumn.top)
@@ -145,14 +146,14 @@ private fun TestQuestionsScreen(
             ) {
                 Image(
                     painter = painterResource(id = R.drawable.house_outline),
-                    contentDescription = "Green Tick",
+                    contentDescription = stringResource(R.string.home_button),
                     modifier = Modifier
                         .fillMaxSize(),
                 )
             }
 
             Text(
-                text = "$currentScore/$totalQuestions Correct",
+                text = stringResource(R.string.current_score, currentScore, totalQuestions),
                 modifier = Modifier
                     .constrainAs(currentScoreText) {
                         top.linkTo(parent.top, margin = 50.dp)
@@ -208,7 +209,7 @@ private fun TestQuestionsScreen(
                                 },
                             text = if (currentQuestion.title.isBlank())
                             {
-                                "Question $currentQuestionNumber"
+                                stringResource(R.string.question_number, currentQuestionNumber)
 
                             } else {
                                 currentQuestion.title
@@ -216,21 +217,25 @@ private fun TestQuestionsScreen(
                             style = MaterialTheme.typography.bodyLarge,
                             fontSize = 30.sp
                         )
-                        HorizontalDivider(modifier = Modifier.constrainAs(divider){
-                            top.linkTo(questionTitle.bottom, margin = 5.dp)
-                            start.linkTo(parent.start)
-                            end.linkTo(parent.end)
-                        }.padding(horizontal = 30.dp),
+                        HorizontalDivider(modifier = Modifier
+                            .constrainAs(divider) {
+                                top.linkTo(questionTitle.bottom, margin = 5.dp)
+                                start.linkTo(parent.start)
+                                end.linkTo(parent.end)
+                            }
+                            .padding(horizontal = 30.dp),
                             thickness = 2.dp
                         )
                         Text(
                             text = currentQuestion.description,
-                            modifier = Modifier.padding(20.dp).constrainAs(questionDescription){
-                                top.linkTo(divider.bottom)
-                                start.linkTo(parent.start)
-                                end.linkTo(parent.end)
-                                bottom.linkTo(parent.bottom, margin = 30.dp)
-                            },
+                            modifier = Modifier
+                                .padding(20.dp)
+                                .constrainAs(questionDescription) {
+                                    top.linkTo(divider.bottom)
+                                    start.linkTo(parent.start)
+                                    end.linkTo(parent.end)
+                                    bottom.linkTo(parent.bottom, margin = 30.dp)
+                                },
                             fontSize = 20.sp,
                             textAlign = TextAlign.Center
                         )
@@ -287,7 +292,7 @@ private fun TestQuestionsScreen(
                             .weight(2.5f),
                         colour = MaterialTheme.colorScheme.primary,
                         shape = MaterialTheme.shapes.medium,
-                        text = Pair("Submit Answer", 20),
+                        text = Pair(stringResource(R.string.submit_answer), 20),
                         icon = Icons.AutoMirrored.Filled.Send,
                     )
                 } else {
@@ -298,7 +303,7 @@ private fun TestQuestionsScreen(
                             .weight(2.5f),
                         colour = Color.LightGray,
                         shape = MaterialTheme.shapes.medium,
-                        text = Pair("Skip Question", 20),
+                        text = Pair(stringResource(R.string.skip_question), 20),
                         icon = Icons.AutoMirrored.Filled.Send,
                     )
                 }
@@ -315,10 +320,10 @@ private fun TestQuestionsScreen(
                     modifier = modifier,
                     colors = ButtonDefaults.buttonColors(containerColor = MaterialTheme.colorScheme.primary)
                 ) {
-                    Text(text = "Skip", fontSize = 19.sp)
+                    Text(text = stringResource(R.string.skip), fontSize = 19.sp)
                 }
             },
-            actionDialogMessage = "Are you sure you want to skip? This will be counted as an incorrect answer",
+            actionDialogMessage = stringResource(R.string.skip_question_check),
             performMainAction = { skipQuestion ->
                 if (skipQuestion) {
                     nextQuestion()
@@ -335,10 +340,10 @@ private fun TestQuestionsScreen(
                     modifier = modifier,
                     colors = ButtonDefaults.buttonColors(containerColor = MaterialTheme.colorScheme.primary)
                 ) {
-                    Text(text = "Exit Quiz", fontSize = 19.sp)
+                    Text(text = stringResource(R.string.exit_quiz), fontSize = 19.sp)
                 }
             },
-            actionDialogMessage = "Are you sure you want to exit? Your quiz progress will not be saved",
+            actionDialogMessage = stringResource(R.string.exit_quiz_check),
             performMainAction = { exit ->
                 exitQuiz(exit)
             }

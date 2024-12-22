@@ -43,6 +43,7 @@ import androidx.compose.ui.draw.shadow
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.graphics.RectangleShape
 import androidx.compose.ui.res.painterResource
+import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
@@ -73,6 +74,12 @@ fun QuestionBankScreenTopLevel(
         },
         deleteQuestionsById = { selectedQuestionIds ->
             questionsViewModel.deleteQuestionsById(selectedQuestionIds)
+        },
+        editQuestion = { question ->
+            val destination = "${Screen.QuestionEdit.basePath}${question.id}"
+            navController.navigate(destination) {
+                launchSingleTop = true
+            }
         }
     )
 }
@@ -82,7 +89,8 @@ private fun QuestionBankScreen(
     navController: NavHostController,
     questionList: List<Question>,
     deleteSelectedQuestion: (Question?) -> Unit = {},
-    deleteQuestionsById: (List<Int>) -> Unit = {}
+    deleteQuestionsById: (List<Int>) -> Unit = {},
+    editQuestion: (Question) -> Unit = {}
 ) {
     TopLevelNavigationScaffold(
         navController = navController
@@ -118,7 +126,7 @@ private fun QuestionBankScreen(
                     displaySelectDelete = !displaySelectDelete
                 },
                 colour = MaterialTheme.colorScheme.error,
-                text = if (!displaySelectDelete) Pair("Delete", 20) else null,
+                text = if (!displaySelectDelete) Pair(stringResource(R.string.delete), 20) else null,
                 modifier = Modifier
                     .constrainAs(selectDelete) {
                         top.linkTo(parent.top, margin = 25.dp)
@@ -148,13 +156,10 @@ private fun QuestionBankScreen(
             ) {
                 QuizelSimpleButton(
                     colour = MaterialTheme.colorScheme.secondary,
-                    text = Pair("New Question", 25),
+                    text = Pair(stringResource(R.string.new_question), 25),
                     onClick = {
                         displaySelectDelete = false
-                        val destination = "${Screen.QuestionEdit.basePath}${0}"
-                        navController.navigate(destination) {
-                            launchSingleTop = true
-                        }
+                        editQuestion(Question())
                     },
                     modifier = Modifier
                         .fillMaxWidth()
@@ -179,7 +184,7 @@ private fun QuestionBankScreen(
                                 .fillMaxSize()
                         ) {
                             Text(
-                                text = "Oh no, empty Question Bank!\nTo add questions to the bank, use the + New Answer button!",
+                                text = stringResource(R.string.oh_no_empty_question_bank),
                                 modifier = Modifier
                                     .fillMaxSize()
                                     .padding(40.dp)
@@ -201,11 +206,7 @@ private fun QuestionBankScreen(
                                 Button(
                                     onClick = {
                                         displaySelectDelete = false
-                                        val destination =
-                                            "${Screen.QuestionEdit.basePath}${question.id}"
-                                        navController.navigate(destination) {
-                                            launchSingleTop = true
-                                        }
+                                        editQuestion(question)
                                     },
                                     modifier = Modifier
                                         .fillMaxWidth()
@@ -254,7 +255,7 @@ private fun QuestionBankScreen(
                                             ) {
                                                 Image(
                                                     painter = painterResource(id = R.drawable.bin_icon),
-                                                    contentDescription = "Bin icon",
+                                                    contentDescription = stringResource(R.string.delete_icon),
                                                     modifier = Modifier
                                                         .padding(10.dp)
                                                         .fillMaxSize()
@@ -282,7 +283,7 @@ private fun QuestionBankScreen(
                                         }
                                         Icon(
                                             imageVector = Icons.AutoMirrored.Filled.ArrowRight,
-                                            contentDescription = "Arrow right",
+                                            contentDescription = stringResource(R.string.edit_icon),
                                             modifier = Modifier
                                                 .fillMaxSize()
                                                 .wrapContentSize()
@@ -305,10 +306,10 @@ private fun QuestionBankScreen(
                         modifier = modifier,
                         colors = ButtonDefaults.buttonColors(containerColor = MaterialTheme.colorScheme.error)
                     ) {
-                        Text(text = "Delete Selected Questions", fontSize = 19.sp)
+                        Text(text = stringResource(R.string.delete_selected_questions), fontSize = 19.sp)
                     }
                 },
-                actionDialogMessage = "Are you sure you want to delete the selected questions?",
+                actionDialogMessage = stringResource(R.string.delete_selected_questions_check),
                 performMainAction = { deleteSelectedQuestions ->
                     if (deleteSelectedQuestions) {
                         val selectedQuestionIds =
@@ -341,10 +342,10 @@ private fun QuestionBankScreen(
                         modifier = modifier,
                         colors = ButtonDefaults.buttonColors(containerColor = MaterialTheme.colorScheme.error)
                     ) {
-                        Text(text = "Delete", fontSize = 19.sp)
+                        Text(text = stringResource(R.string.delete), fontSize = 19.sp)
                     }
                 },
-                actionDialogMessage = "Are you sure you want to delete this question?",
+                actionDialogMessage = stringResource(R.string.delete__question_check),
                 performMainAction = { deleteQuestion ->
                     if (deleteQuestion) {
                         deleteSelectedQuestion(selectedQuestion)

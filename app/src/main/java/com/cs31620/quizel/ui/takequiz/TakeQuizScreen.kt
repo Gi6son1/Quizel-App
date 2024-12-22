@@ -37,6 +37,7 @@ import androidx.compose.runtime.saveable.rememberSaveable
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.shadow
 import androidx.compose.ui.graphics.Color
+import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.tooling.preview.Preview
@@ -46,6 +47,7 @@ import androidx.constraintlayout.compose.ConstraintLayout
 import androidx.constraintlayout.compose.Dimension
 import androidx.navigation.NavHostController
 import androidx.navigation.compose.rememberNavController
+import com.cs31620.quizel.R
 import com.cs31620.quizel.model.QuestionsViewModel
 import com.cs31620.quizel.ui.components.Question
 import com.cs31620.quizel.ui.components.TopLevelNavigationScaffold
@@ -106,7 +108,7 @@ private fun TakeQuizScreen(navController: NavHostController,
                             .padding(8.dp)
                     ) {
                         Text(
-                            text = "Quiz Options",
+                            text = stringResource(R.string.quiz_options),
                             textAlign = TextAlign.Center,
                             style = MaterialTheme.typography.titleLarge,
                             modifier = Modifier
@@ -115,8 +117,12 @@ private fun TakeQuizScreen(navController: NavHostController,
                             fontSize = 60.sp
                         )
 
-                        Row(modifier = Modifier.padding(horizontal = 10.dp).height(50.dp)) {
-                            Text(text = "Show Current Score", modifier = Modifier.fillMaxHeight().wrapContentHeight()
+                        Row(modifier = Modifier
+                            .padding(horizontal = 10.dp)
+                            .height(50.dp)) {
+                            Text(text = stringResource(R.string.show_current_score), modifier = Modifier
+                                .fillMaxHeight()
+                                .wrapContentHeight()
                             , fontSize = 20.sp)
                             Spacer(modifier = Modifier.weight(1f))
                             QuizelSwitch(
@@ -126,8 +132,12 @@ private fun TakeQuizScreen(navController: NavHostController,
 
                         HorizontalDivider()
 
-                        Row(modifier = Modifier.padding(horizontal = 10.dp).height(50.dp)) {
-                            Text(text = "Show Progress Bar", modifier = Modifier.fillMaxHeight().wrapContentHeight()
+                        Row(modifier = Modifier
+                            .padding(horizontal = 10.dp)
+                            .height(50.dp)) {
+                            Text(text = stringResource(R.string.show_progress_bar), modifier = Modifier
+                                .fillMaxHeight()
+                                .wrapContentHeight()
                             , fontSize = 20.sp)
                             Spacer(modifier = Modifier.weight(1f))
                             QuizelSwitch(
@@ -144,10 +154,12 @@ private fun TakeQuizScreen(navController: NavHostController,
 
                         beginQuiz(quizSettingsString)
                     },
-                    modifier = Modifier.fillMaxWidth().height(70.dp),
+                    modifier = Modifier
+                        .fillMaxWidth()
+                        .height(70.dp),
                     shape = MaterialTheme.shapes.medium,
                     colour = MaterialTheme.colorScheme.primary,
-                    text = Pair("Begin Quiz", 25),
+                    text = Pair(stringResource(R.string.begin_quiz), 25),
                     icon = Icons.AutoMirrored.Filled.Send,
                     enabled = enableBeginButton
                 )

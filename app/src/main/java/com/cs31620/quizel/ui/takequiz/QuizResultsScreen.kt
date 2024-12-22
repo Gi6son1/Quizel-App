@@ -30,6 +30,7 @@ import androidx.compose.runtime.Composable
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.shadow
 import androidx.compose.ui.graphics.Color
+import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.tooling.preview.Preview
@@ -38,6 +39,7 @@ import androidx.compose.ui.unit.sp
 import androidx.constraintlayout.compose.ConstraintLayout
 import androidx.navigation.NavHostController
 import androidx.navigation.compose.rememberNavController
+import com.cs31620.quizel.R
 import com.cs31620.quizel.ui.components.TopLevelBackgroundScaffold
 import com.cs31620.quizel.ui.components.TopLevelNavigationScaffold
 import com.cs31620.quizel.ui.components.customcomposables.QuizelSimpleButton
@@ -96,7 +98,7 @@ private fun QuizResultsScreen(
             ) {
 
                 Text(
-                    text = "Your Quiz Results",
+                    text = stringResource(R.string.your_quiz_results),
                     modifier = Modifier
                         .fillMaxWidth()
                         .wrapContentWidth(),
@@ -119,7 +121,11 @@ private fun QuizResultsScreen(
                         )
 
                         Text(
-                            text = "You got $finalScore out of $totalQuestions questions correct",
+                            text = stringResource(
+                                R.string.you_got_out_of_questions_correct,
+                                finalScore,
+                                totalQuestions
+                            ),
                             textAlign = TextAlign.Center,
                             style = MaterialTheme.typography.bodyLarge,
                             modifier = Modifier
@@ -140,7 +146,7 @@ private fun QuizResultsScreen(
                         .shadow(10.dp, MaterialTheme.shapes.medium),
                     shape = MaterialTheme.shapes.medium,
                     colour = MaterialTheme.colorScheme.primary,
-                    text = Pair("Retry Quiz", 25),
+                    text = Pair(stringResource(R.string.retry_quiz), 25),
                     icon = Icons.AutoMirrored.Filled.KeyboardReturn
                 )
 
@@ -154,7 +160,7 @@ private fun QuizResultsScreen(
                         .shadow(10.dp, MaterialTheme.shapes.medium),
                     shape = MaterialTheme.shapes.medium,
                     colour = MaterialTheme.colorScheme.primary,
-                    text = Pair("Return to Home", 25),
+                    text = Pair(stringResource(R.string.return_to_home), 25),
                     icon = Icons.Filled.Menu
                 )
             }

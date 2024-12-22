@@ -26,12 +26,14 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.scale
 import androidx.compose.ui.draw.shadow
 import androidx.compose.ui.graphics.Color
+import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.TextStyle
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import androidx.compose.ui.window.Dialog
 import androidx.compose.ui.window.DialogProperties
+import com.cs31620.quizel.R
 import com.cs31620.quizel.ui.components.Answer
 import com.cs31620.quizel.ui.components.customcomposables.QuizelSimpleButton
 import com.cs31620.quizel.ui.components.customcomposables.QuizelSwitch
@@ -84,7 +86,7 @@ fun AddAnswerDialog(
                                 .weight(1.1f)
                                 .wrapContentHeight(align = Alignment.Top),
                             textStyle = TextStyle.Default.copy(fontSize = 23.sp),
-                            placeholder = { Text(text = "Enter Answer", fontSize = 23.sp) },
+                            placeholder = { Text(text = stringResource(R.string.enter_answer), fontSize = 23.sp) },
                             singleLine = true
                         )
                         Row(
@@ -94,7 +96,7 @@ fun AddAnswerDialog(
                                 .background(Color.LightGray)
                         ) {
                             Text(
-                                text = "This is the correct answer",
+                                text = stringResource(R.string.this_is_the_correct_answer),
                                 modifier = Modifier
                                     .weight(1.5f)
                                     .padding(start = 5.dp, end = 5.dp)
@@ -125,7 +127,7 @@ fun AddAnswerDialog(
                 ) {
                     QuizelSimpleButton(
                         onClick = { dialogOpen(false) },
-                        text = Pair("Cancel", 20),
+                        text = Pair(stringResource(R.string.cancel), 20),
                         modifier = Modifier
                             .weight(1f)
                             .fillMaxHeight(),
@@ -138,7 +140,7 @@ fun AddAnswerDialog(
                                 answer(Answer(text = inputText, isCorrect = toggleState))
                             }
                         },
-                        text = Pair("Save", 20),
+                        text = Pair(stringResource(R.string.save), 20),
                         modifier = Modifier
                             .weight(1f)
                             .fillMaxHeight(),

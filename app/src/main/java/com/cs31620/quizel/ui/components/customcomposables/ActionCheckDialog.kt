@@ -21,12 +21,14 @@ import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.shadow
 import androidx.compose.ui.platform.LocalView
+import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import androidx.compose.ui.window.Dialog
 import androidx.compose.ui.window.DialogProperties
 import androidx.compose.ui.window.DialogWindowProvider
+import com.cs31620.quizel.R
 
 
 @Composable
@@ -82,7 +84,7 @@ fun ActionCheckDialog(
                         onClick = { dialogOpen(false) },
                         modifier = Modifier.weight(1f).fillMaxHeight(),
                         colour = MaterialTheme.colorScheme.tertiary,
-                        text = Pair("Cancel", 20)
+                        text = Pair(stringResource(R.string.cancel), 20)
                     )
 
                     mainActionButton(

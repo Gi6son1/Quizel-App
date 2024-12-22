@@ -20,8 +20,10 @@ import androidx.compose.ui.draw.shadow
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.graphics.painter.Painter
 import androidx.compose.ui.graphics.vector.ImageVector
+import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
+import com.cs31620.quizel.R
 
 @Composable
 fun QuizelSimpleButton(
@@ -49,15 +51,21 @@ fun QuizelSimpleButton(
             if (icon != null) {
                 Icon(
                     imageVector = icon,
-                    contentDescription = "Button Icon",
-                    modifier = Modifier.size(25.dp).wrapContentSize().alpha(if (enabled) 1f else 0.5f),
+                    contentDescription = stringResource(R.string.button_icon),
+                    modifier = Modifier
+                        .size(25.dp)
+                        .wrapContentSize()
+                        .alpha(if (enabled) 1f else 0.5f),
                     tint = if (colour == Color.LightGray || colour == MaterialTheme.colorScheme.surface) Color.Black else Color.White
                 )
             } else if (image != null) {
                 Image(
                     painter = image.first,
-                    contentDescription = "Button Image",
-                    modifier = Modifier.padding(image.second.dp).wrapContentSize().alpha(if (enabled) 1f else 0.5f)
+                    contentDescription = stringResource(R.string.button_icon),
+                    modifier = Modifier
+                        .padding(image.second.dp)
+                        .wrapContentSize()
+                        .alpha(if (enabled) 1f else 0.5f)
                 )
             }
             if (text != null) {
