@@ -57,7 +57,7 @@ private fun BuildNavigationGraph(
             QuestionBankScreenTopLevel(navController, questionsViewModel)
         }
         composable(Screen.TakeQuiz.route) {
-            TakeQuizScreenTopLevel(navController)
+            TakeQuizScreenTopLevel(navController, questionsViewModel)
         }
         composable(Screen.QuestionEdit.route) {
             QuestionEditScreenTopLevel(navController, questionsViewModel, selectedQuestionId)

@@ -2,6 +2,7 @@ package com.cs31620.quizel.model
 
 import android.app.Application
 import android.util.Log
+import androidx.compose.runtime.livedata.observeAsState
 import androidx.lifecycle.AndroidViewModel
 import androidx.lifecycle.LiveData
 import androidx.lifecycle.viewModelScope

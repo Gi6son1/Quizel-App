@@ -152,6 +152,6 @@ fun AddAnswerDialog(
 
 @Preview
 @Composable
-fun AddAnswerDialogPreview() {
+private fun AddAnswerDialogPreview() {
     AddAnswerDialog(dialogIsOpen = true)
 }

@@ -68,7 +68,6 @@ fun QuizResultsScreenTopLevel(
     )
 }
 
-@SuppressLint("UnusedMaterial3ScaffoldPaddingParameter")
 @Composable
 private fun QuizResultsScreen(
     totalQuestions: Int = 0,

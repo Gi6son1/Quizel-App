@@ -3,6 +3,7 @@ package com.cs31620.quizel.ui.questionbank
 import android.util.Log
 import androidx.compose.foundation.Image
 import androidx.compose.foundation.layout.Arrangement
+import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.PaddingValues
 import androidx.compose.foundation.layout.Row
@@ -42,6 +43,7 @@ import androidx.compose.ui.draw.shadow
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.graphics.RectangleShape
 import androidx.compose.ui.res.painterResource
+import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
@@ -117,16 +119,20 @@ private fun QuestionBankScreen(
                 },
                 colour = MaterialTheme.colorScheme.error,
                 text = if (!displaySelectDelete) Pair("Delete", 20) else null,
-                modifier = Modifier.constrainAs(selectDelete) {
-                    top.linkTo(parent.top, margin = 25.dp)
-                    end.linkTo(parent.end, margin = 10.dp)
-                    bottom.linkTo(questionBankArea.top, margin = 15.dp)
-                }
+                modifier = Modifier
+                    .constrainAs(selectDelete) {
+                        top.linkTo(parent.top, margin = 25.dp)
+                        end.linkTo(parent.end, margin = 10.dp)
+                        bottom.linkTo(questionBankArea.top, margin = 15.dp)
+                    }
                     .height(50.dp),
                 shape = MaterialTheme.shapes.medium,
                 contentPadding = PaddingValues(10.dp),
                 icon = if (!displaySelectDelete) Icons.Outlined.CheckBox else null,
-                image = if (displaySelectDelete) Pair(painterResource(id = R.drawable.bin_icon), 0) else null
+                image = if (displaySelectDelete) Pair(
+                    painterResource(id = R.drawable.bin_icon),
+                    0
+                ) else null
             )
 
             Column(
@@ -142,7 +148,7 @@ private fun QuestionBankScreen(
             ) {
                 QuizelSimpleButton(
                     colour = MaterialTheme.colorScheme.secondary,
-                    text = Pair("New Question", 20),
+                    text = Pair("New Question", 25),
                     onClick = {
                         displaySelectDelete = false
                         val destination = "${Screen.QuestionEdit.basePath}${0}"
@@ -167,105 +173,123 @@ private fun QuestionBankScreen(
                     shape = MaterialTheme.shapes.medium
 
                 ) {
-
-                    LazyColumn(
-                        modifier = Modifier
-                            .fillMaxSize()
-                            .padding(start = 10.dp, end = 10.dp, top = 10.dp),
-                        verticalArrangement = Arrangement.spacedBy(10.dp),
-                        state = state
-                    ) {
-                        items(questionList) { question ->
-                            Button(
-                                onClick = {
-                                    displaySelectDelete = false
-                                    val destination = "${Screen.QuestionEdit.basePath}${question.id}"
-                                    navController.navigate(destination){
-                                        launchSingleTop = true
-                                    }
-                                },
+                    if (questionList.isEmpty()) {
+                        Box(
+                            modifier = Modifier
+                                .fillMaxSize()
+                        ) {
+                            Text(
+                                text = "Oh no, empty Question Bank!\nTo add questions to the bank, use the + New Answer button!",
                                 modifier = Modifier
-                                    .fillMaxWidth()
-                                    .height(70.dp),
-                                shape = MaterialTheme.shapes.medium,
-                                colors = ButtonDefaults.buttonColors(containerColor = MaterialTheme.colorScheme.surfaceContainer),
-                                contentPadding = PaddingValues(0.dp),
-                                elevation = ButtonDefaults.buttonElevation(10.dp)
+                                    .fillMaxSize()
+                                    .padding(40.dp)
+                                    .wrapContentSize(),
+                                style = MaterialTheme.typography.displayMedium,
+                                textAlign = TextAlign.Center,
                             )
-                            {
-                                Row {
-                                    if (displaySelectDelete) {
-                                        Surface(
-                                            modifier = Modifier
-                                                .fillMaxSize()
-                                                .weight(1f),
-                                            shape = RectangleShape,
-                                            color = MaterialTheme.colorScheme.error
-                                        ) {
-                                            Checkbox(
-                                                checked = checkedQuestionStates[question.id] == true,
-                                                onCheckedChange = {
-                                                    checkedQuestionStates[question.id] = it
-                                                },
-                                                colors = CheckboxDefaults.colors(
-                                                    checkedColor = Color.White,
-                                                    uncheckedColor = Color.White,
-                                                    checkmarkColor = Color.Black
-                                                )
-                                            )
+                        }
+
+                    } else {
+                        LazyColumn(
+                            modifier = Modifier
+                                .fillMaxSize()
+                                .padding(start = 10.dp, end = 10.dp, top = 10.dp),
+                            verticalArrangement = Arrangement.spacedBy(10.dp),
+                            state = state
+                        ) {
+                            items(questionList) { question ->
+                                Button(
+                                    onClick = {
+                                        displaySelectDelete = false
+                                        val destination =
+                                            "${Screen.QuestionEdit.basePath}${question.id}"
+                                        navController.navigate(destination) {
+                                            launchSingleTop = true
                                         }
-                                    } else {
-                                        Button(
-                                            onClick = {
-                                                selectedQuestion = question
-                                                showDeleteQuestionDialog = true
-                                            },
-                                            modifier = Modifier
-                                                .fillMaxSize()
-                                                .weight(1f),
-                                            shape = RectangleShape,
-                                            contentPadding = PaddingValues(0.dp),
-                                            colors = ButtonDefaults.buttonColors(
-                                                MaterialTheme.colorScheme.error
-                                            )
-                                        ) {
-                                            Image(
-                                                painter = painterResource(id = R.drawable.bin_icon),
-                                                contentDescription = "Bin icon",
+                                    },
+                                    modifier = Modifier
+                                        .fillMaxWidth()
+                                        .height(70.dp),
+                                    shape = MaterialTheme.shapes.medium,
+                                    colors = ButtonDefaults.buttonColors(containerColor = MaterialTheme.colorScheme.surfaceContainer),
+                                    contentPadding = PaddingValues(0.dp),
+                                    elevation = ButtonDefaults.buttonElevation(10.dp)
+                                )
+                                {
+                                    Row {
+                                        if (displaySelectDelete) {
+                                            Surface(
                                                 modifier = Modifier
-                                                    .padding(10.dp)
                                                     .fillMaxSize()
-                                            )
+                                                    .weight(1f),
+                                                shape = RectangleShape,
+                                                color = MaterialTheme.colorScheme.error
+                                            ) {
+                                                Checkbox(
+                                                    checked = checkedQuestionStates[question.id] == true,
+                                                    onCheckedChange = {
+                                                        checkedQuestionStates[question.id] = it
+                                                    },
+                                                    colors = CheckboxDefaults.colors(
+                                                        checkedColor = Color.White,
+                                                        uncheckedColor = Color.White,
+                                                        checkmarkColor = Color.Black
+                                                    )
+                                                )
+                                            }
+                                        } else {
+                                            Button(
+                                                onClick = {
+                                                    selectedQuestion = question
+                                                    showDeleteQuestionDialog = true
+                                                },
+                                                modifier = Modifier
+                                                    .fillMaxSize()
+                                                    .weight(1f),
+                                                shape = RectangleShape,
+                                                contentPadding = PaddingValues(0.dp),
+                                                colors = ButtonDefaults.buttonColors(
+                                                    MaterialTheme.colorScheme.error
+                                                )
+                                            ) {
+                                                Image(
+                                                    painter = painterResource(id = R.drawable.bin_icon),
+                                                    contentDescription = "Bin icon",
+                                                    modifier = Modifier
+                                                        .padding(10.dp)
+                                                        .fillMaxSize()
+                                                )
+                                            }
                                         }
-                                    }
-                                    Column(
-                                        modifier = Modifier
-                                            .weight(6f)
-                                            .fillMaxSize()
-                                            .wrapContentHeight()
-                                            .padding(horizontal = 5.dp, vertical = 5.dp)
-                                    ) {
-                                        if (question.title.isNotBlank()) {
+                                        Column(
+                                            modifier = Modifier
+                                                .weight(6f)
+                                                .fillMaxSize()
+                                                .wrapContentHeight()
+                                                .padding(horizontal = 5.dp, vertical = 5.dp)
+                                        ) {
+                                            if (question.title.isNotBlank()) {
+                                                Text(
+                                                    text = question.title,
+                                                    style = MaterialTheme.typography.bodyLarge,
+                                                    color = Color.Black,
+                                                )
+                                            }
                                             Text(
-                                                text = question.title,
-                                                style = MaterialTheme.typography.bodyLarge,
-                                                color = Color.Black,
+                                                text = question.description,
+                                                color = Color.Black
                                             )
                                         }
-                                        Text(
-                                            text = question.description,
-                                            color = Color.Black
+                                        Icon(
+                                            imageVector = Icons.AutoMirrored.Filled.ArrowRight,
+                                            contentDescription = "Arrow right",
+                                            modifier = Modifier
+                                                .fillMaxSize()
+                                                .wrapContentSize()
+                                                .weight(1f),
+                                            tint = Color.Black
                                         )
                                     }
-                                    Icon(
-                                        imageVector = Icons.AutoMirrored.Filled.ArrowRight,
-                                        contentDescription = "Arrow right",
-                                        modifier = Modifier
-                                            .fillMaxSize()
-                                            .wrapContentSize()
-                                            .weight(1f),
-                                        tint = Color.Black
-                                    )
                                 }
                             }
                         }
@@ -293,7 +317,10 @@ private fun QuestionBankScreen(
                                     checkedQuestionStates.apply {
                                         keysToRemove.forEach { key ->
                                             remove(key)
-                                            Log.d("QuestionBankScreen", "Question $key removed from original graph")
+                                            Log.d(
+                                                "QuestionBankScreen",
+                                                "Question $key removed from original graph"
+                                            )
                                         }
                                     }
                                 }
@@ -334,6 +361,6 @@ private fun QuestionBankScreen(
 
 @Preview
 @Composable
-fun QuestionBankScreenPreview() {
+private fun QuestionBankScreenPreview() {
     QuestionBankScreen(navController = rememberNavController(), emptyList())
 }

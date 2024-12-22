@@ -37,12 +37,12 @@ fun TopLevelBackgroundScaffold(
 
 @Preview
 @Composable
-fun TopLevelBackgroundScaffoldPreview() {
+private fun TopLevelBackgroundScaffoldPreview() {
     TopLevelBackgroundScaffold()
 }
 
 @Composable
-fun AppBackground() {
+private fun AppBackground() {
     Box(modifier = Modifier.fillMaxSize()) {
         Image(
             painter = painterResource(id = R.drawable.app_background),
@@ -53,7 +53,7 @@ fun AppBackground() {
 }
 
 @Composable
-fun AppTitle(innerPadding: PaddingValues){
+private fun AppTitle(innerPadding: PaddingValues){
     Text(
         modifier = Modifier
             .fillMaxWidth()

@@ -56,20 +56,26 @@ import com.cs31620.quizel.ui.theme.QuizelTheme
 
 @Composable
 fun TakeQuizScreenTopLevel(
-    navController: NavHostController
+    navController: NavHostController,
+    questionsViewModel: QuestionsViewModel
 ) {
+    val questionList by questionsViewModel.questionsList.observeAsState(listOf())
+
     TakeQuizScreen(navController = navController,
         beginQuiz = { quizSettingsString ->
             val destination = "${Screen.TestQuestions.basePath}${quizSettingsString}"
             navController.navigate(destination) {
                 launchSingleTop = true
             }
-            })
+            },
+        enableBeginButton = !questionList.isEmpty()
+        )
 }
 
 @Composable
 private fun TakeQuizScreen(navController: NavHostController,
-                           beginQuiz: (String) -> Unit = {}) {
+                           beginQuiz: (String) -> Unit = {},
+                           enableBeginButton: Boolean = false) {
     TopLevelNavigationScaffold(
         navController = navController
     ) { innerPadding ->
@@ -142,7 +148,8 @@ private fun TakeQuizScreen(navController: NavHostController,
                     shape = MaterialTheme.shapes.medium,
                     colour = MaterialTheme.colorScheme.primary,
                     text = Pair("Begin Quiz", 25),
-                    icon = Icons.AutoMirrored.Filled.Send
+                    icon = Icons.AutoMirrored.Filled.Send,
+                    enabled = enableBeginButton
                 )
             }
         }

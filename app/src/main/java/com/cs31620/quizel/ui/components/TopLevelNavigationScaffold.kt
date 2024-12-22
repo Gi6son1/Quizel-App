@@ -42,6 +42,6 @@ fun TopLevelNavigationScaffold(
 
 @Preview
 @Composable
-fun TopLevelNavigationScaffoldPreview() {
+private fun TopLevelNavigationScaffoldPreview() {
     TopLevelNavigationScaffold(navController = rememberNavController())
 }

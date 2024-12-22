@@ -40,6 +40,6 @@ fun InvalidInformationDialog(
 
 @Preview
 @Composable
-fun InvalidInformationDialogPreview(){
+private fun InvalidInformationDialogPreview(){
     InvalidInformationDialog("Invalid Info", "This is an invalid info message", true)
 }

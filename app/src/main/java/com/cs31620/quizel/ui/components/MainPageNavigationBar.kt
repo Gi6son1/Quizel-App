@@ -81,7 +81,7 @@ fun MainPageNavigationBar(
 
 @Preview(showBackground = true)
 @Composable
-fun MainPageNavigationBarPreview() {
+private fun MainPageNavigationBarPreview() {
     QuizelTheme {
         MainPageNavigationBar(navController = rememberNavController())
     }
