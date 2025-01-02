@@ -24,9 +24,6 @@ import androidx.compose.runtime.getValue
 import androidx.compose.runtime.setValue
 import androidx.compose.runtime.remember
 import androidx.compose.runtime.mutableIntStateOf
-import androidx.compose.runtime.mutableStateListOf
-import androidx.compose.runtime.mutableStateMapOf
-import com.cs31620.quizel.ui.navigation.Language
 import com.cs31620.quizel.ui.takequiz.QuizResultsScreenTopLevel
 import com.cs31620.quizel.ui.takequiz.TestQuestionsScreenTopLevel
 
@@ -51,14 +48,6 @@ private fun BuildNavigationGraph(
     var selectedQuestionId by remember { mutableIntStateOf(0) }
     var quizScore by remember { mutableStateOf("-1") }
     var quizSettings by remember { mutableStateOf("") }
-
-    var currentLanguage = remember {
-        mutableStateMapOf<Language, Boolean>(
-            Language.English to true,
-            Language.French to false,
-            Language.Spanish to false
-        )
-    }
 
     NavHost(
         navController = navController,

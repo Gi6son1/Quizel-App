@@ -15,7 +15,6 @@ composeNavigation = "2.8.5"
 constraintLayout = "1.1.0"
 gson = "2.10.1"
 glide = "1.0.0-beta01"
-appCompat = "1.7.0"
 
 [libraries]
 androidx-core-ktx = { group = "androidx.core", name = "core-ktx", version.ref = "coreKtx" }
@@ -42,7 +41,6 @@ androidx-room-ktx = {group = "androidx.room", name = "room-ktx", version.ref = "
 gson = { group = "com.google.code.gson", name = "gson", version.ref = "gson" }
 androidx-compose-runtime-livedata = {group = "androidx.compose.runtime", name = "runtime-livedata", version.ref = "glide"}
 glide-compose = { group = "com.github.bumptech.glide", name = "compose", version.ref = "glide"}
-androidx-appcompat = { group = "androidx.appcompat", name = "appcompat", version.ref = "appCompat"}
 
 [plugins]
 android-application = { id = "com.android.application", version.ref = "agp" }
