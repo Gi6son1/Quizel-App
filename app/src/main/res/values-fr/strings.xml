@@ -47,4 +47,7 @@
     <string name="skip_question_check">Are you sure you want to skip? This will be counted as an incorrect answer</string>
     <string name="exit_quiz">Exit Quiz</string>
     <string name="exit_quiz_check">Are you sure you want to exit? Your quiz progress will not be saved</string>
+    <string name="recent_scores">RecentScores</string>
+    <string name="change_name">Change Name</string>
+    <string name="enter_name">Enter name</string>
 </resources>

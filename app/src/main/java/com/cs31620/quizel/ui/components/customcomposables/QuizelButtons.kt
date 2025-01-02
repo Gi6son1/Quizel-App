@@ -16,11 +16,11 @@ import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.alpha
-import androidx.compose.ui.draw.shadow
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.graphics.painter.Painter
 import androidx.compose.ui.graphics.vector.ImageVector
 import androidx.compose.ui.res.stringResource
+import androidx.compose.ui.text.style.TextOverflow
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import com.cs31620.quizel.R
@@ -79,7 +79,8 @@ fun QuizelSimpleButton(
                         .wrapContentSize()
                         .alpha(if (enabled) 1f else 0.5f),
                     color = if (colour == Color.LightGray ||
-                        colour == MaterialTheme.colorScheme.surfaceContainer) Color.Black else Color.White
+                        colour == MaterialTheme.colorScheme.surfaceContainer) Color.Black else Color.White,
+                    overflow = TextOverflow.Ellipsis,
                 )
             }
 

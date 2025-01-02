@@ -1,6 +1,7 @@
 package com.cs31620.quizel.ui.takequiz
 
 import android.annotation.SuppressLint
+import android.util.Log
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Row
@@ -17,6 +18,7 @@ import androidx.compose.foundation.layout.wrapContentWidth
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.automirrored.filled.KeyboardReturn
 import androidx.compose.material.icons.automirrored.filled.Send
+import androidx.compose.material.icons.filled.Edit
 import androidx.compose.material.icons.filled.KeyboardReturn
 import androidx.compose.material.icons.filled.Menu
 import androidx.compose.material3.Button
@@ -27,6 +29,11 @@ import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Surface
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.livedata.observeAsState
+import androidx.compose.runtime.getValue
+import androidx.compose.runtime.mutableStateOf
+import androidx.compose.runtime.saveable.rememberSaveable
+import androidx.compose.runtime.setValue
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.shadow
 import androidx.compose.ui.graphics.Color
@@ -40,19 +47,25 @@ import androidx.constraintlayout.compose.ConstraintLayout
 import androidx.navigation.NavHostController
 import androidx.navigation.compose.rememberNavController
 import com.cs31620.quizel.R
+import com.cs31620.quizel.model.ScoresViewModel
+import com.cs31620.quizel.ui.components.Score
 import com.cs31620.quizel.ui.components.TopLevelBackgroundScaffold
 import com.cs31620.quizel.ui.components.TopLevelNavigationScaffold
 import com.cs31620.quizel.ui.components.customcomposables.QuizelSimpleButton
 import com.cs31620.quizel.ui.components.customcomposables.QuizelSwitch
+import com.cs31620.quizel.ui.components.customcomposables.RecentScoresDisplay
 import com.cs31620.quizel.ui.navigation.Screen
+import com.cs31620.quizel.ui.questionbank.TextInputDialog
 import com.cs31620.quizel.ui.theme.QuizelTheme
 
 @Composable
 fun QuizResultsScreenTopLevel(
     navController: NavHostController,
-    quizResults: String
+    quizResults: String,
+    scoresViewModel: ScoresViewModel
 ) {
     val (finalScore, totalQuestions) = quizResults.split(",").map { it.toInt() }
+    val scoresList by scoresViewModel.scoresList.observeAsState(listOf())
 
     QuizResultsScreen(totalQuestions = totalQuestions, finalScore = finalScore,
         restartQuiz = { restart ->
@@ -66,6 +79,12 @@ fun QuizResultsScreenTopLevel(
             if (goHome) {
                 navController.popBackStack(Screen.TakeQuiz.route, inclusive = false)
             }
+        },
+        recentScores = scoresList,
+        changeName = { name ->
+            val recentScore = scoresList.first()
+            Log.d("QuizResultsScreenTopLevel", "changeName: $name for score $recentScore" )
+            scoresViewModel.updateScoreWithUsername(score = recentScore, username = name)
         }
     )
 }
@@ -75,7 +94,9 @@ private fun QuizResultsScreen(
     totalQuestions: Int = 0,
     finalScore: Int = 0,
     restartQuiz: (Boolean) -> Unit = {},
-    goHome: (Boolean) -> Unit = {}
+    goHome: (Boolean) -> Unit = {},
+    recentScores: List<Score>,
+    changeName: (String) -> Unit = {},
 ) {
     TopLevelBackgroundScaffold(showTitle = false) { innerPadding ->
         ConstraintLayout(
@@ -86,6 +107,7 @@ private fun QuizResultsScreen(
         )
         {
             val (content) = createRefs()
+            var showChangeNameDialog by rememberSaveable { mutableStateOf(false) }
 
             Column(
                 modifier = Modifier.constrainAs(content) {
@@ -134,16 +156,39 @@ private fun QuizResultsScreen(
                             fontSize = 30.sp
                         )
 
+                        HorizontalDivider(modifier = Modifier.padding(vertical = 5.dp))
+
+                        Text(
+                            text = stringResource(R.string.recent_scores),
+                            style = MaterialTheme.typography.titleLarge,
+                            fontSize = 35.sp,
+                        )
+                        RecentScoresDisplay(scoresList = recentScores)
+                        Text(text = "Your score is saved under: ${recentScores.first().username}",
+                            fontWeight = FontWeight.Bold,
+                            fontSize = 20.sp,
+                            textAlign = TextAlign.Center,
+                            modifier = Modifier.padding(vertical = 5.dp).fillMaxWidth())
                     }
                 }
+                QuizelSimpleButton(
+                    onClick = {showChangeNameDialog = true},
+                    modifier = Modifier
+                        .fillMaxWidth()
+                        .height(70.dp),
+                    shape = MaterialTheme.shapes.medium,
+                    colour = Color.LightGray,
+                    text = Pair(stringResource(R.string.change_name), 25),
+                    icon = Icons.Filled.Edit
+                )
+
                 QuizelSimpleButton(
                     onClick = {
                         restartQuiz(true)
                     },
                     modifier = Modifier
                         .fillMaxWidth()
-                        .height(70.dp)
-                        .shadow(10.dp, MaterialTheme.shapes.medium),
+                        .height(70.dp),
                     shape = MaterialTheme.shapes.medium,
                     colour = MaterialTheme.colorScheme.primary,
                     text = Pair(stringResource(R.string.retry_quiz), 25),
@@ -156,13 +201,22 @@ private fun QuizResultsScreen(
                     },
                     modifier = Modifier
                         .fillMaxWidth()
-                        .height(70.dp)
-                        .shadow(10.dp, MaterialTheme.shapes.medium),
+                        .height(70.dp),
                     shape = MaterialTheme.shapes.medium,
                     colour = MaterialTheme.colorScheme.primary,
                     text = Pair(stringResource(R.string.return_to_home), 25),
                     icon = Icons.Filled.Menu
                 )
+
+                TextInputDialog(
+                    dialogIsOpen = showChangeNameDialog,
+                    dialogOpen = { isOpen -> showChangeNameDialog = isOpen },
+                    placeholder = stringResource(R.string.enter_name),
+                    response = { name ->
+                        changeName(name as String) }
+                )
+
+
             }
         }
     }

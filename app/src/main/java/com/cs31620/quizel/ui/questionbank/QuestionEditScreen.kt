@@ -46,6 +46,7 @@ import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.TextStyle
 import androidx.compose.ui.text.style.TextAlign
+import androidx.compose.ui.text.style.TextOverflow
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
@@ -156,7 +157,7 @@ private fun QuestionEditScreen(
                     focusedContainerColor = Color.White,
                     unfocusedContainerColor = Color.White
                 ),
-                shape = MaterialTheme.shapes.medium
+                shape = MaterialTheme.shapes.medium,
 
             )
             OutlinedTextField(
@@ -268,7 +269,8 @@ private fun QuestionEditScreen(
                                                 .weight(6f)
                                                 .fillMaxSize()
                                                 .wrapContentHeight(),
-                                            fontSize = 20.sp
+                                            fontSize = 20.sp,
+                                            overflow = TextOverflow.Ellipsis,
                                         )
                                         Button(
                                             onClick = { answers.remove(answer) },
@@ -366,9 +368,11 @@ private fun QuestionEditScreen(
             showDiscardQuestionDialog = true
         }
 
-        AddAnswerDialog(dialogIsOpen = showAddAnswerDialog,
+        TextInputDialog(dialogIsOpen = showAddAnswerDialog,
             dialogOpen = { isOpen -> showAddAnswerDialog = isOpen },
-            answer = { answer -> addAnswerToAnswerList(answers, answer) })
+            isAnswer = true,
+            placeholder = stringResource(R.string.enter_answer),
+            response = { answer -> addAnswerToAnswerList(answers, answer as Answer) })
 
         ActionCheckDialog(dialogIsOpen = showDiscardQuestionDialog,
             dialogOpen = { isOpen -> showDiscardQuestionDialog = isOpen },

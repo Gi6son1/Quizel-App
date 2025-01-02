@@ -7,12 +7,14 @@ import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.fillMaxHeight
 import androidx.compose.foundation.layout.fillMaxSize
+import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.width
 import androidx.compose.foundation.layout.wrapContentHeight
 import androidx.compose.material3.Card
 import androidx.compose.material3.MaterialTheme
+import androidx.compose.material3.OutlinedTextField
 import androidx.compose.material3.Text
 import androidx.compose.material3.TextField
 import androidx.compose.runtime.Composable
@@ -28,6 +30,7 @@ import androidx.compose.ui.draw.shadow
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.TextStyle
+import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
@@ -40,10 +43,12 @@ import com.cs31620.quizel.ui.components.customcomposables.QuizelSwitch
 import com.cs31620.quizel.ui.components.customcomposables.getDialogWindow
 
 @Composable
-fun AddAnswerDialog(
+fun TextInputDialog(
     dialogIsOpen: Boolean,
     dialogOpen: (Boolean) -> Unit = {},
-    answer: (Answer) -> Unit = {}
+    response: (Any) -> Unit = {},
+    isAnswer: Boolean = false,
+    placeholder: String = ""
 ) {
     if (dialogIsOpen) {
         Dialog(
@@ -68,54 +73,55 @@ fun AddAnswerDialog(
             Column(
                 modifier = Modifier
                     .width(350.dp)
-                    .height(225.dp)
+                    .height(230.dp),
             ) {
                 Card(
                     modifier = Modifier
                         .align(Alignment.CenterHorizontally)
-                        .weight(1.5f)
                         .shadow(5.dp, MaterialTheme.shapes.medium),
-
                     ) {
                     Column {
                         TextField(
                             value = inputText,
                             onValueChange = { inputText = it },
                             modifier = Modifier
-                                .fillMaxSize()
-                                .weight(1.1f)
+                                .fillMaxWidth()
+                                .height(63.dp)
                                 .wrapContentHeight(align = Alignment.Top),
-                            textStyle = TextStyle.Default.copy(fontSize = 23.sp),
-                            placeholder = { Text(text = stringResource(R.string.enter_answer), fontSize = 23.sp) },
-                            singleLine = true
+                            textStyle = TextStyle.Default.copy(fontSize = 27.sp),
+                            placeholder = { Text(text = placeholder, fontSize = 27.sp) },
+                            singleLine = true,
                         )
-                        Row(
-                            modifier = Modifier
-                                .weight(1.5f)
-                                .fillMaxSize()
-                                .background(Color.LightGray)
-                        ) {
-                            Text(
-                                text = stringResource(R.string.this_is_the_correct_answer),
+                        if (isAnswer)
+                        {
+                            Row(
                                 modifier = Modifier
-                                    .weight(1.5f)
-                                    .padding(start = 5.dp, end = 5.dp)
-                                    .fillMaxHeight()
-                                    .wrapContentHeight(),
-                                fontSize = 22.sp,
-                                textAlign = androidx.compose.ui.text.style.TextAlign.Right
-                            )
-                            QuizelSwitch(
-                                checked = toggleState,
-                                onCheckedChange = {
-                                    toggleState = it
-                                },
-                                modifier = Modifier
-                                    .weight(1f)
+                                    .height(80.dp)
                                     .fillMaxSize()
-                                    .scale(1.25f)
-                                    .padding(end = 10.dp)
-                            )
+                                    .background(Color.LightGray)
+                            ) {
+                                Text(
+                                    text = stringResource(R.string.this_is_the_correct_answer),
+                                    modifier = Modifier
+                                        .weight(1.5f)
+                                        .padding(start = 5.dp, end = 5.dp)
+                                        .fillMaxHeight()
+                                        .wrapContentHeight(),
+                                    fontSize = 22.sp,
+                                    textAlign = TextAlign.Right
+                                )
+                                QuizelSwitch(
+                                    checked = toggleState,
+                                    onCheckedChange = {
+                                        toggleState = it
+                                    },
+                                    modifier = Modifier
+                                        .weight(1f)
+                                        .fillMaxSize()
+                                        .scale(1.25f)
+                                        .padding(end = 10.dp)
+                                )
+                            }
                         }
                     }
                 }
@@ -123,7 +129,7 @@ fun AddAnswerDialog(
                     horizontalArrangement = Arrangement.spacedBy(10.dp),
                     modifier = Modifier
                         .padding(top = 25.dp)
-                        .weight(1f)
+                        .height(65.dp)
                 ) {
                     QuizelSimpleButton(
                         onClick = { dialogOpen(false) },
@@ -137,7 +143,12 @@ fun AddAnswerDialog(
                         onClick = {
                             dialogOpen(false)
                             if (inputText.isNotBlank()) {
-                                answer(Answer(text = inputText, isCorrect = toggleState))
+                                response(
+                                    if (isAnswer)
+                                        Answer(text = inputText, isCorrect = toggleState)
+                                    else
+                                        inputText
+                                )
                             }
                         },
                         text = Pair(stringResource(R.string.save), 20),
@@ -155,5 +166,5 @@ fun AddAnswerDialog(
 @Preview
 @Composable
 private fun AddAnswerDialogPreview() {
-    AddAnswerDialog(dialogIsOpen = true)
+   TextInputDialog(dialogIsOpen = true)
 }

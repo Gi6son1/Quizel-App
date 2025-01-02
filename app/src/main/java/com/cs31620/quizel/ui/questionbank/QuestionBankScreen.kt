@@ -45,6 +45,7 @@ import androidx.compose.ui.graphics.RectangleShape
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.style.TextAlign
+import androidx.compose.ui.text.style.TextOverflow
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
@@ -274,11 +275,14 @@ private fun QuestionBankScreen(
                                                     text = question.title,
                                                     style = MaterialTheme.typography.bodyLarge,
                                                     color = Color.Black,
+                                                    maxLines = 1,
+                                                    overflow = TextOverflow.Ellipsis
                                                 )
                                             }
                                             Text(
                                                 text = question.description,
-                                                color = Color.Black
+                                                color = Color.Black,
+                                                overflow = TextOverflow.Ellipsis,
                                             )
                                         }
                                         Icon(

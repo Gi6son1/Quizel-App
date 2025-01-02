@@ -2,6 +2,7 @@ package com.cs31620.quizel.model
 
 import android.app.Application
 import android.util.Log
+import androidx.compose.runtime.livedata.observeAsState
 import androidx.lifecycle.AndroidViewModel
 import androidx.lifecycle.LiveData
 import androidx.lifecycle.viewModelScope
@@ -17,6 +18,8 @@ class ScoresViewModel(application: Application) : AndroidViewModel(application) 
     var scoresList: LiveData<List<Score>> = repository.getAllRecentScores()
         private set
 
+    var mostRecentUsername: LiveData<String> = repository.getMostRecentUsername()
+
     fun addNewScore(score: Score?) {
         viewModelScope.launch(Dispatchers.IO) {
             if (score != null) {
@@ -25,9 +28,10 @@ class ScoresViewModel(application: Application) : AndroidViewModel(application) 
         }
     }
 
-    fun updateScore(score: Score?) {
+    fun updateScoreWithUsername(score: Score?, username: String?) {
         viewModelScope.launch(Dispatchers.IO) {
             if (score != null) {
+                score.username = username ?: "User"
                 repository.updateScore(score)
             }
         }

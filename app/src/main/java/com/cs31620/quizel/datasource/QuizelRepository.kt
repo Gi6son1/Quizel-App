@@ -43,5 +43,6 @@ class QuizelRepository(application: Application) {
         scoreDao.insertScore(score)
     }
 
+    fun getMostRecentUsername() = scoreDao.getMostRecentUsername()
 
 }

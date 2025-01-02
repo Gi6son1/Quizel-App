@@ -24,6 +24,7 @@ import androidx.compose.runtime.getValue
 import androidx.compose.runtime.setValue
 import androidx.compose.runtime.remember
 import androidx.compose.runtime.mutableIntStateOf
+import com.cs31620.quizel.model.ScoresViewModel
 import com.cs31620.quizel.ui.takequiz.QuizResultsScreenTopLevel
 import com.cs31620.quizel.ui.takequiz.TestQuestionsScreenTopLevel
 
@@ -42,7 +43,8 @@ class MainActivity : ComponentActivity() {
 
 @Composable
 private fun BuildNavigationGraph(
-    questionsViewModel: QuestionsViewModel = viewModel()
+    questionsViewModel: QuestionsViewModel = viewModel(),
+    scoresViewModel: ScoresViewModel = viewModel()
 ) {
     val navController = rememberNavController()
     var selectedQuestionId by remember { mutableIntStateOf(0) }
@@ -57,7 +59,7 @@ private fun BuildNavigationGraph(
             QuestionBankScreenTopLevel(navController, questionsViewModel)
         }
         composable(Screen.TakeQuiz.route) {
-            TakeQuizScreenTopLevel(navController, questionsViewModel)
+            TakeQuizScreenTopLevel(navController, questionsViewModel, scoresViewModel)
         }
         composable(Screen.QuestionEdit.route) {
             QuestionEditScreenTopLevel(navController, questionsViewModel, selectedQuestionId)
@@ -74,7 +76,7 @@ private fun BuildNavigationGraph(
             }
         }
         composable(Screen.TestQuestions.route) {
-            TestQuestionsScreenTopLevel(navController, questionsViewModel, quizSettings)
+            TestQuestionsScreenTopLevel(navController, questionsViewModel, quizSettings, scoresViewModel)
         }
         composable(
             Screen.TestQuestions.routePath(),
@@ -84,11 +86,11 @@ private fun BuildNavigationGraph(
                 if (it.containsKey(Screen.TestQuestions.argument)){
                     quizSettings = it.getString(Screen.TestQuestions.argument)?: "11"
                 }
-                TestQuestionsScreenTopLevel(navController, questionsViewModel, quizSettings)
+                TestQuestionsScreenTopLevel(navController, questionsViewModel, quizSettings, scoresViewModel)
             }
         }
         composable(Screen.QuizResults.route) {
-            QuizResultsScreenTopLevel(navController, quizScore)
+            QuizResultsScreenTopLevel(navController, quizScore, scoresViewModel)
         }
         composable(
             Screen.QuizResults.routePath(),
@@ -98,7 +100,7 @@ private fun BuildNavigationGraph(
                 if (it.containsKey(Screen.QuizResults.argument)){
                     quizScore = it.getString(Screen.QuizResults.argument)?: "-1"
                 }
-                QuizResultsScreenTopLevel(navController, quizScore)
+                QuizResultsScreenTopLevel(navController, quizScore, scoresViewModel)
             }
         }
 

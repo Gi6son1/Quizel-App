@@ -36,6 +36,7 @@ import androidx.compose.runtime.setValue
 import androidx.compose.runtime.saveable.rememberSaveable
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.shadow
+import androidx.compose.ui.focus.focusModifier
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.font.FontWeight
@@ -49,19 +50,24 @@ import androidx.navigation.NavHostController
 import androidx.navigation.compose.rememberNavController
 import com.cs31620.quizel.R
 import com.cs31620.quizel.model.QuestionsViewModel
+import com.cs31620.quizel.model.ScoresViewModel
 import com.cs31620.quizel.ui.components.Question
+import com.cs31620.quizel.ui.components.Score
 import com.cs31620.quizel.ui.components.TopLevelNavigationScaffold
 import com.cs31620.quizel.ui.components.customcomposables.QuizelSimpleButton
 import com.cs31620.quizel.ui.components.customcomposables.QuizelSwitch
+import com.cs31620.quizel.ui.components.customcomposables.RecentScoresDisplay
 import com.cs31620.quizel.ui.navigation.Screen
 import com.cs31620.quizel.ui.theme.QuizelTheme
 
 @Composable
 fun TakeQuizScreenTopLevel(
     navController: NavHostController,
-    questionsViewModel: QuestionsViewModel
+    questionsViewModel: QuestionsViewModel,
+    scoresViewModel: ScoresViewModel
 ) {
     val questionList by questionsViewModel.questionsList.observeAsState(listOf())
+    val scoresList by scoresViewModel.scoresList.observeAsState(listOf())
 
     TakeQuizScreen(navController = navController,
         beginQuiz = { quizSettingsString ->
@@ -70,14 +76,16 @@ fun TakeQuizScreenTopLevel(
                 launchSingleTop = true
             }
             },
-        enableBeginButton = !questionList.isEmpty()
+        enableBeginButton = !questionList.isEmpty(),
+        recentScores = scoresList
         )
 }
 
 @Composable
 private fun TakeQuizScreen(navController: NavHostController,
                            beginQuiz: (String) -> Unit = {},
-                           enableBeginButton: Boolean = false) {
+                           enableBeginButton: Boolean = false,
+                           recentScores: List<Score>) {
     TopLevelNavigationScaffold(
         navController = navController
     ) { innerPadding ->
@@ -102,7 +110,24 @@ private fun TakeQuizScreen(navController: NavHostController,
             },
                 verticalArrangement = Arrangement.spacedBy(10.dp)
             ) {
-                Card(modifier = Modifier.shadow(10.dp, MaterialTheme.shapes.medium)) {
+                Card(modifier = Modifier.shadow(10.dp, MaterialTheme.shapes.medium).fillMaxWidth()) {
+                    Column(
+                        modifier = Modifier.padding(vertical = 15.dp, horizontal = 10.dp)
+                    ){
+                        Text(
+                            text = stringResource(R.string.recent_scores),
+                            textAlign = TextAlign.Center,
+                            style = MaterialTheme.typography.titleLarge,
+                            modifier = Modifier
+                                .fillMaxWidth()
+                                .wrapContentWidth(),
+                            fontSize = 60.sp
+                        )
+                        RecentScoresDisplay(modifier = Modifier.fillMaxWidth(), scoresList = recentScores)
+                    }
+
+                }
+                Card(modifier = Modifier.shadow(10.dp, MaterialTheme.shapes.medium).fillMaxWidth()) {
                     Column(
                         modifier = Modifier
                             .padding(8.dp)
@@ -172,5 +197,5 @@ private fun TakeQuizScreen(navController: NavHostController,
 @Preview
 @Composable
 private fun TakeQuizScreenPreview() {
-    QuizelTheme { TakeQuizScreen(navController = rememberNavController()) }
+    QuizelTheme { TakeQuizScreen(navController = rememberNavController(), recentScores = listOf()) }
 }

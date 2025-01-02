@@ -14,6 +14,8 @@ import androidx.compose.foundation.layout.wrapContentSize
 import androidx.compose.foundation.lazy.grid.GridCells
 import androidx.compose.foundation.lazy.grid.LazyVerticalGrid
 import androidx.compose.foundation.lazy.grid.items
+import androidx.compose.foundation.rememberScrollState
+import androidx.compose.foundation.verticalScroll
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.automirrored.filled.Send
 import androidx.compose.material3.Button
@@ -40,6 +42,7 @@ import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.text.style.TextAlign
+import androidx.compose.ui.text.style.TextOverflow
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
@@ -48,9 +51,11 @@ import androidx.constraintlayout.compose.Dimension
 import androidx.navigation.NavHostController
 import com.cs31620.quizel.R
 import com.cs31620.quizel.model.QuestionsViewModel
+import com.cs31620.quizel.model.ScoresViewModel
 import com.cs31620.quizel.ui.components.customcomposables.ActionCheckDialog
 import com.cs31620.quizel.ui.components.Answer
 import com.cs31620.quizel.ui.components.Question
+import com.cs31620.quizel.ui.components.Score
 import com.cs31620.quizel.ui.components.TopLevelBackgroundScaffold
 import com.cs31620.quizel.ui.components.customcomposables.QuizelSimpleButton
 import com.cs31620.quizel.ui.navigation.Screen
@@ -59,19 +64,21 @@ import com.cs31620.quizel.ui.navigation.Screen
 fun TestQuestionsScreenTopLevel(
     navController: NavHostController,
     questionsViewModel: QuestionsViewModel,
-    quizViewParameters: String
+    quizViewParameters: String,
+    scoresViewModel: ScoresViewModel
 ) {
     val questionList by questionsViewModel.questionsList.observeAsState(listOf())
     val shuffledList by rememberSaveable { mutableStateOf(questionList.shuffled()) }
 
     val (showProgressBar, showNumberCorrect) = quizViewParameters.split(",").map { it == "1" }
+    val mostRecentUsername by scoresViewModel.mostRecentUsername.observeAsState("")
 
     TestQuestionsScreen(
         questionList = shuffledList,
 
         quizResultsScreen = { quizResults ->
             val destination = "${Screen.QuizResults.basePath}${quizResults}"
-            navController.navigate(destination){
+            navController.navigate(destination) {
                 launchSingleTop = true
             }
         },
@@ -82,7 +89,11 @@ fun TestQuestionsScreenTopLevel(
             }
         },
         showNumberCorrect = showNumberCorrect,
-        showProgressBar = showProgressBar
+        showProgressBar = showProgressBar,
+        saveScore = { score ->
+            score.username = mostRecentUsername
+            scoresViewModel.addNewScore(score)
+        }
     )
 }
 
@@ -92,7 +103,8 @@ private fun TestQuestionsScreen(
     quizResultsScreen: (String) -> Unit = {},
     exitQuiz: (Boolean) -> Unit = {},
     showNumberCorrect: Boolean = true,
-    showProgressBar: Boolean = true
+    showProgressBar: Boolean = true,
+    saveScore: (Score) -> Unit = {}
 ) {
     TopLevelBackgroundScaffold(showTitle = !showNumberCorrect) { innerPadding ->
 
@@ -101,11 +113,11 @@ private fun TestQuestionsScreen(
         var currentScore by rememberSaveable { mutableIntStateOf(0) }
         val totalQuestions = questionList.size
 
-        var selectedAnswer by rememberSaveable (currentQuestion) { mutableStateOf<Answer?>(null) }
+        var selectedAnswer by rememberSaveable(currentQuestion) { mutableStateOf<Answer?>(null) }
         var showSkipDialog by rememberSaveable { mutableStateOf(false) }
         var showExitQuizDialog by rememberSaveable { mutableStateOf(false) }
 
-        val shuffledAnswers = rememberSaveable (currentQuestion) {
+        val shuffledAnswers = rememberSaveable(currentQuestion) {
             currentQuestion.answers.shuffled()
         }
 
@@ -114,6 +126,7 @@ private fun TestQuestionsScreen(
         fun nextQuestion(gotCorrect: Boolean = false) {
             currentScore = if (gotCorrect) currentScore + 1 else currentScore
             if (currentQuestionNumber == totalQuestions) {
+                saveScore(Score(score = currentScore, numQuestions = totalQuestions))
                 quizResultsScreen(transferResultsToString())
             } else {
                 currentQuestion = questionList[currentQuestionNumber]
@@ -179,12 +192,12 @@ private fun TestQuestionsScreen(
                 horizontalAlignment = Alignment.CenterHorizontally,
                 verticalArrangement = Arrangement.spacedBy(20.dp)
             ) {
-                if (showProgressBar){
+                if (showProgressBar) {
                     LinearProgressIndicator(
                         modifier = Modifier
                             .weight(0.25f)
                             .fillMaxWidth(),
-                        progress = {currentQuestionNumber/totalQuestions.toFloat()},
+                        progress = { currentQuestionNumber / totalQuestions.toFloat() },
                         trackColor = MaterialTheme.colorScheme.surface
                     )
                 }
@@ -206,16 +219,17 @@ private fun TestQuestionsScreen(
                                     top.linkTo(parent.top, margin = 20.dp)
                                     start.linkTo(parent.start)
                                     end.linkTo(parent.end)
-                                },
-                            text = if (currentQuestion.title.isBlank())
-                            {
+                                }
+                                .padding(horizontal = 10.dp),
+                            text = if (currentQuestion.title.isBlank()) {
                                 stringResource(R.string.question_number, currentQuestionNumber)
 
                             } else {
                                 currentQuestion.title
                             },
                             style = MaterialTheme.typography.bodyLarge,
-                            fontSize = 30.sp
+                            fontSize = 30.sp,
+                            textAlign = TextAlign.Center,
                         )
                         HorizontalDivider(modifier = Modifier
                             .constrainAs(divider) {
@@ -226,19 +240,22 @@ private fun TestQuestionsScreen(
                             .padding(horizontal = 30.dp),
                             thickness = 2.dp
                         )
-                        Text(
-                            text = currentQuestion.description,
-                            modifier = Modifier
-                                .padding(20.dp)
-                                .constrainAs(questionDescription) {
-                                    top.linkTo(divider.bottom)
-                                    start.linkTo(parent.start)
-                                    end.linkTo(parent.end)
-                                    bottom.linkTo(parent.bottom, margin = 30.dp)
-                                },
-                            fontSize = 20.sp,
-                            textAlign = TextAlign.Center
-                        )
+                        Column(modifier = Modifier
+                            .padding(20.dp)
+                            .constrainAs(questionDescription) {
+                                top.linkTo(divider.bottom)
+                                start.linkTo(parent.start)
+                                end.linkTo(parent.end)
+                                bottom.linkTo(parent.bottom, margin = 30.dp)
+                            }
+                            .verticalScroll(rememberScrollState())
+                        ) {
+                            Text(
+                                text = currentQuestion.description,
+                                fontSize = 20.sp,
+                                textAlign = TextAlign.Center,
+                                )
+                        }
                     }
                 }
                 Surface(
@@ -272,7 +289,7 @@ private fun TestQuestionsScreen(
                                     .height(80.dp),
                                 shape = MaterialTheme.shapes.medium,
                                 colour = if (selectedAnswer == answer) MaterialTheme.colorScheme.primary
-                                             else  MaterialTheme.colorScheme.surfaceContainer,
+                                else MaterialTheme.colorScheme.surfaceContainer,
                                 text = Pair(answer.text, 20),
                             )
                         }
@@ -281,7 +298,7 @@ private fun TestQuestionsScreen(
                 if (selectedAnswer != null) {
                     QuizelSimpleButton(
                         onClick = {
-                            if (selectedAnswer!!.isCorrect){
+                            if (selectedAnswer!!.isCorrect) {
                                 nextQuestion(true)
                             } else {
                                 nextQuestion()
