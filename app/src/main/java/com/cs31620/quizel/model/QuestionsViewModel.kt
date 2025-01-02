@@ -2,7 +2,6 @@ package com.cs31620.quizel.model
 
 import android.app.Application
 import android.util.Log
-import androidx.compose.runtime.livedata.observeAsState
 import androidx.lifecycle.AndroidViewModel
 import androidx.lifecycle.LiveData
 import androidx.lifecycle.viewModelScope
@@ -29,7 +28,7 @@ class QuestionsViewModel(application: Application) : AndroidViewModel(applicatio
     fun addNewQuestion(question: Question?) {
         viewModelScope.launch(Dispatchers.IO) {
             if (question != null) {
-                repository.insert(question)
+                repository.insertSingleQuestion(question)
             }
         }
     }

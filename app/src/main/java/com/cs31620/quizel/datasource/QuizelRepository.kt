@@ -2,11 +2,13 @@ package com.cs31620.quizel.datasource
 
 import android.app.Application
 import com.cs31620.quizel.ui.components.Question
+import com.cs31620.quizel.ui.components.Score
 
 class QuizelRepository(application: Application) {
     private val questionDao = QuizelRoomDatabase.getDatabase(application)!!.questionDao()
+    private val scoreDao = QuizelRoomDatabase.getDatabase(application)!!.scoreDao()
 
-    suspend fun insert(question: Question) {
+    suspend fun insertSingleQuestion(question: Question) {
         questionDao.insertSingleQuestion(question)
     }
 
@@ -30,4 +32,16 @@ class QuizelRepository(application: Application) {
     suspend fun deleteQuestionsByIds(questionIds: List<Int>) {
         questionDao.deleteQuestionsByIds(questionIds)
     }
+
+    fun getAllRecentScores() = scoreDao.getAllRecentScores()
+
+    suspend fun updateScore(score: Score) {
+        scoreDao.updateScore(score)
+    }
+
+    suspend fun insertScore(score: Score) {
+        scoreDao.insertScore(score)
+    }
+
+
 }

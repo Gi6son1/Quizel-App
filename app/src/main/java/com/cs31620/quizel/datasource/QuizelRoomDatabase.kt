@@ -8,17 +8,20 @@ import androidx.room.TypeConverters
 import androidx.sqlite.db.SupportSQLiteDatabase
 import com.cs31620.quizel.datasource.util.AnswerConverter
 import com.cs31620.quizel.model.QuestionDao
+import com.cs31620.quizel.model.ScoreDao
 import com.cs31620.quizel.ui.components.Answer
 import com.cs31620.quizel.ui.components.Question
+import com.cs31620.quizel.ui.components.Score
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.launch
 
-@Database(entities = [Question::class], version = 1)
+@Database(entities = [Question::class,Score::class], version = 1)
 @TypeConverters(AnswerConverter::class)
 abstract class QuizelRoomDatabase : RoomDatabase() {
 
     abstract fun questionDao(): QuestionDao
+    abstract fun scoreDao(): ScoreDao
 
     companion object {
         private var instance: QuizelRoomDatabase? = null
@@ -44,9 +47,9 @@ abstract class QuizelRoomDatabase : RoomDatabase() {
                 override fun onCreate(db: SupportSQLiteDatabase) {
                     super.onCreate(db)
 
-                    /*coroutineScope.launch {
+                    coroutineScope.launch {
                         populateDatabase(context, getDatabase(context)!!)
-                    }*/
+                    }
                 }
             }
         }
@@ -86,7 +89,39 @@ abstract class QuizelRoomDatabase : RoomDatabase() {
                 question3
             )
 
+            val score1 = Score(
+                username = "Owain",
+                score = 3,
+                numQuestions = 3
+            )
+
+            val score2 = Score(
+                username = "John",
+                score = 2,
+                numQuestions = 4
+            )
+
+            val score3 = Score(
+                username = "Jane",
+                score = 1,
+                numQuestions = 4
+            )
+
+            val score4 = Score(
+                username = "Bob",
+                score = 0,
+                numQuestions = 1
+            )
+
             val dao = instance.questionDao()
+
+            val scoreDao = instance.scoreDao()
+
+            scoreDao.insertScore(score1)
+            scoreDao.insertScore(score2)
+            scoreDao.insertScore(score3)
+            scoreDao.insertScore(score4)
+
             dao.insertMultipleQuestions(questionList)
         }
     }
