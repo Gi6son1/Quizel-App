@@ -1,6 +1,7 @@
 package com.cs31620.quizel.ui.components.parentscaffolds
 
 import androidx.compose.foundation.Image
+import androidx.compose.foundation.isSystemInDarkTheme
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.PaddingValues
 import androidx.compose.foundation.layout.fillMaxSize
@@ -43,7 +44,7 @@ private fun TopLevelBackgroundScaffoldPreview() {
 private fun AppBackground() {
     Box(modifier = Modifier.fillMaxSize()) {
         Image(
-            painter = painterResource(id = R.drawable.app_background),
+            painter = painterResource(id = if(isSystemInDarkTheme()) R.drawable.app_background_dark else R.drawable.app_background),
             contentDescription = "Background",
             contentScale = ContentScale.Crop,
         )
