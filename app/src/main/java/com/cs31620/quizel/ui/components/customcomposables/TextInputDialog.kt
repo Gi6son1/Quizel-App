@@ -94,7 +94,7 @@ fun TextInputDialog(
                                 modifier = Modifier
                                     .height(80.dp)
                                     .fillMaxSize()
-                                    .background(Color.LightGray)
+                                    .background(MaterialTheme.colorScheme.surfaceDim)
                             ) {
                                 Text(
                                     text = stringResource(R.string.this_is_the_correct_answer),

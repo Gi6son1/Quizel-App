@@ -179,7 +179,7 @@ private fun QuizResultsScreen(
                             height = Dimension.fillToConstraints.atLeast(70.dp).atMost(70.dp)
                         },
                     shape = MaterialTheme.shapes.medium,
-                    colour = Color.LightGray,
+                    colour = MaterialTheme.colorScheme.surfaceDim,
                     text = Pair(stringResource(R.string.change_name), 25),
                     icon = Icons.Filled.Edit
                 )

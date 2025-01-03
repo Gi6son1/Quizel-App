@@ -203,7 +203,7 @@ private fun TestQuestionsScreen(
                         .weight(11f)
                         .shadow(10.dp, MaterialTheme.shapes.medium),
                     shape = MaterialTheme.shapes.medium,
-                    color = Color.LightGray
+                    color = MaterialTheme.colorScheme.surfaceDim
                 )
                 {
                     ConstraintLayout(
@@ -259,7 +259,7 @@ private fun TestQuestionsScreen(
                     modifier = Modifier
                         .weight(10f)
                         .shadow(10.dp, MaterialTheme.shapes.medium),
-                    color = Color.LightGray,
+                    color = MaterialTheme.colorScheme.surfaceDim,
                     shape = MaterialTheme.shapes.medium,
                 )
                 {
@@ -286,7 +286,7 @@ private fun TestQuestionsScreen(
                                     .height(80.dp),
                                 shape = MaterialTheme.shapes.medium,
                                 colour = if (selectedAnswer == answer) MaterialTheme.colorScheme.primary
-                                else MaterialTheme.colorScheme.surfaceContainer,
+                                else MaterialTheme.colorScheme.surfaceBright,
                                 text = Pair(answer.text, 20),
                             )
                         }
@@ -315,7 +315,7 @@ private fun TestQuestionsScreen(
                         modifier = Modifier
                             .fillMaxWidth()
                             .height(70.dp),
-                        colour = Color.LightGray,
+                        colour = MaterialTheme.colorScheme.surfaceDim,
                         shape = MaterialTheme.shapes.medium,
                         text = Pair(stringResource(R.string.skip_question), 20),
                         icon = Icons.AutoMirrored.Filled.Send,

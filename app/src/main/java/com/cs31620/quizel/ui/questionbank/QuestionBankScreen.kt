@@ -175,7 +175,7 @@ private fun QuestionBankScreen(
                         .fillMaxWidth()
                         .weight(10f)
                         .shadow(5.dp, MaterialTheme.shapes.medium),
-                    color = Color.LightGray,
+                    color = MaterialTheme.colorScheme.surfaceDim,
                     shape = MaterialTheme.shapes.medium
 
                 ) {
@@ -213,7 +213,7 @@ private fun QuestionBankScreen(
                                         .fillMaxWidth()
                                         .height(70.dp),
                                     shape = MaterialTheme.shapes.medium,
-                                    colors = ButtonDefaults.buttonColors(containerColor = MaterialTheme.colorScheme.surfaceContainer),
+                                    colors = ButtonDefaults.buttonColors(containerColor = MaterialTheme.colorScheme.surfaceBright),
                                     contentPadding = PaddingValues(0.dp),
                                     elevation = ButtonDefaults.buttonElevation(10.dp)
                                 )
@@ -233,9 +233,9 @@ private fun QuestionBankScreen(
                                                         checkedQuestionStates[question.id] = it
                                                     },
                                                     colors = CheckboxDefaults.colors(
-                                                        checkedColor = Color.White,
-                                                        uncheckedColor = Color.White,
-                                                        checkmarkColor = Color.Black
+                                                        checkedColor = MaterialTheme.colorScheme.surfaceBright,
+                                                        uncheckedColor = MaterialTheme.colorScheme.surfaceBright,
+                                                        checkmarkColor = MaterialTheme.colorScheme.onSurface
                                                     )
                                                 )
                                             }
@@ -274,14 +274,14 @@ private fun QuestionBankScreen(
                                                 Text(
                                                     text = question.title,
                                                     style = MaterialTheme.typography.bodyLarge,
-                                                    color = Color.Black,
+                                                    color = MaterialTheme.colorScheme.onSurface,
                                                     maxLines = 1,
                                                     overflow = TextOverflow.Ellipsis
                                                 )
                                             }
                                             Text(
                                                 text = question.description,
-                                                color = Color.Black,
+                                                color = MaterialTheme.colorScheme.onSurface,
                                                 overflow = TextOverflow.Ellipsis,
                                             )
                                         }
@@ -292,7 +292,7 @@ private fun QuestionBankScreen(
                                                 .fillMaxSize()
                                                 .wrapContentSize()
                                                 .weight(1f),
-                                            tint = Color.Black
+                                            tint = MaterialTheme.colorScheme.onSurface
                                         )
                                     }
                                 }

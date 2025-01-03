@@ -31,7 +31,7 @@ fun QuizelSwitch(
                 Icon(
                     imageVector = Icons.Filled.Close,
                     contentDescription = "toggleOff",
-                    tint = Color.White
+                    tint = MaterialTheme.colorScheme.surfaceBright
                 )
             }
         }

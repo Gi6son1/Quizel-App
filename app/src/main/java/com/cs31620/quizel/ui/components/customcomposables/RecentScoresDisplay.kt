@@ -8,6 +8,7 @@ import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.rememberScrollState
 import androidx.compose.foundation.verticalScroll
 import androidx.compose.material3.HorizontalDivider
+import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Modifier
@@ -35,7 +36,7 @@ fun RecentScoresDisplay(modifier: Modifier = Modifier, scoresList: List<Score>){
                     )
                 }
                 if (index != scoresList.lastIndex) {
-                    HorizontalDivider(color = if (scoresList[index + 1].numQuestions == score.numQuestions) Color.LightGray else Color.Black)
+                    HorizontalDivider(color = if (scoresList[index + 1].numQuestions == score.numQuestions) MaterialTheme.colorScheme.surfaceDim else MaterialTheme.colorScheme.onSurface)
                 }
             }
         }

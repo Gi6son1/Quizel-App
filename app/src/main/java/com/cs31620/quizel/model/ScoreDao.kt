@@ -17,7 +17,7 @@ interface ScoreDao {
         @Update(onConflict = OnConflictStrategy.REPLACE)
         suspend fun updateScore(score: Score)
 
-        @Query("SELECT * FROM scores ORDER BY id DESC LIMIT 7")
+        @Query("SELECT * FROM scores ORDER BY id DESC LIMIT 8")
         fun getAllRecentScores(): LiveData<List<Score>>
 
         @Query("SELECT username FROM scores ORDER BY id DESC LIMIT 1")

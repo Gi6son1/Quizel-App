@@ -56,7 +56,7 @@ fun QuizelSimpleButton(
                         .size(25.dp)
                         .wrapContentSize()
                         .alpha(if (enabled) 1f else 0.5f),
-                    tint = if (colour == Color.LightGray || colour == MaterialTheme.colorScheme.surface) Color.Black else Color.White
+                    tint = if (colour == MaterialTheme.colorScheme.surfaceDim || colour == MaterialTheme.colorScheme.surfaceBright) MaterialTheme.colorScheme.onSurface else MaterialTheme.colorScheme.surfaceBright
                 )
             } else if (image != null) {
                 Image(
@@ -78,8 +78,8 @@ fun QuizelSimpleButton(
                         .fillMaxHeight()
                         .wrapContentSize()
                         .alpha(if (enabled) 1f else 0.5f),
-                    color = if (colour == Color.LightGray ||
-                        colour == MaterialTheme.colorScheme.surfaceContainer) Color.Black else Color.White,
+                    color = if (colour == MaterialTheme.colorScheme.surfaceDim ||
+                        colour == MaterialTheme.colorScheme.surfaceBright) MaterialTheme.colorScheme.onSurface else MaterialTheme.colorScheme.surfaceBright,
                     overflow = TextOverflow.Ellipsis,
                 )
             }

@@ -161,8 +161,8 @@ private fun QuestionEditScreen(
                     )
                 },
                 colors = OutlinedTextFieldDefaults.colors(
-                    focusedContainerColor = Color.White,
-                    unfocusedContainerColor = Color.White
+                    focusedContainerColor = MaterialTheme.colorScheme.surfaceBright,
+                    unfocusedContainerColor = MaterialTheme.colorScheme.surfaceBright
                 ),
                 shape = MaterialTheme.shapes.medium,
 
@@ -181,8 +181,8 @@ private fun QuestionEditScreen(
                 placeholder = { Text(text = stringResource(R.string.enter_question), fontSize = 18.sp) },
                 textStyle = TextStyle.Default.copy(fontSize = 18.sp),
                 colors = OutlinedTextFieldDefaults.colors(
-                    focusedContainerColor = Color.White,
-                    unfocusedContainerColor = Color.White
+                    focusedContainerColor = MaterialTheme.colorScheme.surfaceBright,
+                    unfocusedContainerColor = MaterialTheme.colorScheme.surfaceBright
                 ),
                 shape = MaterialTheme.shapes.medium
             )
@@ -195,7 +195,7 @@ private fun QuestionEditScreen(
                         bottom.linkTo(buttonRow.top, margin = 8.dp)
                         height = Dimension.preferredWrapContent
                     },
-                color = Color.LightGray,
+                color = MaterialTheme.colorScheme.surfaceDim,
                 shape = MaterialTheme.shapes.medium
             ) {
                 Column {
@@ -240,7 +240,7 @@ private fun QuestionEditScreen(
                                     .padding(40.dp)
                                     .wrapContentSize(),
                                 style = MaterialTheme.typography.displayMedium,
-                                textAlign = TextAlign.Center,
+                                textAlign = TextAlign.Center
                             )
                         }
                     } else {
@@ -261,7 +261,7 @@ private fun QuestionEditScreen(
                                         .height(60.dp),
                                     elevation = ButtonDefaults.buttonElevation(10.dp),
                                     contentPadding = PaddingValues(0.dp),
-                                    colors = ButtonDefaults.buttonColors(Color.White)
+                                    colors = ButtonDefaults.buttonColors(MaterialTheme.colorScheme.surfaceBright)
                                 ) {
                                     Row(
                                         modifier = Modifier

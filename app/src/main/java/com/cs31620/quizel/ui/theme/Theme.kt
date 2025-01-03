@@ -1,5 +1,4 @@
 package com.cs31620.quizel.ui.theme
-
 import android.app.Activity
 import android.os.Build
 import androidx.compose.foundation.isSystemInDarkTheme
@@ -8,15 +7,22 @@ import androidx.compose.material3.lightColorScheme
 import androidx.compose.material3.darkColorScheme
 import androidx.compose.material3.dynamicDarkColorScheme
 import androidx.compose.material3.dynamicLightColorScheme
+import androidx.compose.material3.Typography
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.Immutable
 import androidx.compose.runtime.SideEffect
 import androidx.compose.ui.graphics.Color
+import androidx.compose.ui.graphics.toArgb
 import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.platform.LocalView
 import androidx.core.view.WindowCompat
 import androidx.core.view.WindowInsetsCompat
 import androidx.core.view.WindowInsetsControllerCompat
+
+@Immutable
+data class ExtendedColorScheme(
+    val neutralVariant2: ColorFamily,
+)
 
 private val lightScheme = lightColorScheme(
     primary = primaryLight,
@@ -246,6 +252,60 @@ private val highContrastDarkColorScheme = darkColorScheme(
     surfaceContainerHighest = surfaceContainerHighestDarkHighContrast,
 )
 
+val extendedLight = ExtendedColorScheme(
+  neutralVariant2 = ColorFamily(
+  neutralVariant2Light,
+  onNeutralVariant2Light,
+  neutralVariant2ContainerLight,
+  onNeutralVariant2ContainerLight,
+  ),
+)
+
+val extendedDark = ExtendedColorScheme(
+  neutralVariant2 = ColorFamily(
+  neutralVariant2Dark,
+  onNeutralVariant2Dark,
+  neutralVariant2ContainerDark,
+  onNeutralVariant2ContainerDark,
+  ),
+)
+
+val extendedLightMediumContrast = ExtendedColorScheme(
+  neutralVariant2 = ColorFamily(
+  neutralVariant2LightMediumContrast,
+  onNeutralVariant2LightMediumContrast,
+  neutralVariant2ContainerLightMediumContrast,
+  onNeutralVariant2ContainerLightMediumContrast,
+  ),
+)
+
+val extendedLightHighContrast = ExtendedColorScheme(
+  neutralVariant2 = ColorFamily(
+  neutralVariant2LightHighContrast,
+  onNeutralVariant2LightHighContrast,
+  neutralVariant2ContainerLightHighContrast,
+  onNeutralVariant2ContainerLightHighContrast,
+  ),
+)
+
+val extendedDarkMediumContrast = ExtendedColorScheme(
+  neutralVariant2 = ColorFamily(
+  neutralVariant2DarkMediumContrast,
+  onNeutralVariant2DarkMediumContrast,
+  neutralVariant2ContainerDarkMediumContrast,
+  onNeutralVariant2ContainerDarkMediumContrast,
+  ),
+)
+
+val extendedDarkHighContrast = ExtendedColorScheme(
+  neutralVariant2 = ColorFamily(
+  neutralVariant2DarkHighContrast,
+  onNeutralVariant2DarkHighContrast,
+  neutralVariant2ContainerDarkHighContrast,
+  onNeutralVariant2ContainerDarkHighContrast,
+  ),
+)
+
 @Immutable
 data class ColorFamily(
     val color: Color,
@@ -288,10 +348,10 @@ fun QuizelTheme(
         }
     }
 
-    MaterialTheme(
-        colorScheme = colorScheme,
-        typography = AppTypography,
-        content = content
-    )
+  MaterialTheme(
+    colorScheme = colorScheme,
+    typography = AppTypography,
+    content = content
+  )
 }
 
