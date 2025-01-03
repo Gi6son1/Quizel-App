@@ -303,7 +303,7 @@ private fun TestQuestionsScreen(
                         },
                         modifier = Modifier
                             .fillMaxWidth()
-                            .weight(2.5f),
+                            .height(70.dp),
                         colour = MaterialTheme.colorScheme.primary,
                         shape = MaterialTheme.shapes.medium,
                         text = Pair(stringResource(R.string.submit_answer), 20),
@@ -314,7 +314,7 @@ private fun TestQuestionsScreen(
                         onClick = { showSkipDialog = true },
                         modifier = Modifier
                             .fillMaxWidth()
-                            .weight(2.5f),
+                            .height(70.dp),
                         colour = Color.LightGray,
                         shape = MaterialTheme.shapes.medium,
                         text = Pair(stringResource(R.string.skip_question), 20),

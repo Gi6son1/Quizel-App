@@ -87,7 +87,6 @@ private fun TakeQuizScreen(navController: NavHostController,
                 .fillMaxSize()
                 .padding(innerPadding)
                 .padding(start = 10.dp, end = 10.dp, bottom = 20.dp, top = 90.dp)
-                .border(2.dp, Color.Black)
                 .wrapContentSize(),
             ) {
                 val (recentScoresDisplay, quizOptions, beginButton) = createRefs()

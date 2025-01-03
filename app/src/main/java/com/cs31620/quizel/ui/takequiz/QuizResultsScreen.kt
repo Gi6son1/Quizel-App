@@ -1,12 +1,14 @@
 package com.cs31620.quizel.ui.takequiz
 
 import android.util.Log
+import androidx.compose.foundation.border
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
+import androidx.compose.foundation.layout.wrapContentSize
 import androidx.compose.foundation.layout.wrapContentWidth
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.automirrored.filled.KeyboardReturn
@@ -32,6 +34,8 @@ import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import androidx.constraintlayout.compose.ConstraintLayout
 import androidx.constraintlayout.compose.Dimension
+import androidx.constraintlayout.compose.atLeast
+import androidx.constraintlayout.compose.atMost
 import androidx.navigation.NavHostController
 import com.cs31620.quizel.R
 import com.cs31620.quizel.model.ScoresViewModel
@@ -83,36 +87,35 @@ private fun QuizResultsScreen(
     changeName: (String) -> Unit = {},
 ) {
     TopLevelBackgroundScaffold(showTitle = false) { innerPadding ->
-        ConstraintLayout(
-            modifier = Modifier
-                .fillMaxSize()
-                .padding(innerPadding)
-                .padding(start = 10.dp, end = 10.dp)
-        )
-        {
-            val (content) = createRefs()
+
             var showChangeNameDialog by rememberSaveable { mutableStateOf(false) }
 
-            Column(
-                modifier = Modifier.constrainAs(content) {
-                    top.linkTo(parent.top)
-                    bottom.linkTo(parent.bottom)
-                    start.linkTo(parent.start)
-                    end.linkTo(parent.end)
-                    height = Dimension.fillToConstraints
-                },
-                verticalArrangement = Arrangement.spacedBy(10.dp)
+            ConstraintLayout(
+                modifier = Modifier.fillMaxSize()
+                    .padding(innerPadding)
+                    .padding(start = 10.dp, end = 10.dp, bottom = 20.dp)
+                    .wrapContentSize()
+
             ) {
+                val (title, results, changeNameButton, retryButton, menuButton) = createRefs()
 
                 Text(
                     text = stringResource(R.string.your_quiz_results),
                     modifier = Modifier
                         .fillMaxWidth()
-                        .wrapContentWidth(),
+                        .constrainAs(title) {
+                            top.linkTo(parent.top)
+                            bottom.linkTo(results.top)
+                        }.wrapContentWidth(),
                     fontSize = 80.sp,
                     style = MaterialTheme.typography.displayLarge
                 )
-                Card(modifier = Modifier.shadow(10.dp, MaterialTheme.shapes.medium)) {
+                Card(modifier = Modifier.shadow(10.dp, MaterialTheme.shapes.medium)
+                    .constrainAs(results) {
+                        top.linkTo(title.bottom)
+                        bottom.linkTo(changeNameButton.top, margin = 10.dp)
+                        height = Dimension.preferredWrapContent
+                    }) {
                     Column(
                         modifier = Modifier
                             .padding(10.dp)
@@ -170,7 +173,11 @@ private fun QuizResultsScreen(
                     onClick = { showChangeNameDialog = true },
                     modifier = Modifier
                         .fillMaxWidth()
-                        .height(70.dp),
+                        .constrainAs(changeNameButton){
+                            top.linkTo(results.bottom)
+                            bottom.linkTo(retryButton.top, margin = 10.dp)
+                            height = Dimension.fillToConstraints.atLeast(70.dp).atMost(70.dp)
+                        },
                     shape = MaterialTheme.shapes.medium,
                     colour = Color.LightGray,
                     text = Pair(stringResource(R.string.change_name), 25),
@@ -183,7 +190,11 @@ private fun QuizResultsScreen(
                     },
                     modifier = Modifier
                         .fillMaxWidth()
-                        .height(70.dp),
+                        .constrainAs(retryButton){
+                            top.linkTo(changeNameButton.bottom)
+                            bottom.linkTo(menuButton.top, margin = 10.dp)
+                            height = Dimension.fillToConstraints.atLeast(70.dp).atMost(70.dp)
+                        },
                     shape = MaterialTheme.shapes.medium,
                     colour = MaterialTheme.colorScheme.primary,
                     text = Pair(stringResource(R.string.retry_quiz), 25),
@@ -196,7 +207,11 @@ private fun QuizResultsScreen(
                     },
                     modifier = Modifier
                         .fillMaxWidth()
-                        .height(70.dp),
+                        .constrainAs(menuButton){
+                            top.linkTo(retryButton.bottom)
+                            bottom.linkTo(parent.bottom)
+                            height = Dimension.fillToConstraints.atLeast(70.dp).atMost(70.dp)
+                        },
                     shape = MaterialTheme.shapes.medium,
                     colour = MaterialTheme.colorScheme.primary,
                     text = Pair(stringResource(R.string.return_to_home), 25),
@@ -216,4 +231,3 @@ private fun QuizResultsScreen(
             }
         }
     }
-}
