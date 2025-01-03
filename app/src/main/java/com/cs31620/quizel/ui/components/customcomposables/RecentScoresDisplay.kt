@@ -5,6 +5,8 @@ import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.padding
+import androidx.compose.foundation.rememberScrollState
+import androidx.compose.foundation.verticalScroll
 import androidx.compose.material3.HorizontalDivider
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
@@ -17,10 +19,10 @@ import com.cs31620.quizel.ui.components.Score
 @Composable
 fun RecentScoresDisplay(modifier: Modifier = Modifier, scoresList: List<Score>){
     if (scoresList.isEmpty()){
-        Text(text = "There are no recent scores to display", modifier = Modifier.padding(horizontal = 10.dp),
+        Text(text = "There are no recent scores to display", modifier = Modifier.padding(horizontal = 10.dp).fillMaxWidth(),
             textAlign = TextAlign.Center)
     } else {
-        Column(modifier = modifier.padding(horizontal = 10.dp)) {
+        Column(modifier = modifier.padding(horizontal = 10.dp).verticalScroll(rememberScrollState())) {
             scoresList.forEachIndexed { index, score ->
                 Row(
                     modifier = Modifier.fillMaxWidth().padding(vertical = 5.dp),

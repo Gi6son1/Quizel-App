@@ -31,6 +31,7 @@ import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import androidx.constraintlayout.compose.ConstraintLayout
+import androidx.constraintlayout.compose.Dimension
 import androidx.navigation.NavHostController
 import com.cs31620.quizel.R
 import com.cs31620.quizel.model.ScoresViewModel
@@ -66,7 +67,7 @@ fun QuizResultsScreenTopLevel(
         recentScores = scoresList,
         changeName = { name ->
             val recentScore = scoresList.first()
-            Log.d("QuizResultsScreenTopLevel", "changeName: $name for score $recentScore" )
+            Log.d("QuizResultsScreenTopLevel", "changeName: $name for score $recentScore")
             scoresViewModel.updateScoreWithUsername(score = recentScore, username = name)
         }
     )
@@ -98,6 +99,7 @@ private fun QuizResultsScreen(
                     bottom.linkTo(parent.bottom)
                     start.linkTo(parent.start)
                     end.linkTo(parent.end)
+                    height = Dimension.fillToConstraints
                 },
                 verticalArrangement = Arrangement.spacedBy(10.dp)
             ) {
@@ -147,20 +149,25 @@ private fun QuizResultsScreen(
                             fontSize = 35.sp,
                         )
                         RecentScoresDisplay(scoresList = recentScores)
-                        Text(text = stringResource(
-                            R.string.your_score_is_saved_under,
-                            recentScores.first().username
-                        ),
+                        Text(
+                            text = stringResource(
+                                R.string.your_score_is_saved_under,
+                                if (!recentScores.isEmpty())
+                                    recentScores.first().username
+                                else
+                                    R.string.user
+                            ),
                             fontWeight = FontWeight.Bold,
                             fontSize = 20.sp,
                             textAlign = TextAlign.Center,
                             modifier = Modifier
                                 .padding(vertical = 5.dp)
-                                .fillMaxWidth())
+                                .fillMaxWidth()
+                        )
                     }
                 }
                 QuizelSimpleButton(
-                    onClick = {showChangeNameDialog = true},
+                    onClick = { showChangeNameDialog = true },
                     modifier = Modifier
                         .fillMaxWidth()
                         .height(70.dp),
@@ -201,7 +208,8 @@ private fun QuizResultsScreen(
                     dialogOpen = { isOpen -> showChangeNameDialog = isOpen },
                     placeholder = stringResource(R.string.enter_name),
                     response = { name ->
-                        changeName(name as String) }
+                        changeName(name as String)
+                    }
                 )
 
 

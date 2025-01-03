@@ -34,6 +34,7 @@ import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.shadow
 import androidx.compose.ui.graphics.Color
+import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.style.TextAlign
@@ -61,11 +62,13 @@ fun TestQuestionsScreenTopLevel(
     quizViewParameters: String,
     scoresViewModel: ScoresViewModel
 ) {
+    val context = LocalContext.current
+
     val questionList by questionsViewModel.questionsList.observeAsState(listOf())
     val shuffledList by rememberSaveable { mutableStateOf(questionList.shuffled()) }
 
     val (showProgressBar, showNumberCorrect) = quizViewParameters.split(",").map { it == "1" }
-    val mostRecentUsername by scoresViewModel.mostRecentUsername.observeAsState("")
+    val mostRecentUsername: String? by scoresViewModel.mostRecentUsername.observeAsState("")
 
     TestQuestionsScreen(
         questionList = shuffledList,
@@ -85,7 +88,7 @@ fun TestQuestionsScreenTopLevel(
         showNumberCorrect = showNumberCorrect,
         showProgressBar = showProgressBar,
         saveScore = { score ->
-            score.username = mostRecentUsername
+            score.username = mostRecentUsername ?: context.getString(R.string.user)
             scoresViewModel.addNewScore(score)
         }
     )

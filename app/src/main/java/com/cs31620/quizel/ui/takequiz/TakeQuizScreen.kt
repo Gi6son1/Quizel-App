@@ -1,5 +1,6 @@
 package com.cs31620.quizel.ui.takequiz
 
+import androidx.compose.foundation.border
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Row
@@ -10,6 +11,7 @@ import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.wrapContentHeight
+import androidx.compose.foundation.layout.wrapContentSize
 import androidx.compose.foundation.layout.wrapContentWidth
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.automirrored.filled.Send
@@ -25,12 +27,16 @@ import androidx.compose.runtime.setValue
 import androidx.compose.runtime.saveable.rememberSaveable
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.shadow
+import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import androidx.constraintlayout.compose.ConstraintLayout
+import androidx.constraintlayout.compose.Dimension
+import androidx.constraintlayout.compose.atLeast
+import androidx.constraintlayout.compose.atMost
 import androidx.navigation.NavHostController
 import androidx.navigation.compose.rememberNavController
 import com.cs31620.quizel.R
@@ -77,24 +83,22 @@ private fun TakeQuizScreen(navController: NavHostController,
         var showProgressBar by rememberSaveable { mutableStateOf(true) }
         var showCurrentScore by rememberSaveable { mutableStateOf(true) }
 
-        ConstraintLayout(
-            modifier = Modifier
+            ConstraintLayout( modifier = Modifier
                 .fillMaxSize()
                 .padding(innerPadding)
-                .padding(start = 10.dp, end = 10.dp, bottom = 20.dp, top = 100.dp)
-        )
-        {
-            val (content) = createRefs()
-
-            Column(modifier = Modifier.constrainAs(content) {
-                top.linkTo(parent.top)
-                bottom.linkTo(parent.bottom)
-                start.linkTo(parent.start)
-                end.linkTo(parent.end)
-            },
-                verticalArrangement = Arrangement.spacedBy(10.dp)
+                .padding(start = 10.dp, end = 10.dp, bottom = 20.dp, top = 90.dp)
+                .border(2.dp, Color.Black)
+                .wrapContentSize(),
             ) {
-                Card(modifier = Modifier.shadow(10.dp, MaterialTheme.shapes.medium).fillMaxWidth()) {
+                val (recentScoresDisplay, quizOptions, beginButton) = createRefs()
+
+                Card(modifier = Modifier.shadow(10.dp, MaterialTheme.shapes.medium).fillMaxWidth()
+                    .constrainAs(recentScoresDisplay){
+                        top.linkTo(parent.top)
+                        bottom.linkTo(quizOptions.top, margin = 10.dp)
+                        height = Dimension.preferredWrapContent
+                    }
+                    ) {
                     Column(
                         modifier = Modifier.padding(vertical = 15.dp, horizontal = 10.dp)
                     ){
@@ -109,9 +113,14 @@ private fun TakeQuizScreen(navController: NavHostController,
                         )
                         RecentScoresDisplay(modifier = Modifier.fillMaxWidth(), scoresList = recentScores)
                     }
-
                 }
-                Card(modifier = Modifier.shadow(10.dp, MaterialTheme.shapes.medium).fillMaxWidth()) {
+                Card(modifier = Modifier.shadow(10.dp, MaterialTheme.shapes.medium).fillMaxWidth()
+                    .constrainAs(quizOptions){
+                        top.linkTo(recentScoresDisplay.bottom)
+                        bottom.linkTo(beginButton.top, margin = 10.dp)
+                        height = Dimension.fillToConstraints.atLeast(170.dp).atMost(175.dp)
+
+                    }) {
                     Column(
                         modifier = Modifier
                             .padding(8.dp)
@@ -165,7 +174,11 @@ private fun TakeQuizScreen(navController: NavHostController,
                     },
                     modifier = Modifier
                         .fillMaxWidth()
-                        .height(70.dp),
+                        .constrainAs(beginButton) {
+                            top.linkTo(quizOptions.bottom)
+                            bottom.linkTo(parent.bottom)
+                            height = Dimension.fillToConstraints.atLeast(70.dp).atMost(70.dp)
+                        },
                     shape = MaterialTheme.shapes.medium,
                     colour = MaterialTheme.colorScheme.primary,
                     text = Pair(stringResource(R.string.begin_quiz), 25),
@@ -175,7 +188,7 @@ private fun TakeQuizScreen(navController: NavHostController,
             }
         }
     }
-}
+
 
 
 @Preview
