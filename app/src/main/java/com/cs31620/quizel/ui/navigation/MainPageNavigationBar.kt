@@ -1,4 +1,4 @@
-package com.cs31620.quizel.ui.components
+package com.cs31620.quizel.ui.navigation
 
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.automirrored.filled.FormatListBulleted
@@ -9,7 +9,6 @@ import androidx.compose.material3.Icon
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.NavigationBar
 import androidx.compose.material3.NavigationBarItem
-import androidx.compose.material3.NavigationBarItemColors
 import androidx.compose.material3.NavigationBarItemDefaults
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
@@ -21,8 +20,6 @@ import androidx.navigation.NavGraph.Companion.findStartDestination
 import androidx.navigation.compose.currentBackStackEntryAsState
 import androidx.navigation.compose.rememberNavController
 import com.cs31620.quizel.R
-import com.cs31620.quizel.ui.navigation.Screen
-import com.cs31620.quizel.ui.navigation.navigation_screens
 import com.cs31620.quizel.ui.theme.QuizelTheme
 
 @Composable

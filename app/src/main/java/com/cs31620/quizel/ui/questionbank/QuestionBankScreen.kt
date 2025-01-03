@@ -57,7 +57,7 @@ import com.cs31620.quizel.R
 import com.cs31620.quizel.model.QuestionsViewModel
 import com.cs31620.quizel.ui.components.customcomposables.ActionCheckDialog
 import com.cs31620.quizel.ui.components.Question
-import com.cs31620.quizel.ui.components.TopLevelNavigationScaffold
+import com.cs31620.quizel.ui.components.parentscaffolds.TopLevelNavigationScaffold
 import com.cs31620.quizel.ui.components.customcomposables.QuizelSimpleButton
 import com.cs31620.quizel.ui.navigation.Screen
 

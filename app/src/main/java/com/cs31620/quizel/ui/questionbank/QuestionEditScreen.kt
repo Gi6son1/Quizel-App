@@ -52,15 +52,15 @@ import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import androidx.navigation.NavGraph.Companion.findStartDestination
 import androidx.navigation.NavHostController
-import androidx.navigation.compose.rememberNavController
 import com.cs31620.quizel.R
 import com.cs31620.quizel.model.QuestionsViewModel
 import com.cs31620.quizel.ui.components.customcomposables.ActionCheckDialog
 import com.cs31620.quizel.ui.components.Answer
 import com.cs31620.quizel.ui.components.customcomposables.InvalidInformationDialog
 import com.cs31620.quizel.ui.components.Question
-import com.cs31620.quizel.ui.components.TopLevelBackgroundScaffold
+import com.cs31620.quizel.ui.components.parentscaffolds.TopLevelBackgroundScaffold
 import com.cs31620.quizel.ui.components.customcomposables.QuizelSimpleButton
+import com.cs31620.quizel.ui.components.customcomposables.TextInputDialog
 import com.cs31620.quizel.ui.navigation.Screen
 
 @Composable

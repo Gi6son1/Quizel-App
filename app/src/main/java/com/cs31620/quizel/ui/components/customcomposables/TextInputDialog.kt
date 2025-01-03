@@ -1,4 +1,4 @@
-package com.cs31620.quizel.ui.questionbank
+package com.cs31620.quizel.ui.components.customcomposables
 
 import androidx.activity.compose.BackHandler
 import androidx.compose.foundation.background
@@ -14,7 +14,6 @@ import androidx.compose.foundation.layout.width
 import androidx.compose.foundation.layout.wrapContentHeight
 import androidx.compose.material3.Card
 import androidx.compose.material3.MaterialTheme
-import androidx.compose.material3.OutlinedTextField
 import androidx.compose.material3.Text
 import androidx.compose.material3.TextField
 import androidx.compose.runtime.Composable
@@ -38,9 +37,6 @@ import androidx.compose.ui.window.Dialog
 import androidx.compose.ui.window.DialogProperties
 import com.cs31620.quizel.R
 import com.cs31620.quizel.ui.components.Answer
-import com.cs31620.quizel.ui.components.customcomposables.QuizelSimpleButton
-import com.cs31620.quizel.ui.components.customcomposables.QuizelSwitch
-import com.cs31620.quizel.ui.components.customcomposables.getDialogWindow
 
 @Composable
 fun TextInputDialog(

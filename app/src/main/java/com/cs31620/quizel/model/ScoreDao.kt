@@ -2,12 +2,10 @@ package com.cs31620.quizel.model
 
 import androidx.lifecycle.LiveData
 import androidx.room.Dao
-import androidx.room.Delete
 import androidx.room.Insert
 import androidx.room.OnConflictStrategy
 import androidx.room.Query
 import androidx.room.Update
-import com.cs31620.quizel.ui.components.Question
 import com.cs31620.quizel.ui.components.Score
 
 @Dao

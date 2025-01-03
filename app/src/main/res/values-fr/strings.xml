@@ -50,4 +50,5 @@
     <string name="recent_scores">RecentScores</string>
     <string name="change_name">Change Name</string>
     <string name="enter_name">Enter name</string>
+    <string name="your_score_is_saved_under">Your score is saved under: %1$s</string>
 </resources>

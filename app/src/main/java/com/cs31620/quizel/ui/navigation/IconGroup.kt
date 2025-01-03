@@ -1,4 +1,4 @@
-package com.cs31620.quizel.ui.components
+package com.cs31620.quizel.ui.navigation
 
 import androidx.compose.ui.graphics.vector.ImageVector
 

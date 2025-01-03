@@ -1,32 +1,20 @@
 package com.cs31620.quizel.ui.takequiz
 
-import android.annotation.SuppressLint
 import android.util.Log
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Column
-import androidx.compose.foundation.layout.Row
-import androidx.compose.foundation.layout.Spacer
-import androidx.compose.foundation.layout.fillMaxHeight
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
-import androidx.compose.foundation.layout.width
-import androidx.compose.foundation.layout.wrapContentHeight
-import androidx.compose.foundation.layout.wrapContentSize
 import androidx.compose.foundation.layout.wrapContentWidth
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.automirrored.filled.KeyboardReturn
-import androidx.compose.material.icons.automirrored.filled.Send
 import androidx.compose.material.icons.filled.Edit
-import androidx.compose.material.icons.filled.KeyboardReturn
 import androidx.compose.material.icons.filled.Menu
-import androidx.compose.material3.Button
 import androidx.compose.material3.Card
 import androidx.compose.material3.HorizontalDivider
-import androidx.compose.material3.Icon
 import androidx.compose.material3.MaterialTheme
-import androidx.compose.material3.Surface
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.livedata.observeAsState
@@ -40,23 +28,18 @@ import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.text.style.TextAlign
-import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import androidx.constraintlayout.compose.ConstraintLayout
 import androidx.navigation.NavHostController
-import androidx.navigation.compose.rememberNavController
 import com.cs31620.quizel.R
 import com.cs31620.quizel.model.ScoresViewModel
 import com.cs31620.quizel.ui.components.Score
-import com.cs31620.quizel.ui.components.TopLevelBackgroundScaffold
-import com.cs31620.quizel.ui.components.TopLevelNavigationScaffold
+import com.cs31620.quizel.ui.components.parentscaffolds.TopLevelBackgroundScaffold
 import com.cs31620.quizel.ui.components.customcomposables.QuizelSimpleButton
-import com.cs31620.quizel.ui.components.customcomposables.QuizelSwitch
 import com.cs31620.quizel.ui.components.customcomposables.RecentScoresDisplay
 import com.cs31620.quizel.ui.navigation.Screen
-import com.cs31620.quizel.ui.questionbank.TextInputDialog
-import com.cs31620.quizel.ui.theme.QuizelTheme
+import com.cs31620.quizel.ui.components.customcomposables.TextInputDialog
 
 @Composable
 fun QuizResultsScreenTopLevel(
@@ -164,11 +147,16 @@ private fun QuizResultsScreen(
                             fontSize = 35.sp,
                         )
                         RecentScoresDisplay(scoresList = recentScores)
-                        Text(text = "Your score is saved under: ${recentScores.first().username}",
+                        Text(text = stringResource(
+                            R.string.your_score_is_saved_under,
+                            recentScores.first().username
+                        ),
                             fontWeight = FontWeight.Bold,
                             fontSize = 20.sp,
                             textAlign = TextAlign.Center,
-                            modifier = Modifier.padding(vertical = 5.dp).fillMaxWidth())
+                            modifier = Modifier
+                                .padding(vertical = 5.dp)
+                                .fillMaxWidth())
                     }
                 }
                 QuizelSimpleButton(
