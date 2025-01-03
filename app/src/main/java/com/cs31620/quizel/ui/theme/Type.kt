@@ -1,30 +1,20 @@
 package com.cs31620.quizel.ui.theme
 
 import androidx.compose.material3.Typography
+import androidx.compose.ui.text.font.Font
 import androidx.compose.ui.text.font.FontFamily
 
-import androidx.compose.ui.text.googlefonts.GoogleFont
-import androidx.compose.ui.text.googlefonts.Font
 import com.cs31620.quizel.R
 
-val provider = GoogleFont.Provider(
-    providerAuthority = "com.google.android.gms.fonts",
-    providerPackage = "com.google.android.gms",
-    certificates = R.array.com_google_android_gms_fonts_certs
-)
 
 val bodyFontFamily = FontFamily(
     Font(
-        googleFont = GoogleFont("Roboto"),
-        fontProvider = provider,
+        R.font.roboto_regular
     )
 )
 
 val displayFontFamily = FontFamily(
-    Font(
-        googleFont = GoogleFont("Just Another Hand"),
-        fontProvider = provider,
-    )
+    Font(R.font.just_another_hand_regular)
 )
 
 // Default Material 3 typography values
