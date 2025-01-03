@@ -36,7 +36,6 @@ import androidx.compose.runtime.remember
 import androidx.compose.runtime.saveable.rememberSaveable
 import androidx.compose.runtime.setValue
 import androidx.compose.runtime.snapshots.SnapshotStateList
-import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.shadow
 import androidx.compose.ui.graphics.Color
@@ -50,6 +49,10 @@ import androidx.compose.ui.text.style.TextOverflow
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
+import androidx.constraintlayout.compose.ConstraintLayout
+import androidx.constraintlayout.compose.Dimension
+import androidx.constraintlayout.compose.atLeast
+import androidx.constraintlayout.compose.atMost
 import androidx.navigation.NavGraph.Companion.findStartDestination
 import androidx.navigation.NavHostController
 import com.cs31620.quizel.R
@@ -126,20 +129,24 @@ private fun QuestionEditScreen(
         var invalidInfoDialogDescription by rememberSaveable { mutableStateOf("") }
 
 
-        Column(
+        ConstraintLayout(
             modifier = Modifier
                 .fillMaxSize()
                 .padding(innerPadding)
-                .padding(start = 10.dp, end = 10.dp, bottom = 20.dp, top = 100.dp),
-            verticalArrangement = Arrangement.spacedBy(8.dp)
+                .padding(start = 10.dp, end = 10.dp, bottom = 20.dp, top = 100.dp)
         ) {
+            val (titleBox, descriptionBox, answerBox, buttonRow) = createRefs()
+
             OutlinedTextField(
                 value = title,
                 onValueChange = { title = it },
                 modifier = Modifier
-                    .weight(1f)
-                    .fillMaxSize()
-                    .shadow(5.dp, MaterialTheme.shapes.medium),
+                    .fillMaxWidth()
+                    .shadow(5.dp, MaterialTheme.shapes.medium)
+                    .constrainAs(titleBox) {
+                        top.linkTo(parent.top)
+                        bottom.linkTo(descriptionBox.top, margin = 8.dp)
+                    },
                 singleLine = true,
                 textStyle = TextStyle.Default.copy(
                     fontSize = 22.sp,
@@ -164,10 +171,13 @@ private fun QuestionEditScreen(
                 value = description,
                 onValueChange = { description = it },
                 modifier = Modifier
-                    .align(Alignment.CenterHorizontally)
-                    .weight(2f)
                     .fillMaxWidth()
-                    .shadow(5.dp, MaterialTheme.shapes.medium),
+                    .shadow(5.dp, MaterialTheme.shapes.medium)
+                    .height(120.dp)
+                    .constrainAs(descriptionBox){
+                        top.linkTo(titleBox.bottom)
+                        bottom.linkTo(answerBox.top, margin = 8.dp)
+                    },
                 placeholder = { Text(text = stringResource(R.string.enter_question), fontSize = 18.sp) },
                 textStyle = TextStyle.Default.copy(fontSize = 18.sp),
                 colors = OutlinedTextFieldDefaults.colors(
@@ -178,18 +188,20 @@ private fun QuestionEditScreen(
             )
             Surface(
                 modifier = Modifier
-                    .align(Alignment.CenterHorizontally)
                     .fillMaxWidth()
-                    .weight(8f)
-                    .padding(bottom = 10.dp)
-                    .shadow(5.dp, MaterialTheme.shapes.medium),
+                    .shadow(5.dp, MaterialTheme.shapes.medium)
+                    .constrainAs(answerBox) {
+                        top.linkTo(descriptionBox.bottom)
+                        bottom.linkTo(buttonRow.top, margin = 8.dp)
+                        height = Dimension.preferredWrapContent
+                    },
                 color = Color.LightGray,
                 shape = MaterialTheme.shapes.medium
             ) {
                 Column {
                     Row(
                         modifier = Modifier
-                            .weight(1f)
+                            .height(60.dp)
                             .padding(5.dp)
                     ) {
                         Text(
@@ -302,13 +314,17 @@ private fun QuestionEditScreen(
                 horizontalArrangement = Arrangement.spacedBy(5.dp),
                 modifier = Modifier
                     .fillMaxWidth()
-                    .weight(1f)
+                    .constrainAs(buttonRow){
+                        top.linkTo(answerBox.bottom)
+                        bottom.linkTo(parent.bottom)
+                        height = Dimension.fillToConstraints.atLeast(70.dp).atMost(70.dp)
+                    }
             ) {
                 QuizelSimpleButton(
                     onClick = { showDiscardQuestionDialog = true },
                     modifier = Modifier
-                        .weight(1f)
-                        .fillMaxHeight(),
+                        .fillMaxHeight()
+                        .weight(1f),
                     colour = MaterialTheme.colorScheme.error,
                     text = Pair(stringResource(R.string.discard_changes), 18)
                 )

@@ -35,7 +35,7 @@ fun QuizelSimpleButton(
     enabled: Boolean = true,
     modifier: Modifier = Modifier,
     shape: Shape = ButtonDefaults.shape,
-    contentPadding: PaddingValues = ButtonDefaults.ContentPadding
+    contentPadding: PaddingValues = PaddingValues(0.dp),
 
 ){
     Button(

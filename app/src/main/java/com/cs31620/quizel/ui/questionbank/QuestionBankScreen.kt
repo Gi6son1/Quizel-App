@@ -164,7 +164,7 @@ private fun QuestionBankScreen(
                     },
                     modifier = Modifier
                         .fillMaxWidth()
-                        .weight(1.1f),
+                        .height(70.dp),
                     shape = RoundedCornerShape(35),
                     icon = Icons.Filled.Add
                 )
@@ -310,7 +310,7 @@ private fun QuestionBankScreen(
                         modifier = modifier,
                         colors = ButtonDefaults.buttonColors(containerColor = MaterialTheme.colorScheme.error)
                     ) {
-                        Text(text = stringResource(R.string.delete_selected_questions), fontSize = 19.sp)
+                        Text(text = stringResource(R.string.delete), fontSize = 19.sp)
                     }
                 },
                 actionDialogMessage = stringResource(R.string.delete_selected_questions_check),
