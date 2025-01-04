@@ -221,63 +221,13 @@ private fun TestQuestionsScreen(
                         trackColor = MaterialTheme.colorScheme.surface
                     )
                 }
-                Surface( //question area
-                    modifier = Modifier
-                        .weight(11f)
-                        .shadow(10.dp, MaterialTheme.shapes.medium),
-                    shape = MaterialTheme.shapes.medium,
-                    color = MaterialTheme.colorScheme.surfaceDim
-                )
-                {
-                    ConstraintLayout( //holds the question and description
-                        modifier = Modifier.fillMaxSize(),
-                    ) {
-                        val (questionTitle, questionDescription, divider) = createRefs()
-                        Text(
-                            modifier = Modifier
-                                .constrainAs(questionTitle) {
-                                    top.linkTo(parent.top, margin = 20.dp)
-                                    start.linkTo(parent.start)
-                                    end.linkTo(parent.end)
-                                }
-                                .padding(horizontal = 10.dp),
-                            text = if (currentQuestion.title.isBlank()) {
-                                stringResource(R.string.question_number, currentQuestionNumber)
 
-                            } else {
-                                currentQuestion.title
-                            },
-                            style = MaterialTheme.typography.bodyLarge,
-                            fontSize = 30.sp,
-                            textAlign = TextAlign.Center,
-                        )
-                        HorizontalDivider(modifier = Modifier
-                            .constrainAs(divider) {
-                                top.linkTo(questionTitle.bottom, margin = 5.dp)
-                                start.linkTo(parent.start)
-                                end.linkTo(parent.end)
-                            }
-                            .padding(horizontal = 30.dp),
-                            thickness = 2.dp
-                        )
-                        Column(modifier = Modifier
-                            .padding(20.dp)
-                            .constrainAs(questionDescription) {
-                                top.linkTo(divider.bottom)
-                                start.linkTo(parent.start)
-                                end.linkTo(parent.end)
-                                bottom.linkTo(parent.bottom, margin = 30.dp)
-                            }
-                            .verticalScroll(rememberScrollState())
-                        ) {
-                            Text(
-                                text = currentQuestion.description,
-                                fontSize = 20.sp,
-                                textAlign = TextAlign.Center,
-                            )
-                        }
-                    }
-                }
+                QuestionArea( //surface where question is displayed
+                    modifier = Modifier.weight(11f),
+                    question = currentQuestion,
+                    questionNumber = currentQuestionNumber
+                )
+
                 Surface( //answer area
                     modifier = Modifier
                         .weight(10f)
@@ -385,6 +335,76 @@ private fun TestQuestionsScreen(
                 exitQuiz(exit)
             }
         )
+    }
+}
+
+/**
+ * Question area method
+ * @param modifier the modifier for the question area
+ * @param question the question to be displayed
+ * @param questionNumber the question number
+ */
+@Composable
+private fun QuestionArea(
+    modifier: Modifier,
+    question: Question,
+    questionNumber: Int
+){
+    Surface( //question area
+        modifier = modifier
+            .shadow(10.dp, MaterialTheme.shapes.medium),
+        shape = MaterialTheme.shapes.medium,
+        color = MaterialTheme.colorScheme.surfaceDim
+    )
+    {
+        ConstraintLayout( //holds the question and description
+            modifier = Modifier.fillMaxSize(),
+        ) {
+            val (questionTitle, questionDescription, divider) = createRefs()
+            Text(
+                modifier = Modifier
+                    .constrainAs(questionTitle) {
+                        top.linkTo(parent.top, margin = 20.dp)
+                        start.linkTo(parent.start)
+                        end.linkTo(parent.end)
+                    }
+                    .padding(horizontal = 10.dp),
+                text = if (question.title.isBlank()) {
+                    stringResource(R.string.question_number, questionNumber)
+
+                } else {
+                    question.title
+                },
+                style = MaterialTheme.typography.bodyLarge,
+                fontSize = 30.sp,
+                textAlign = TextAlign.Center,
+            )
+            HorizontalDivider(modifier = Modifier
+                .constrainAs(divider) {
+                    top.linkTo(questionTitle.bottom, margin = 5.dp)
+                    start.linkTo(parent.start)
+                    end.linkTo(parent.end)
+                }
+                .padding(horizontal = 30.dp),
+                thickness = 2.dp
+            )
+            Column(modifier = Modifier
+                .padding(20.dp)
+                .constrainAs(questionDescription) {
+                    top.linkTo(divider.bottom)
+                    start.linkTo(parent.start)
+                    end.linkTo(parent.end)
+                    bottom.linkTo(parent.bottom, margin = 30.dp)
+                }
+                .verticalScroll(rememberScrollState())
+            ) {
+                Text(
+                    text = question.description,
+                    fontSize = 20.sp,
+                    textAlign = TextAlign.Center,
+                )
+            }
+        }
     }
 }
 

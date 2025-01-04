@@ -1,6 +1,5 @@
 package com.cs31620.quizel.ui.questionbank
 
-import android.annotation.SuppressLint
 import android.util.Log
 import androidx.activity.compose.BackHandler
 import androidx.compose.foundation.Image
