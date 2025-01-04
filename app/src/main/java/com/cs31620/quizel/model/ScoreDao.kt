@@ -8,6 +8,10 @@ import androidx.room.Query
 import androidx.room.Update
 import com.cs31620.quizel.ui.components.Score
 
+/**
+ * Data access object for the scores table in the database
+ * Holds the SQL queries behind the methods
+ */
 @Dao
 interface ScoreDao {
 

@@ -5,6 +5,10 @@ import com.cs31620.quizel.ui.components.Answer
 import com.google.gson.Gson
 import com.google.gson.reflect.TypeToken
 
+/**
+ * This is used to convert a mutableList of answer objects into JSON string and back again when required using the GSON library
+ * This is so that they can be stored in the Room database
+ */
 object AnswerConverter {
     @TypeConverter
     @JvmStatic

@@ -26,7 +26,6 @@ import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.scale
 import androidx.compose.ui.draw.shadow
-import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.TextStyle
 import androidx.compose.ui.text.style.TextAlign
@@ -38,13 +37,19 @@ import androidx.compose.ui.window.DialogProperties
 import com.cs31620.quizel.R
 import com.cs31620.quizel.ui.components.Answer
 
+/**
+ * Custom composable to hold text input dialogs used in the quizel app
+ * This currently includes both the change name dialog and the add answer dialog
+ *
+ * The response is passed out of the function back to the caller
+ */
 @Composable
 fun TextInputDialog(
     dialogIsOpen: Boolean,
     dialogOpen: (Boolean) -> Unit = {},
-    response: (Any) -> Unit = {},
-    isAnswer: Boolean = false,
-    placeholder: String = ""
+    response: (Any) -> Unit = {}, //any because it can be a string or an answer object
+    isAnswer: Boolean = false, //set to false by default because this is only one special use case
+    placeholder: String = "" //sets it to blank by default
 ) {
     if (dialogIsOpen) {
         Dialog(
@@ -53,25 +58,25 @@ fun TextInputDialog(
         ) {
             val dialogWindow = getDialogWindow()
 
-            SideEffect {
+            SideEffect { //used for dimming the background
                 dialogWindow.let { window ->
                     window?.setDimAmount(0.8f)
                 }
             }
 
-            var inputText by rememberSaveable { mutableStateOf("") }
-            var toggleState by rememberSaveable { mutableStateOf(false) }
+            var inputText by rememberSaveable { mutableStateOf("") } //used to hold the input
+            var toggleState by rememberSaveable { mutableStateOf(false) } //used to hold the switch state
 
             BackHandler {
-                dialogOpen(false)
+                dialogOpen(false) //closes dialog if back button pressed
             }
 
-            Column(
+            Column( //column to hold the dialog
                 modifier = Modifier
                     .width(350.dp)
                     .height(230.dp),
             ) {
-                Card(
+                Card( //card to hold input box and switch container (if used)
                     modifier = Modifier
                         .align(Alignment.CenterHorizontally)
                         .shadow(5.dp, MaterialTheme.shapes.medium),
@@ -86,9 +91,9 @@ fun TextInputDialog(
                                 .wrapContentHeight(align = Alignment.Top),
                             textStyle = TextStyle.Default.copy(fontSize = 27.sp),
                             placeholder = { Text(text = placeholder, fontSize = 27.sp) },
-                            singleLine = true,
+                            singleLine = true, //means only one line of text can be inputted, instead of multiline
                         )
-                        if (isAnswer)
+                        if (isAnswer) //only show the switch if this dialog is used to add a potential answer
                         {
                             Row(
                                 modifier = Modifier
@@ -96,7 +101,7 @@ fun TextInputDialog(
                                     .fillMaxSize()
                                     .background(MaterialTheme.colorScheme.surfaceDim)
                             ) {
-                                Text(
+                                Text( //text to the left of the switch
                                     text = stringResource(R.string.this_is_the_correct_answer),
                                     modifier = Modifier
                                         .weight(1.5f)
@@ -106,7 +111,7 @@ fun TextInputDialog(
                                     fontSize = 22.sp,
                                     textAlign = TextAlign.Right
                                 )
-                                QuizelSwitch(
+                                QuizelSwitch( //switch to the right of the text
                                     checked = toggleState,
                                     onCheckedChange = {
                                         toggleState = it
@@ -121,13 +126,13 @@ fun TextInputDialog(
                         }
                     }
                 }
-                Row(
+                Row( //row to hold the buttons
                     horizontalArrangement = Arrangement.spacedBy(10.dp),
                     modifier = Modifier
                         .padding(top = 25.dp)
                         .height(65.dp)
                 ) {
-                    QuizelSimpleButton(
+                    QuizelSimpleButton( //cancel button
                         onClick = { dialogOpen(false) },
                         text = Pair(stringResource(R.string.cancel), 20),
                         modifier = Modifier
@@ -135,7 +140,7 @@ fun TextInputDialog(
                             .fillMaxHeight(),
                         colour = MaterialTheme.colorScheme.tertiary
                     )
-                    QuizelSimpleButton(
+                    QuizelSimpleButton( //save button
                         onClick = {
                             dialogOpen(false)
                             if (inputText.isNotBlank()) {

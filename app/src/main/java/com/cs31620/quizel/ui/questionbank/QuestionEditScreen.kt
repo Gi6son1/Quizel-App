@@ -78,11 +78,9 @@ fun QuestionEditScreenTopLevel(
         question = retrievedQuestion,
         addNewQuestion = { question ->
             questionsViewModel.addNewQuestion(question)
-            Log.d("QuestionBankScreen", "Question ${question?.description} added")
         },
         updateQuestion = { question ->
             questionsViewModel.updateSelectedQuestion(question)
-            Log.d("QuestionBankScreen", "Question ${question?.description} updated")
         },
         returnToBank = { doReturn ->
             if (doReturn){
@@ -99,8 +97,8 @@ fun QuestionEditScreenTopLevel(
 @Composable
 private fun QuestionEditScreen(
     question: Question?,
-    addNewQuestion: (Question?) -> Unit = {},
-    updateQuestion: (Question?) -> Unit = {},
+    addNewQuestion: (Question) -> Unit = {},
+    updateQuestion: (Question) -> Unit = {},
     returnToBank: (Boolean) -> Unit = {}
 ) {
     TopLevelBackgroundScaffold { innerPadding ->

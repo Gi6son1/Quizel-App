@@ -30,36 +30,42 @@ import androidx.compose.ui.window.DialogProperties
 import androidx.compose.ui.window.DialogWindowProvider
 import com.cs31620.quizel.R
 
-
+/**
+ * Custom composable to hold action check dialogs i.e. "Are you sure you want to do this?"
+ * It takes a check message as an input and a main action button to pass into the dialog
+ */
 @Composable
 fun ActionCheckDialog(
-    dialogIsOpen: Boolean,
-    dialogOpen: (Boolean) -> Unit = {},
+    dialogIsOpen: Boolean, //checks if the dialog should be open
+    dialogOpen: (Boolean) -> Unit = {}, //method used for closing the dialog
     actionDialogMessage: String,
-    mainActionButton: @Composable (onClick: () -> Unit, modifier: Modifier) -> Unit,
-    performMainAction: (Boolean) -> Unit = {false},
+    mainActionButton: @Composable (onClick: () -> Unit, modifier: Modifier) -> Unit, //takes a clickable composable with a modifier
+    performMainAction: (Boolean) -> Unit = {false}, //sets to false by default
 ) {
     if (dialogIsOpen) {
         Dialog(
-            onDismissRequest = {},
-            properties = DialogProperties(usePlatformDefaultWidth = false)
+            onDismissRequest = {}, //sets it so that user cannot dismiss dialog by tapping outside
+            properties = DialogProperties(usePlatformDefaultWidth = false) //allows a nonstandard width for the dialog
         ) {
+            BackHandler {
+                dialogOpen(false) //closes dialog when back button is pressed
+            }
 
-            val dialogWindow = getDialogWindow()
+            val dialogWindow = getDialogWindow() //used for custom screen dimming
 
             SideEffect {
-                dialogWindow.let { window ->
+                dialogWindow.let { window -> //dims background
                     window?.setDimAmount(0.8f)
                 }
             }
 
-            Column(
+            Column( //column to hold the dialog
                 modifier = Modifier
                     .fillMaxWidth()
                     .padding(start = 10.dp, end = 10.dp)
                     .height(200.dp)
             ) {
-                Card(
+                Card( //card to hold the message
                     modifier = Modifier
                         .align(Alignment.CenterHorizontally)
                         .weight(1.1f)
@@ -72,9 +78,7 @@ fun ActionCheckDialog(
                             .wrapContentHeight()
                     )
                 }
-                BackHandler {
-                    dialogOpen(false)
-                }
+                //row to hold the buttons
                 Row(horizontalArrangement = Arrangement.spacedBy(5.dp),
                     modifier = Modifier
                         .padding(top = 25.dp)
@@ -87,12 +91,12 @@ fun ActionCheckDialog(
                         text = Pair(stringResource(R.string.cancel), 20)
                     )
 
-                    mainActionButton(
+                    mainActionButton( //sets onclick details for button
                         {
                             dialogOpen(false)
                             performMainAction(true)
                         },
-                        Modifier
+                        Modifier //sets modifier details for button
                             .weight(1f)
                             .fillMaxHeight()
                             .shadow(5.dp, ButtonDefaults.shape)
@@ -103,6 +107,6 @@ fun ActionCheckDialog(
     }
 }
 
-@ReadOnlyComposable
+//Method that gets the dialog window
 @Composable
 fun getDialogWindow(): Window? = (LocalView.current.parent as? DialogWindowProvider)?.window

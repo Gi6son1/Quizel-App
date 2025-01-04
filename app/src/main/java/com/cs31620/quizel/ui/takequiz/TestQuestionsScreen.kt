@@ -1,5 +1,6 @@
 package com.cs31620.quizel.ui.takequiz
 
+import androidx.activity.compose.BackHandler
 import androidx.compose.foundation.Image
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Column
@@ -116,6 +117,10 @@ private fun TestQuestionsScreen(
 
         val shuffledAnswers = rememberSaveable(currentQuestion) {
             currentQuestion.answers.shuffled()
+        }
+
+        BackHandler {
+            showExitQuizDialog = true
         }
 
         fun transferResultsToString() = "$currentScore,$totalQuestions"

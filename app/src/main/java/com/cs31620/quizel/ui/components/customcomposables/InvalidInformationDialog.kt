@@ -14,6 +14,10 @@ import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import com.cs31620.quizel.R
 
+/**
+ * Custom composable to hold invalid information dialogs used
+ * The title, and description is passed into the method to make it re-usable
+ */
 @Composable
 fun InvalidInformationDialog(
     title: String,
@@ -23,7 +27,7 @@ fun InvalidInformationDialog(
 ){
     if (dialogIsOpen) {
         AlertDialog(
-            onDismissRequest = { dialogOpen(false) },
+            onDismissRequest = {}, //clicking outside the dialog or using the back button doesn't dismiss it
             title = { Text(text = title,
                 style = MaterialTheme.typography.bodyLarge,
                 fontSize = 20.sp

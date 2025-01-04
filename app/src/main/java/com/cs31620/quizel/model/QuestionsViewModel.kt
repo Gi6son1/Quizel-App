@@ -10,6 +10,10 @@ import com.cs31620.quizel.ui.components.Question
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.launch
 
+/**
+ * The viewmodel class used by the classes that need to access the questions table in the database
+ * It uses the SQL methods in the repository class to get the data, and update where needed
+ */
 class QuestionsViewModel(application: Application) : AndroidViewModel(application) {
     private val repository: QuizelRepository = QuizelRepository(application)
 
@@ -18,30 +22,25 @@ class QuestionsViewModel(application: Application) : AndroidViewModel(applicatio
 
     fun deleteSelectedQuestion(question: Question?) {
         viewModelScope.launch(Dispatchers.IO) {
-            if (question != null) {
-                Log.d("QuestionsViewModel", "Deleting question: ${question.description}")
+            if (question != null) { //checks if null first to avoid crashing
                 repository.deleteQuestion(question)
             }
         }
     }
 
-    fun addNewQuestion(question: Question?) {
+    fun addNewQuestion(question: Question) {
         viewModelScope.launch(Dispatchers.IO) {
-            if (question != null) {
-                repository.insertSingleQuestion(question)
-            }
+            repository.insertSingleQuestion(question)
         }
     }
 
-    fun getQuestionById(questionId: Int?): LiveData<Question?>{
+    fun getQuestionById(questionId: Int?): LiveData<Question?> {
         return repository.getQuestionById(questionId)
     }
 
-    fun updateSelectedQuestion(question: Question?) {
+    fun updateSelectedQuestion(question: Question) {
         viewModelScope.launch(Dispatchers.IO) {
-            if (question != null) {
-                repository.updateQuestion(question)
-            }
+            repository.updateQuestion(question)
         }
     }
 

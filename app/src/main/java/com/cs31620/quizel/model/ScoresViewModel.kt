@@ -9,6 +9,9 @@ import com.cs31620.quizel.ui.components.Score
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.launch
 
+/**
+ * The viewmodel class used by the classes that need to access the scores table in the database
+ */
 class ScoresViewModel(application: Application) : AndroidViewModel(application) {
     private val repository: QuizelRepository = QuizelRepository(application)
 
@@ -17,18 +20,16 @@ class ScoresViewModel(application: Application) : AndroidViewModel(application) 
 
     var mostRecentUsername: LiveData<String> = repository.getMostRecentUsername()
 
-    fun addNewScore(score: Score?) {
+    fun addNewScore(score: Score) {
         viewModelScope.launch(Dispatchers.IO) {
-            if (score != null) {
-                repository.insertScore(score)
-            }
+            repository.insertScore(score)
         }
     }
 
-    fun updateScoreWithUsername(score: Score?, username: String?) {
+    fun updateScoreWithUsername(score: Score?, username: String) {
         viewModelScope.launch(Dispatchers.IO) {
-            if (score != null) {
-                score.username = username ?: "User"
+            if (score != null) { //checks if null first (in case the database hasn't added the score in time when this method is called)
+                score.username = username
                 repository.updateScore(score)
             }
         }

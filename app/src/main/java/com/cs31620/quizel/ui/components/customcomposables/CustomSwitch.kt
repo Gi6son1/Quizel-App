@@ -8,8 +8,12 @@ import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Switch
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Modifier
-import androidx.compose.ui.graphics.Color
+import androidx.compose.ui.res.stringResource
+import com.cs31620.quizel.R
 
+/**
+ * Custom composable to hold the switch objects used in the quizel app
+ */
 @Composable
 fun QuizelSwitch(
     checked: Boolean,
@@ -20,17 +24,17 @@ fun QuizelSwitch(
         checked = checked,
         onCheckedChange = onCheckedChange,
         modifier = modifier,
-        thumbContent = {
+        thumbContent = { //custom switch design -> Tick if on, cross if off
             if (checked) {
                 Icon(
                     imageVector = Icons.Filled.Check,
-                    contentDescription = "toggleOn",
+                    contentDescription = stringResource(R.string.toggle_on),
                     tint = MaterialTheme.colorScheme.primary
                 )
             } else {
                 Icon(
                     imageVector = Icons.Filled.Close,
-                    contentDescription = "toggleOff",
+                    contentDescription = stringResource(R.string.toggle_off),
                     tint = MaterialTheme.colorScheme.surfaceBright
                 )
             }

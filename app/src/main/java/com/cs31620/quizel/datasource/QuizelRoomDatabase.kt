@@ -16,6 +16,9 @@ import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.launch
 
+/**
+ * Database object for storing the questions and scores
+ */
 @Database(entities = [Question::class,Score::class], version = 1)
 @TypeConverters(AnswerConverter::class)
 abstract class QuizelRoomDatabase : RoomDatabase() {
@@ -27,6 +30,7 @@ abstract class QuizelRoomDatabase : RoomDatabase() {
         private var instance: QuizelRoomDatabase? = null
         private val coroutineScope = CoroutineScope(Dispatchers.IO)
 
+        //creating the database object
         @Synchronized
         fun getDatabase(context: Context): QuizelRoomDatabase? {
             if (instance == null) {
@@ -42,6 +46,7 @@ abstract class QuizelRoomDatabase : RoomDatabase() {
             return instance
         }
 
+
         private fun roomDatabaseCallback(context: Context): Callback {
             return object : Callback() {
                 override fun onCreate(db: SupportSQLiteDatabase) {
@@ -54,6 +59,7 @@ abstract class QuizelRoomDatabase : RoomDatabase() {
             }
         }
 
+        //pre-populating the database with questions and scores, used for testing
         private suspend fun populateDatabase(context: Context, instance: QuizelRoomDatabase) {
             val question1 = Question(
                 title = "What is the capital of France?",
