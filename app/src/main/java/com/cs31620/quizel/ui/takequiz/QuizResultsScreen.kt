@@ -46,14 +46,20 @@ import com.cs31620.quizel.ui.components.customcomposables.RecentScoresDisplay
 import com.cs31620.quizel.ui.navigation.Screen
 import com.cs31620.quizel.ui.components.customcomposables.TextInputDialog
 
+/**
+ * The top level for the quiz results screen
+ * @param navController the navigation controller
+ * @param quizResults the results of the quiz, stored as a string
+ * @param scoresViewModel the viewmodel for the scores table
+ */
 @Composable
 fun QuizResultsScreenTopLevel(
     navController: NavHostController,
     quizResults: String,
     scoresViewModel: ScoresViewModel
 ) {
-    val (finalScore, totalQuestions) = quizResults.split(",").map { it.toInt() }
-    val scoresList by scoresViewModel.scoresList.observeAsState(listOf())
+    val (finalScore, totalQuestions) = quizResults.split(",").map { it.toInt() } //splits the string into the final score and the total questions
+    val scoresList by scoresViewModel.scoresList.observeAsState(listOf()) //get the list of recent scores from the viewmodel
 
     QuizResultsScreen(totalQuestions = totalQuestions, finalScore = finalScore,
         restartQuiz = { restart ->
@@ -70,13 +76,22 @@ fun QuizResultsScreenTopLevel(
         },
         recentScores = scoresList,
         changeName = { name ->
-            val recentScore = scoresList.first()
+            val recentScore = scoresList.first() //updates most recent score with the given name
             Log.d("QuizResultsScreenTopLevel", "changeName: $name for score $recentScore")
             scoresViewModel.updateScoreWithUsername(score = recentScore, username = name)
         }
     )
 }
 
+/**
+ * The quiz results screen
+ * @param totalQuestions the total number of questions in the quiz
+ * @param finalScore the final score of the quiz
+ * @param restartQuiz the function to restart the quiz
+ * @param goHome the function to go home
+ * @param recentScores the list of recent scores
+ * @param changeName the function to change the name of the user
+ */
 @Composable
 private fun QuizResultsScreen(
     totalQuestions: Int = 0,
@@ -86,20 +101,21 @@ private fun QuizResultsScreen(
     recentScores: List<Score>,
     changeName: (String) -> Unit = {},
 ) {
-    TopLevelBackgroundScaffold(showTitle = false) { innerPadding ->
+    TopLevelBackgroundScaffold(showTitle = false) //hides the app title
+    { innerPadding ->
 
-            var showChangeNameDialog by rememberSaveable { mutableStateOf(false) }
+            var showChangeNameDialog by rememberSaveable { mutableStateOf(false) } //whether to show the change name dialog
 
-            ConstraintLayout(
+            ConstraintLayout( //holds the components of the screen
                 modifier = Modifier.fillMaxSize()
                     .padding(innerPadding)
                     .padding(start = 10.dp, end = 10.dp, bottom = 20.dp)
                     .wrapContentSize()
 
             ) {
-                val (title, results, changeNameButton, retryButton, menuButton) = createRefs()
+                val (title, results, changeNameButton, retryButton, menuButton) = createRefs() //holds the references to the components
 
-                Text(
+                Text( //title of the screen
                     text = stringResource(R.string.your_quiz_results),
                     modifier = Modifier
                         .fillMaxWidth()
@@ -110,7 +126,7 @@ private fun QuizResultsScreen(
                     fontSize = 80.sp,
                     style = MaterialTheme.typography.displayLarge
                 )
-                Card(modifier = Modifier.shadow(10.dp, MaterialTheme.shapes.medium)
+                Card(modifier = Modifier.shadow(10.dp, MaterialTheme.shapes.medium) //holds the recent scores area
                     .constrainAs(results) {
                         top.linkTo(title.bottom)
                         bottom.linkTo(changeNameButton.top, margin = 10.dp)
@@ -121,7 +137,7 @@ private fun QuizResultsScreen(
                             .padding(10.dp)
                     ) {
                         Text(
-                            text = "${(finalScore / totalQuestions.toFloat() * 100).toInt()}%",
+                            text = "${(finalScore / totalQuestions.toFloat() * 100).toInt()}%", //displayes score as percentage
                             textAlign = TextAlign.Center,
                             style = MaterialTheme.typography.bodyLarge,
                             modifier = Modifier
@@ -132,7 +148,7 @@ private fun QuizResultsScreen(
 
                         Text(
                             text = stringResource(
-                                R.string.you_got_out_of_questions_correct,
+                                R.string.you_got_out_of_questions_correct, //displays final score with respect to total questions
                                 finalScore,
                                 totalQuestions
                             ),
@@ -146,12 +162,12 @@ private fun QuizResultsScreen(
 
                         HorizontalDivider(modifier = Modifier.padding(vertical = 5.dp))
 
-                        Text(
+                        Text( //recent scores title
                             text = stringResource(R.string.recent_scores),
                             style = MaterialTheme.typography.titleLarge,
                             fontSize = 35.sp,
                         )
-                        RecentScoresDisplay(scoresList = recentScores)
+                        RecentScoresDisplay(scoresList = recentScores) //displays the recent scores
                         Text(
                             text = stringResource(
                                 R.string.your_score_is_saved_under,
@@ -169,7 +185,7 @@ private fun QuizResultsScreen(
                         )
                     }
                 }
-                QuizelSimpleButton(
+                QuizelSimpleButton( //button to change name
                     onClick = { showChangeNameDialog = true },
                     modifier = Modifier
                         .fillMaxWidth()
@@ -184,7 +200,7 @@ private fun QuizResultsScreen(
                     icon = Icons.Filled.Edit
                 )
 
-                QuizelSimpleButton(
+                QuizelSimpleButton( //button to retry quiz
                     onClick = {
                         restartQuiz(true)
                     },
@@ -201,7 +217,7 @@ private fun QuizResultsScreen(
                     icon = Icons.AutoMirrored.Filled.KeyboardReturn
                 )
 
-                QuizelSimpleButton(
+                QuizelSimpleButton( //button to go home
                     onClick = {
                         goHome(true)
                     },

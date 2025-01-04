@@ -19,11 +19,6 @@ import androidx.core.view.WindowCompat
 import androidx.core.view.WindowInsetsCompat
 import androidx.core.view.WindowInsetsControllerCompat
 
-@Immutable
-data class ExtendedColorScheme(
-    val neutralVariant2: ColorFamily,
-)
-
 private val lightScheme = lightColorScheme(
     primary = primaryLight,
     onPrimary = onPrimaryLight,
@@ -252,60 +247,6 @@ private val highContrastDarkColorScheme = darkColorScheme(
     surfaceContainerHighest = surfaceContainerHighestDarkHighContrast,
 )
 
-val extendedLight = ExtendedColorScheme(
-  neutralVariant2 = ColorFamily(
-  neutralVariant2Light,
-  onNeutralVariant2Light,
-  neutralVariant2ContainerLight,
-  onNeutralVariant2ContainerLight,
-  ),
-)
-
-val extendedDark = ExtendedColorScheme(
-  neutralVariant2 = ColorFamily(
-  neutralVariant2Dark,
-  onNeutralVariant2Dark,
-  neutralVariant2ContainerDark,
-  onNeutralVariant2ContainerDark,
-  ),
-)
-
-val extendedLightMediumContrast = ExtendedColorScheme(
-  neutralVariant2 = ColorFamily(
-  neutralVariant2LightMediumContrast,
-  onNeutralVariant2LightMediumContrast,
-  neutralVariant2ContainerLightMediumContrast,
-  onNeutralVariant2ContainerLightMediumContrast,
-  ),
-)
-
-val extendedLightHighContrast = ExtendedColorScheme(
-  neutralVariant2 = ColorFamily(
-  neutralVariant2LightHighContrast,
-  onNeutralVariant2LightHighContrast,
-  neutralVariant2ContainerLightHighContrast,
-  onNeutralVariant2ContainerLightHighContrast,
-  ),
-)
-
-val extendedDarkMediumContrast = ExtendedColorScheme(
-  neutralVariant2 = ColorFamily(
-  neutralVariant2DarkMediumContrast,
-  onNeutralVariant2DarkMediumContrast,
-  neutralVariant2ContainerDarkMediumContrast,
-  onNeutralVariant2ContainerDarkMediumContrast,
-  ),
-)
-
-val extendedDarkHighContrast = ExtendedColorScheme(
-  neutralVariant2 = ColorFamily(
-  neutralVariant2DarkHighContrast,
-  onNeutralVariant2DarkHighContrast,
-  neutralVariant2ContainerDarkHighContrast,
-  onNeutralVariant2ContainerDarkHighContrast,
-  ),
-)
-
 @Immutable
 data class ColorFamily(
     val color: Color,
@@ -342,9 +283,9 @@ fun QuizelTheme(
 
             WindowCompat.setDecorFitsSystemWindows(window, false)
             controller.isAppearanceLightStatusBars = darkTheme
-            controller.hide(WindowInsetsCompat.Type.navigationBars())
+            controller.hide(WindowInsetsCompat.Type.navigationBars()) //hide navigation bars to look better
             controller.systemBarsBehavior =
-                WindowInsetsControllerCompat.BEHAVIOR_SHOW_TRANSIENT_BARS_BY_SWIPE
+                WindowInsetsControllerCompat.BEHAVIOR_SHOW_TRANSIENT_BARS_BY_SWIPE //removes bottom bar unless it is interacted with
         }
     }
 

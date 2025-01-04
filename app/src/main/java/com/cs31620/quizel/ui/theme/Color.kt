@@ -216,34 +216,3 @@ val surfaceContainerLowDarkHighContrast = Color(0xFF1C1B1B)
 val surfaceContainerDarkHighContrast = Color(0xFF201F1F)
 val surfaceContainerHighDarkHighContrast = Color(0xFF2A2A2A)
 val surfaceContainerHighestDarkHighContrast = Color(0xFF353434)
-
-val neutralVariant2Light = Color(0xFF000000)
-val onNeutralVariant2Light = Color(0xFFFFFFFF)
-val neutralVariant2ContainerLight = Color(0xFF262626)
-val onNeutralVariant2ContainerLight = Color(0xFFB1B1B1)
-
-val neutralVariant2LightMediumContrast = Color(0xFF000000)
-val onNeutralVariant2LightMediumContrast = Color(0xFFFFFFFF)
-val neutralVariant2ContainerLightMediumContrast = Color(0xFF262626)
-val onNeutralVariant2ContainerLightMediumContrast = Color(0xFFDCDCDC)
-
-val neutralVariant2LightHighContrast = Color(0xFF000000)
-val onNeutralVariant2LightHighContrast = Color(0xFFFFFFFF)
-val neutralVariant2ContainerLightHighContrast = Color(0xFF262626)
-val onNeutralVariant2ContainerLightHighContrast = Color(0xFFFFFFFF)
-
-val neutralVariant2Dark = Color(0xFFC6C6C6)
-val onNeutralVariant2Dark = Color(0xFF303030)
-val neutralVariant2ContainerDark = Color(0xFF000000)
-val onNeutralVariant2ContainerDark = Color(0xFF969696)
-
-val neutralVariant2DarkMediumContrast = Color(0xFFCBCBCB)
-val onNeutralVariant2DarkMediumContrast = Color(0xFF161616)
-val neutralVariant2ContainerDarkMediumContrast = Color(0xFF919191)
-val onNeutralVariant2ContainerDarkMediumContrast = Color(0xFF000000)
-
-val neutralVariant2DarkHighContrast = Color(0xFFFBFBFB)
-val onNeutralVariant2DarkHighContrast = Color(0xFF000000)
-val neutralVariant2ContainerDarkHighContrast = Color(0xFFCBCBCB)
-val onNeutralVariant2ContainerDarkHighContrast = Color(0xFF000000)
-

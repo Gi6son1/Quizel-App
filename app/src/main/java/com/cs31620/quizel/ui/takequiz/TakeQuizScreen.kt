@@ -47,14 +47,20 @@ import com.cs31620.quizel.ui.components.customcomposables.RecentScoresDisplay
 import com.cs31620.quizel.ui.navigation.Screen
 import com.cs31620.quizel.ui.theme.QuizelTheme
 
+/**
+ * The top level for the take quiz screen
+ * @param navController the navigation controller
+ * @param questionsViewModel the viewmodel for the questions table
+ * @param scoresViewModel the viewmodel for the scores table
+ */
 @Composable
 fun TakeQuizScreenTopLevel(
     navController: NavHostController,
     questionsViewModel: QuestionsViewModel,
     scoresViewModel: ScoresViewModel
 ) {
-    val questionList by questionsViewModel.questionsList.observeAsState(listOf())
-    val scoresList by scoresViewModel.scoresList.observeAsState(listOf())
+    val questionList by questionsViewModel.questionsList.observeAsState(listOf()) //get the list of questions from the viewmodel
+    val scoresList by scoresViewModel.scoresList.observeAsState(listOf()) //get the list of recent scores from the viewmodel
 
     TakeQuizScreen(navController = navController,
         beginQuiz = { quizSettingsString ->
@@ -63,11 +69,18 @@ fun TakeQuizScreenTopLevel(
                 launchSingleTop = true
             }
             },
-        enableBeginButton = !questionList.isEmpty(),
+        enableBeginButton = !questionList.isEmpty(), //only enables the begin button if there are questions in the database
         recentScores = scoresList
         )
 }
 
+/**
+ * The take quiz screen
+ * @param navController the navigation controller for passing to the scaffold
+ * @param beginQuiz the function to begin the quiz
+ * @param enableBeginButton whether to enable the begin button
+ * @param recentScores the list of recent scores
+ */
 @Composable
 private fun TakeQuizScreen(navController: NavHostController,
                            beginQuiz: (String) -> Unit = {},
@@ -77,18 +90,18 @@ private fun TakeQuizScreen(navController: NavHostController,
         navController = navController
     ) { innerPadding ->
 
-        var showProgressBar by rememberSaveable { mutableStateOf(true) }
-        var showCurrentScore by rememberSaveable { mutableStateOf(true) }
+        var showProgressBar by rememberSaveable { mutableStateOf(true) } //whether to show the progress bar
+        var showCurrentScore by rememberSaveable { mutableStateOf(true) } //whether to show the current score
 
-            ConstraintLayout( modifier = Modifier
+            ConstraintLayout( modifier = Modifier //holds the components of the screen
                 .fillMaxSize()
                 .padding(innerPadding)
                 .padding(start = 10.dp, end = 10.dp, bottom = 20.dp, top = 90.dp)
                 .wrapContentSize(),
             ) {
-                val (recentScoresDisplay, quizOptions, beginButton) = createRefs()
+                val (recentScoresDisplay, quizOptions, beginButton) = createRefs() //holds the references to the components
 
-                Card(modifier = Modifier.shadow(10.dp, MaterialTheme.shapes.medium).fillMaxWidth()
+                Card(modifier = Modifier.shadow(10.dp, MaterialTheme.shapes.medium).fillMaxWidth() //holds the recent scores area
                     .constrainAs(recentScoresDisplay){
                         top.linkTo(parent.top)
                         bottom.linkTo(quizOptions.top, margin = 10.dp)
@@ -110,7 +123,7 @@ private fun TakeQuizScreen(navController: NavHostController,
                         RecentScoresDisplay(modifier = Modifier.fillMaxWidth(), scoresList = recentScores)
                     }
                 }
-                Card(modifier = Modifier.shadow(10.dp, MaterialTheme.shapes.medium).fillMaxWidth()
+                Card(modifier = Modifier.shadow(10.dp, MaterialTheme.shapes.medium).fillMaxWidth() //holds the quiz options area
                     .constrainAs(quizOptions){
                         top.linkTo(recentScoresDisplay.bottom)
                         bottom.linkTo(beginButton.top, margin = 10.dp)
@@ -121,7 +134,7 @@ private fun TakeQuizScreen(navController: NavHostController,
                         modifier = Modifier
                             .padding(8.dp)
                     ) {
-                        Text(
+                        Text( //quiz options title
                             text = stringResource(R.string.quiz_options),
                             textAlign = TextAlign.Center,
                             style = MaterialTheme.typography.titleLarge,
@@ -131,7 +144,7 @@ private fun TakeQuizScreen(navController: NavHostController,
                             fontSize = 60.sp
                         )
 
-                        Row(modifier = Modifier
+                        Row(modifier = Modifier //the switch for showing the progress bar
                             .padding(horizontal = 10.dp)
                             .height(50.dp)) {
                             Text(text = stringResource(R.string.show_current_score), modifier = Modifier
@@ -146,7 +159,7 @@ private fun TakeQuizScreen(navController: NavHostController,
 
                         HorizontalDivider()
 
-                        Row(modifier = Modifier
+                        Row(modifier = Modifier //the switch for showing the current score
                             .padding(horizontal = 10.dp)
                             .height(50.dp)) {
                             Text(text = stringResource(R.string.show_progress_bar), modifier = Modifier
@@ -161,9 +174,9 @@ private fun TakeQuizScreen(navController: NavHostController,
 
                     }
                 }
-                QuizelSimpleButton(
+                QuizelSimpleButton( //button to begin quiz
                     onClick = {
-                        val quizSettingsString =
+                        val quizSettingsString = //passes the settings for the quiz to the test questions screen
                             "${if (showProgressBar) "1" else "0"},${if (showCurrentScore) "1" else "0"}"
 
                         beginQuiz(quizSettingsString)

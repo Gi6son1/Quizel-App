@@ -234,7 +234,7 @@ private fun QuestionEditScreen(
                         QuizelSimpleButton(
                             onClick = { showAddAnswerDialog = true },
                             colour = MaterialTheme.colorScheme.secondary,
-                            enabled = answers.size < 10,
+                            enabled = answers.size < 10, //only enabled when there's less than 10 answers
                             shape = MaterialTheme.shapes.medium,
                             modifier = Modifier
                                 .weight(0.9f)
@@ -390,7 +390,7 @@ private fun QuestionEditScreen(
                     modifier = Modifier
                         .weight(1f)
                         .fillMaxHeight(),
-                    enabled = answers.isNotEmpty(),
+                    enabled = answers.isNotEmpty(), //only enabled when there are answers
                     colour = MaterialTheme.colorScheme.secondary,
                     text = Pair(stringResource(R.string.save_changes), 18)
                 )
@@ -408,7 +408,7 @@ private fun QuestionEditScreen(
             placeholder = stringResource(R.string.enter_answer),
             response = { answer -> addAnswerToAnswerList(answers, answer as Answer) }) //add answer to answer list once saved
 
-        ActionCheckDialog(dialogIsOpen = showDiscardQuestionDialog,
+        ActionCheckDialog(dialogIsOpen = showDiscardQuestionDialog, //discard question dialog
             dialogOpen = { isOpen -> showDiscardQuestionDialog = isOpen },
             mainActionButton = { onClick, modifier ->
                 QuizelSimpleButton(
@@ -419,11 +419,11 @@ private fun QuestionEditScreen(
                 )
             },
             actionDialogMessage = stringResource(R.string.discard_any_changes_check),
-            performMainAction = { returnToBank(true) }
+            performMainAction = { returnToBank(true) } //if main action confirmed, go to question bank
 
         )
 
-        InvalidInformationDialog(
+        InvalidInformationDialog( //invalid information dialog used when there is no correct answer selected or question entered
             dialogIsOpen = showInvalidInfoDialog,
             dialogOpen = { isOpen -> showInvalidInfoDialog = isOpen },
             title = invalidInfoDialogTitle,
@@ -432,6 +432,10 @@ private fun QuestionEditScreen(
     }
 }
 
+/**
+ * Small method for setting a answer as correct in the answer list,
+ * sets all of the other answers as incorrect
+ */
 private fun setCorrectAnswer(answers: SnapshotStateList<Answer>, answerIndex: Int) {
     val answer = answers[answerIndex]
     answers.forEach { it.isCorrect = false }
@@ -441,6 +445,10 @@ private fun setCorrectAnswer(answers: SnapshotStateList<Answer>, answerIndex: In
     }
 }
 
+/**
+ * Small method for adding an answer to the answer list
+ * Only adds it when the answer list is not full
+ */
 private fun addAnswerToAnswerList(answers: SnapshotStateList<Answer>, answer: Answer) {
     if (answers.size < 10) {
         answers.add(answer)
