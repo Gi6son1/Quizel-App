@@ -1,6 +1,7 @@
 package com.cs31620.quizel.ui.takequiz
 
 import android.util.Log
+import androidx.activity.compose.BackHandler
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
@@ -100,6 +101,10 @@ private fun QuizResultsScreen(
 ) {
     TopLevelBackgroundScaffold(showTitle = false) //hides the app title
     { innerPadding ->
+
+        BackHandler { //if user uses back button, go back to menu
+            goHome(true)
+        }
 
         var showChangeNameDialog by rememberSaveable { mutableStateOf(false) } //whether to show the change name dialog
 
