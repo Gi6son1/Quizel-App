@@ -19,9 +19,14 @@ import com.cs31620.quizel.ui.components.Score
 /**
  * Custom composable to hold the recent scores display used in the quizel app
  * This takes a list of scores, and displays them into a user-readable column with dividers between each score
+ * @param modifier the modifier to be applied to the column
+ * @param scoresList the list of scores to be displayed
  */
 @Composable
-fun RecentScoresDisplay(modifier: Modifier = Modifier, scoresList: List<Score>){
+fun RecentScoresDisplay(
+    modifier: Modifier = Modifier,
+    scoresList: List<Score>
+){
     if (scoresList.isEmpty()){ //if no scores in the db, display a message
         Text(text = "There are no recent scores to display", modifier = Modifier.padding(horizontal = 10.dp).fillMaxWidth(),
             textAlign = TextAlign.Center)

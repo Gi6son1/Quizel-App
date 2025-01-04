@@ -22,11 +22,15 @@ import androidx.navigation.compose.rememberNavController
 import com.cs31620.quizel.R
 import com.cs31620.quizel.ui.theme.QuizelTheme
 
+/**
+ * Navigation bar for the main page
+ * @param navController the navigation controller
+ */
 @Composable
 fun MainPageNavigationBar(
     navController: NavController,
 ) {
-    val icons = mapOf(
+    val icons = mapOf( //the icons used in the navigation bar
         Screen.QuestionBank to IconGroup(
             filledIcon = Icons.AutoMirrored.Filled.FormatListBulleted,
             outlinedIcon = Icons.AutoMirrored.Outlined.FormatListBulleted,
@@ -39,7 +43,7 @@ fun MainPageNavigationBar(
         )
     )
 
-    NavigationBar{
+    NavigationBar{ //the navigation bar itself
         val navBackStackEntry by navController.currentBackStackEntryAsState()
         val currentDestination = navBackStackEntry?.destination
 
@@ -47,7 +51,7 @@ fun MainPageNavigationBar(
             val isSelected = currentDestination?.route == screen.route
             val labelText = icons[screen]!!.label
 
-            NavigationBarItem(
+            NavigationBarItem( //adds each icon to the navigation bar
                 icon = {
                     Icon(
                         imageVector = (
@@ -61,7 +65,7 @@ fun MainPageNavigationBar(
                 },
                 label = { Text(labelText) },
                 selected = isSelected,
-                onClick = {
+                onClick = { //when tapped, takes to screen and also shows the icon as "enabled"
                     navController.navigate(screen.route) {
                         popUpTo(navController.graph.findStartDestination().id) {
                             saveState = true

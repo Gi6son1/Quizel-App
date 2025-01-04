@@ -17,6 +17,10 @@ import com.cs31620.quizel.R
 /**
  * Custom composable to hold invalid information dialogs used
  * The title, and description is passed into the method to make it re-usable
+ * @param title the title of the dialog
+ * @param description the description of the dialog
+ * @param dialogIsOpen whether or not the dialog is open
+ * @param dialogOpen method used for closing the dialog
  */
 @Composable
 fun InvalidInformationDialog(

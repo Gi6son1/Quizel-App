@@ -33,6 +33,11 @@ import com.cs31620.quizel.R
 /**
  * Custom composable to hold action check dialogs i.e. "Are you sure you want to do this?"
  * It takes a check message as an input and a main action button to pass into the dialog
+ * @param dialogIsOpen whether or not the dialog is open
+ * @param dialogOpen method used for closing the dialog
+ * @param actionDialogMessage the message to be displayed in the dialog
+ * @param mainActionButton the main action button to be displayed in the dialog
+ * @param performMainAction method used for saying if the main action should be performed
  */
 @Composable
 fun ActionCheckDialog(

@@ -66,13 +66,20 @@ import com.cs31620.quizel.ui.components.customcomposables.QuizelSimpleButton
 import com.cs31620.quizel.ui.components.customcomposables.TextInputDialog
 import com.cs31620.quizel.ui.navigation.Screen
 
+/***
+ * The top level for the question edit screen
+ * @param navController the navigation controller
+ * @param questionsViewModel the viewmodel for the questions table
+ * @param questionId the id of the question being edited, defaulted to null (for error handling)
+ */
 @Composable
 fun QuestionEditScreenTopLevel(
     navController: NavHostController,
     questionsViewModel: QuestionsViewModel,
     questionId: Int? = null
 ) {
-    val retrievedQuestion by  questionsViewModel.getQuestionById(questionId).observeAsState(Question())
+    val retrievedQuestion by questionsViewModel.getQuestionById(questionId)
+        .observeAsState(Question()) //retrieves question from viewmodel
     Log.d("QuestionEditScreenTopLevel", "QuestionId: $questionId")
     QuestionEditScreen(
         question = retrievedQuestion,
@@ -83,17 +90,23 @@ fun QuestionEditScreenTopLevel(
             questionsViewModel.updateSelectedQuestion(question)
         },
         returnToBank = { doReturn ->
-            if (doReturn){
-                navController.navigate(Screen.QuestionBank.route){
-                    popUpTo(navController.graph.findStartDestination().id)
+            if (doReturn) {
+                navController.navigate(Screen.QuestionBank.route) {
+                    popUpTo(navController.graph.findStartDestination().id) //pops up backstack until it returns to question bank screen
                     launchSingleTop = true
                 }
             }
-            }
+        }
     )
 }
 
-@SuppressLint("UnusedMaterial3ScaffoldPaddingParameter")
+/**
+ * Question edit screen
+ * @param question the question to be edited, could be null if a new question is being added
+ * @param addNewQuestion the function to add a new question
+ * @param updateQuestion the function to update a question
+ * @param returnToBank the function to return to the question bank screen
+ */
 @Composable
 private fun QuestionEditScreen(
     question: Question?,
@@ -102,16 +115,16 @@ private fun QuestionEditScreen(
     returnToBank: (Boolean) -> Unit = {}
 ) {
     TopLevelBackgroundScaffold { innerPadding ->
-        var title by rememberSaveable(question) { mutableStateOf(question?.title ?: "") }
-        val context = LocalContext.current
+        var title by rememberSaveable(question) { mutableStateOf(question?.title ?: "") } //holds the title of the question
+        val context = LocalContext.current //used to get strings
 
-        var description by rememberSaveable(question) {
+        var description by rememberSaveable(question) { //holds the question description
             mutableStateOf(
                 question?.description ?: ""
             )
         }
 
-        val answers = remember(question) {
+        val answers = remember(question) { //holds the list of answers for the question
             mutableStateListOf<Answer>().also { list ->
                 question?.answers?.let { answers ->
                     list.addAll(answers)
@@ -119,15 +132,15 @@ private fun QuestionEditScreen(
             }
         }
 
-        var showDiscardQuestionDialog by rememberSaveable { mutableStateOf(false) }
-        var showAddAnswerDialog by rememberSaveable { mutableStateOf(false) }
-        var showInvalidInfoDialog by rememberSaveable { mutableStateOf(false) }
+        var showDiscardQuestionDialog by rememberSaveable { mutableStateOf(false) } //variable to hold whether to show the discard question dialog
+        var showAddAnswerDialog by rememberSaveable { mutableStateOf(false) } //variable to hold whether to show the add answer dialog
+        var showInvalidInfoDialog by rememberSaveable { mutableStateOf(false) } //variable to hold whether to show the invalid info dialog
 
-        var invalidInfoDialogTitle by rememberSaveable { mutableStateOf("") }
-        var invalidInfoDialogDescription by rememberSaveable { mutableStateOf("") }
+        var invalidInfoDialogTitle by rememberSaveable { mutableStateOf("") } //variable to hold the title of the invalid info dialog
+        var invalidInfoDialogDescription by rememberSaveable { mutableStateOf("") } //variable to hold the description of the invalid info dialog
 
 
-        ConstraintLayout(
+        ConstraintLayout( //holds the components of the screen
             modifier = Modifier
                 .fillMaxSize()
                 .padding(innerPadding)
@@ -135,7 +148,7 @@ private fun QuestionEditScreen(
         ) {
             val (titleBox, descriptionBox, answerBox, buttonRow) = createRefs()
 
-            OutlinedTextField(
+            OutlinedTextField( //title box
                 value = title,
                 onValueChange = { title = it },
                 modifier = Modifier
@@ -164,19 +177,24 @@ private fun QuestionEditScreen(
                 ),
                 shape = MaterialTheme.shapes.medium,
 
-            )
-            OutlinedTextField(
+                )
+            OutlinedTextField( //description box
                 value = description,
                 onValueChange = { description = it },
                 modifier = Modifier
                     .fillMaxWidth()
                     .shadow(5.dp, MaterialTheme.shapes.medium)
                     .height(120.dp)
-                    .constrainAs(descriptionBox){
+                    .constrainAs(descriptionBox) {
                         top.linkTo(titleBox.bottom)
                         bottom.linkTo(answerBox.top, margin = 8.dp)
                     },
-                placeholder = { Text(text = stringResource(R.string.enter_question), fontSize = 18.sp) },
+                placeholder = {
+                    Text(
+                        text = stringResource(R.string.enter_question),
+                        fontSize = 18.sp
+                    )
+                },
                 textStyle = TextStyle.Default.copy(fontSize = 18.sp),
                 colors = OutlinedTextFieldDefaults.colors(
                     focusedContainerColor = MaterialTheme.colorScheme.surfaceBright,
@@ -184,7 +202,7 @@ private fun QuestionEditScreen(
                 ),
                 shape = MaterialTheme.shapes.medium
             )
-            Surface(
+            Surface( //answer box
                 modifier = Modifier
                     .fillMaxWidth()
                     .shadow(5.dp, MaterialTheme.shapes.medium)
@@ -196,8 +214,8 @@ private fun QuestionEditScreen(
                 color = MaterialTheme.colorScheme.surfaceDim,
                 shape = MaterialTheme.shapes.medium
             ) {
-                Column {
-                    Row(
+                Column { //holds the components of the answer box
+                    Row( //holds the title and add answer button
                         modifier = Modifier
                             .height(60.dp)
                             .padding(5.dp)
@@ -225,7 +243,7 @@ private fun QuestionEditScreen(
                             text = Pair(stringResource(R.string.answer), 22)
                         )
                     }
-                    if (answers.isEmpty()) {
+                    if (answers.isEmpty()) { //if there are no answers, display a message
                         Box(
                             modifier = Modifier
                                 .fillMaxSize()
@@ -241,7 +259,7 @@ private fun QuestionEditScreen(
                                 textAlign = TextAlign.Center
                             )
                         }
-                    } else {
+                    } else { //otherwise display the answers
                         Column(
                             modifier = Modifier
                                 .fillMaxSize()
@@ -250,7 +268,7 @@ private fun QuestionEditScreen(
                                 .weight(8f),
                             verticalArrangement = Arrangement.spacedBy(7.dp)
                         ) {
-                            answers.forEachIndexed { index, answer ->
+                            answers.forEachIndexed { index, answer -> //each answer is a button, on click -> sets as correct answer
                                 Button(
                                     onClick = { setCorrectAnswer(answers, index) },
                                     shape = MaterialTheme.shapes.medium,
@@ -261,7 +279,7 @@ private fun QuestionEditScreen(
                                     contentPadding = PaddingValues(0.dp),
                                     colors = ButtonDefaults.buttonColors(MaterialTheme.colorScheme.surfaceBright)
                                 ) {
-                                    Row(
+                                    Row( //holds the correct answer icon, answer text, and delete button
                                         modifier = Modifier
                                             .fillMaxSize()
                                     ) {
@@ -308,17 +326,19 @@ private fun QuestionEditScreen(
                     }
                 }
             }
-            Row(
+            Row( //holds the save and discard buttons
                 horizontalArrangement = Arrangement.spacedBy(5.dp),
                 modifier = Modifier
                     .fillMaxWidth()
-                    .constrainAs(buttonRow){
+                    .constrainAs(buttonRow) {
                         top.linkTo(answerBox.bottom)
                         bottom.linkTo(parent.bottom)
-                        height = Dimension.fillToConstraints.atLeast(70.dp).atMost(70.dp)
+                        height = Dimension.fillToConstraints
+                            .atLeast(70.dp)
+                            .atMost(70.dp)
                     }
             ) {
-                QuizelSimpleButton(
+                QuizelSimpleButton( //discard button, on click -> show discard question dialog
                     onClick = { showDiscardQuestionDialog = true },
                     modifier = Modifier
                         .fillMaxHeight()
@@ -326,9 +346,9 @@ private fun QuestionEditScreen(
                     colour = MaterialTheme.colorScheme.error,
                     text = Pair(stringResource(R.string.discard_changes), 18)
                 )
-                QuizelSimpleButton(
+                QuizelSimpleButton( //save button, on click -> save question and return to bank
                     onClick = {
-                        if (description.isBlank()) {
+                        if (description.isBlank()) { //if there is no question description, show invalid info dialog
                             invalidInfoDialogTitle =
                                 context.getString(R.string.no_question_inputted)
                             invalidInfoDialogDescription =
@@ -337,9 +357,9 @@ private fun QuestionEditScreen(
                             return@QuizelSimpleButton
                         }
 
-                        answers.forEach { answer ->
-                            if (answer.isCorrect) {
-                                if (question == null) {
+                        answers.forEach { answer -> //if there is no correct answer, show invalid info dialog
+                            if (answer.isCorrect) { //if there is a correct answer, save the question
+                                if (question == null) { //original question = null -> new question
                                     addNewQuestion(
                                         Question(
                                             title = title,
@@ -347,7 +367,7 @@ private fun QuestionEditScreen(
                                             answers = answers
                                         )
                                     )
-                                } else {
+                                } else { //original question != null -> update question
                                     updateQuestion(
                                         Question(
                                             id = question.id,
@@ -372,21 +392,21 @@ private fun QuestionEditScreen(
                         .fillMaxHeight(),
                     enabled = answers.isNotEmpty(),
                     colour = MaterialTheme.colorScheme.secondary,
-                text = Pair(stringResource(R.string.save_changes), 18)
+                    text = Pair(stringResource(R.string.save_changes), 18)
                 )
             }
         }
 
 
-        BackHandler {
+        BackHandler { //if back button is pressed, show discard question dialog
             showDiscardQuestionDialog = true
         }
 
-        TextInputDialog(dialogIsOpen = showAddAnswerDialog,
+        TextInputDialog(dialogIsOpen = showAddAnswerDialog, //add answer dialog
             dialogOpen = { isOpen -> showAddAnswerDialog = isOpen },
             isAnswer = true,
             placeholder = stringResource(R.string.enter_answer),
-            response = { answer -> addAnswerToAnswerList(answers, answer as Answer) })
+            response = { answer -> addAnswerToAnswerList(answers, answer as Answer) }) //add answer to answer list once saved
 
         ActionCheckDialog(dialogIsOpen = showDiscardQuestionDialog,
             dialogOpen = { isOpen -> showDiscardQuestionDialog = isOpen },

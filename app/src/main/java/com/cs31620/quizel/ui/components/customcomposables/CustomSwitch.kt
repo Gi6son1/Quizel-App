@@ -13,6 +13,9 @@ import com.cs31620.quizel.R
 
 /**
  * Custom composable to hold the switch objects used in the quizel app
+ * @param checked whether or not the switch is checked
+ * @param onCheckedChange method used for changing the state of the switch
+ * @param modifier the modifier to be applied to the switch
  */
 @Composable
 fun QuizelSwitch(

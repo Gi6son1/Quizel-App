@@ -20,6 +20,11 @@ import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.sp
 import com.cs31620.quizel.R
 
+/**
+ * Custom composable that holds the background for the app, it's applied to every screen
+ * @param showTitle whether or not to show the title of the app
+ * @param pageContent the content of the page, passed to the scaffold
+ */
 @Composable
 fun TopLevelBackgroundScaffold(
     showTitle: Boolean = true,
@@ -28,7 +33,7 @@ fun TopLevelBackgroundScaffold(
     Scaffold(
         content = { innerPadding ->
             AppBackground()
-            if (showTitle) AppTitle(innerPadding)
+            if (showTitle) AppTitle(innerPadding) //only show the title if it's requested
             pageContent(innerPadding)
         }
     )
@@ -40,17 +45,27 @@ private fun TopLevelBackgroundScaffoldPreview() {
     TopLevelBackgroundScaffold()
 }
 
+/**
+ * Background image for the app
+ */
 @Composable
 private fun AppBackground() {
     Box(modifier = Modifier.fillMaxSize()) {
         Image(
-            painter = painterResource(id = if(isSystemInDarkTheme()) R.drawable.app_background_dark else R.drawable.app_background),
+            painter = painterResource(id =
+            if(isSystemInDarkTheme())  //changes depending on dark or light mode
+                R.drawable.app_background_dark
+            else
+                R.drawable.app_background),
             contentDescription = "Background",
             contentScale = ContentScale.Crop,
         )
     }
 }
 
+/**
+ * Title for the app
+ */
 @Composable
 private fun AppTitle(innerPadding: PaddingValues){
     Text(

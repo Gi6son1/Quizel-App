@@ -14,6 +14,11 @@ import androidx.navigation.NavHostController
 import androidx.navigation.compose.rememberNavController
 import com.cs31620.quizel.ui.navigation.MainPageNavigationBar
 
+/**
+ * Custom composable scaffold that hold the navigation bar for the app
+ * @param navController the navigation controller for the app
+ * @param pageContent the content of the page, passed to the scaffold
+ */
 @Composable
 fun TopLevelNavigationScaffold(
     navController: NavHostController,
@@ -24,7 +29,7 @@ fun TopLevelNavigationScaffold(
             Box(
                 modifier = Modifier
                     .padding(start = 10.dp, end = 10.dp, bottom = 10.dp)
-                    .clip(RoundedCornerShape(15))
+                    .clip(RoundedCornerShape(15)) //sets custom shape for nav bar, making it rounded and therefore cooler
             )
             {
                 MainPageNavigationBar(navController)

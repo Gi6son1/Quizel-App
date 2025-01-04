@@ -40,16 +40,19 @@ import com.cs31620.quizel.ui.components.Answer
 /**
  * Custom composable to hold text input dialogs used in the quizel app
  * This currently includes both the change name dialog and the add answer dialog
- *
- * The response is passed out of the function back to the caller
+ * @param dialogIsOpen whether or not the dialog is open
+ * @param dialogOpen method used for closing the dialog
+ * @param response method used for returning the response to the caller, of type Any because it can be a string or an answer object
+ * @param isAnswer whether or not this dialog is used to add an answer, set to false by default because this is only one special use case
+ * @param placeholder the placeholder text for the input box, set to blank by default
  */
 @Composable
 fun TextInputDialog(
     dialogIsOpen: Boolean,
     dialogOpen: (Boolean) -> Unit = {},
-    response: (Any) -> Unit = {}, //any because it can be a string or an answer object
-    isAnswer: Boolean = false, //set to false by default because this is only one special use case
-    placeholder: String = "" //sets it to blank by default
+    response: (Any) -> Unit = {},
+    isAnswer: Boolean = false,
+    placeholder: String = ""
 ) {
     if (dialogIsOpen) {
         Dialog(

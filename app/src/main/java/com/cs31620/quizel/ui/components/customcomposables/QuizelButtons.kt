@@ -28,19 +28,27 @@ import com.cs31620.quizel.R
 /**
  * Custom composable to hold simple buttons used in the quizel app
  * It takes onClick functionality, colour, and optional text, icons, and images, with default values if they don't get passed in
- *
+ * @param onClick method used for when the button is clicked
+ * @param text a Pair of String and Int, which is the text and the font size
+ * @param icon the icon to be displayed in the button
+ * @param image a Pair of Painter and Int, which is the image and the padding to control size
+ * @param colour the colour of the button
+ * @param enabled whether or not the button is enabled
+ * @param modifier the modifier to be applied to the button
+ * @param shape the shape of the button
+ * @param contentPadding the padding of the button, defaulted to 0 meaning more text can fit into each button
  */
 @Composable
 fun QuizelSimpleButton(
     onClick: () -> Unit = {},
-    text: Pair<String, Int>? = null, //a Pair of String and Int, which is the text and the font size
+    text: Pair<String, Int>? = null,
     icon: ImageVector? = null,
-    image: Pair<Painter, Int>? = null, //a Pair of Painter and Int, which is the image and the padding to control size
+    image: Pair<Painter, Int>? = null,
     colour: Color,
     enabled: Boolean = true,
     modifier: Modifier = Modifier,
     shape: Shape = ButtonDefaults.shape,
-    contentPadding: PaddingValues = PaddingValues(0.dp), //sets padding to 0 meaning more text can fit into each button
+    contentPadding: PaddingValues = PaddingValues(0.dp),
 
 ){
     Button( //uses normal button composable with custom attributes

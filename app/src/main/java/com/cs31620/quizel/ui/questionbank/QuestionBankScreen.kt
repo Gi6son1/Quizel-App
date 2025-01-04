@@ -40,7 +40,6 @@ import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.shadow
-import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.graphics.RectangleShape
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.res.stringResource
@@ -61,12 +60,17 @@ import com.cs31620.quizel.ui.components.parentscaffolds.TopLevelNavigationScaffo
 import com.cs31620.quizel.ui.components.customcomposables.QuizelSimpleButton
 import com.cs31620.quizel.ui.navigation.Screen
 
+/**
+ * Top level object for the question bank screen
+ * @param navController the navigation controller
+ * @param questionsViewModel the viewmodel for the questions table
+ */
 @Composable
 fun QuestionBankScreenTopLevel(
     navController: NavHostController,
     questionsViewModel: QuestionsViewModel
 ) {
-    val questionsList by questionsViewModel.questionsList.observeAsState(listOf())
+    val questionsList by questionsViewModel.questionsList.observeAsState(listOf()) //retrieves list of questions from viewmodel
     QuestionBankScreen(
         navController = navController,
         questionList = questionsList,
@@ -79,12 +83,20 @@ fun QuestionBankScreenTopLevel(
         editQuestion = { question ->
             val destination = "${Screen.QuestionEdit.basePath}${question.id}"
             navController.navigate(destination) {
-                launchSingleTop = true
+                launchSingleTop = true //means that only one of these will be added to the backstack at a time
             }
         }
     )
 }
 
+/**
+ * The question bank screen
+ * @param navController the navigation controller, passed into the navigation scaffold
+ * @param questionList the list of questions to be displayed
+ * @param deleteSelectedQuestion the function to delete a selected question
+ * @param deleteQuestionsById the select delete function to delete questions by id
+ * @param editQuestion the function to edit a question
+ */
 @Composable
 private fun QuestionBankScreen(
     navController: NavHostController,
@@ -103,27 +115,27 @@ private fun QuestionBankScreen(
         ) {
             val (selectDelete, questionBankArea) = createRefs()
 
-            var selectedQuestion by rememberSaveable { mutableStateOf<Question?>(null) }
+            var selectedQuestion by rememberSaveable { mutableStateOf<Question?>(null) } //holds the currently selected question for deletion/editing
 
-            val checkedQuestionStates = remember {
-                val questionIds = questionList.map { it.id }
+            val checkedQuestionStates = remember { //keeps track of which questions are selected for deletion
+                val questionIds = questionList.map { it.id } //turns question list into list of ids
                 val map = mutableStateMapOf<Int, Boolean>()
-                for (id in questionIds) {
+                for (id in questionIds) { //sets all ids to false i.e. not currenlty selected for deletion
                     map[id] = false
                 }
                 map
             }
 
-            var displaySelectDelete by rememberSaveable { mutableStateOf(false) }
-            var showDeleteSelectedDialog by rememberSaveable { mutableStateOf(false) }
-            var showDeleteQuestionDialog by rememberSaveable { mutableStateOf(false) }
+            var displaySelectDelete by rememberSaveable { mutableStateOf(false) } //whether to display the select delete button as a bin icon or a select icon
+            var showDeleteSelectedDialog by rememberSaveable { mutableStateOf(false) } //whether to show the delete selected dialog
+            var showDeleteQuestionDialog by rememberSaveable { mutableStateOf(false) } //whether to show the delete question dialog
 
-            val state = rememberLazyListState()
+            val state = rememberLazyListState() //the state used for the lazy column
 
-            QuizelSimpleButton(
+            QuizelSimpleButton( //select delete button
                 onClick = {
-                    if (displaySelectDelete && checkedQuestionStates.containsValue(true)) showDeleteSelectedDialog =
-                        true
+                    if (displaySelectDelete && checkedQuestionStates.containsValue(true))
+                        showDeleteSelectedDialog = true //only show dialog if any questions have actually been selected for deletion
                     displaySelectDelete = !displaySelectDelete
                 },
                 colour = MaterialTheme.colorScheme.error,
@@ -144,7 +156,7 @@ private fun QuestionBankScreen(
                 ) else null
             )
 
-            Column(
+            Column( //holds the components of the question bank
                 verticalArrangement = Arrangement.SpaceEvenly,
                 horizontalAlignment = Alignment.CenterHorizontally,
                 modifier = Modifier
@@ -155,7 +167,7 @@ private fun QuestionBankScreen(
                         height = Dimension.fillToConstraints
                     }
             ) {
-                QuizelSimpleButton(
+                QuizelSimpleButton( // add question button
                     colour = MaterialTheme.colorScheme.secondary,
                     text = Pair(stringResource(R.string.new_question), 25),
                     onClick = {
@@ -169,7 +181,7 @@ private fun QuestionBankScreen(
                     icon = Icons.Filled.Add
                 )
 
-                Surface(
+                Surface( //surface to hold the questions
                     Modifier
                         .padding(top = 8.dp)
                         .fillMaxWidth()
@@ -179,7 +191,7 @@ private fun QuestionBankScreen(
                     shape = MaterialTheme.shapes.medium
 
                 ) {
-                    if (questionList.isEmpty()) {
+                    if (questionList.isEmpty()) { //if there are no questions, display a message
                         Box(
                             modifier = Modifier
                                 .fillMaxSize()
@@ -196,7 +208,7 @@ private fun QuestionBankScreen(
                         }
 
                     } else {
-                        LazyColumn(
+                        LazyColumn( //if there are questions, display them
                             modifier = Modifier
                                 .fillMaxSize()
                                 .padding(start = 10.dp, end = 10.dp, top = 10.dp),
@@ -204,7 +216,7 @@ private fun QuestionBankScreen(
                             state = state
                         ) {
                             items(questionList) { question ->
-                                Button(
+                                Button( //each question as a button, if clicked, go to the edit screen with the selected question
                                     onClick = {
                                         displaySelectDelete = false
                                         editQuestion(question)
@@ -218,9 +230,9 @@ private fun QuestionBankScreen(
                                     elevation = ButtonDefaults.buttonElevation(10.dp)
                                 )
                                 {
-                                    Row {
+                                    Row { //holds the delete button, question title, description, and edit icon
                                         if (displaySelectDelete) {
-                                            Surface(
+                                            Surface( //if in select delete mode, display a checkbox
                                                 modifier = Modifier
                                                     .fillMaxSize()
                                                     .weight(1f),
@@ -239,7 +251,7 @@ private fun QuestionBankScreen(
                                                     )
                                                 )
                                             }
-                                        } else {
+                                        } else { //otherwise display a delete icon
                                             Button(
                                                 onClick = {
                                                     selectedQuestion = question
@@ -263,14 +275,14 @@ private fun QuestionBankScreen(
                                                 )
                                             }
                                         }
-                                        Column(
+                                        Column( //holds the question title and description
                                             modifier = Modifier
                                                 .weight(6f)
                                                 .fillMaxSize()
                                                 .wrapContentHeight()
                                                 .padding(horizontal = 5.dp, vertical = 5.dp)
                                         ) {
-                                            if (question.title.isNotBlank()) {
+                                            if (question.title.isNotBlank()) { //displays title if it exists
                                                 Text(
                                                     text = question.title,
                                                     style = MaterialTheme.typography.bodyLarge,
@@ -285,7 +297,7 @@ private fun QuestionBankScreen(
                                                 overflow = TextOverflow.Ellipsis,
                                             )
                                         }
-                                        Icon(
+                                        Icon( //edit icon
                                             imageVector = Icons.AutoMirrored.Filled.ArrowRight,
                                             contentDescription = stringResource(R.string.edit_icon),
                                             modifier = Modifier
@@ -302,7 +314,7 @@ private fun QuestionBankScreen(
                 }
             }
 
-            ActionCheckDialog(dialogIsOpen = showDeleteSelectedDialog,
+            ActionCheckDialog(dialogIsOpen = showDeleteSelectedDialog, //shows the delete selected dialog
                 dialogOpen = { isOpen -> showDeleteSelectedDialog = isOpen },
                 mainActionButton = { onClick, modifier ->
                     Button(
@@ -315,7 +327,7 @@ private fun QuestionBankScreen(
                 },
                 actionDialogMessage = stringResource(R.string.delete_selected_questions_check),
                 performMainAction = { deleteSelectedQuestions ->
-                    if (deleteSelectedQuestions) {
+                    if (deleteSelectedQuestions) { //for each question that has been selected for deletion, remove it from the map, and delete the questions by id
                         val selectedQuestionIds =
                             checkedQuestionStates.filter { it.value }.map { it.key }
                                 .also { keysToRemove ->
@@ -338,7 +350,7 @@ private fun QuestionBankScreen(
                 }
             )
 
-            ActionCheckDialog(dialogIsOpen = showDeleteQuestionDialog,
+            ActionCheckDialog(dialogIsOpen = showDeleteQuestionDialog, // the delete question dialog
                 dialogOpen = { isOpen -> showDeleteQuestionDialog = isOpen },
                 mainActionButton = { onClick, modifier ->
                     Button(
