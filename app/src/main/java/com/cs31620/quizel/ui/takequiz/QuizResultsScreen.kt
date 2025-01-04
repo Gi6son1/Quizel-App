@@ -123,7 +123,8 @@ private fun QuizResultsScreen(
                     }
                     .wrapContentWidth(),
                 fontSize = 80.sp,
-                style = MaterialTheme.typography.displayLarge
+                style = MaterialTheme.typography.displayLarge,
+                color = MaterialTheme.colorScheme.onSurface
             )
 
             ScoreArea( //holds the user's score and recent scores

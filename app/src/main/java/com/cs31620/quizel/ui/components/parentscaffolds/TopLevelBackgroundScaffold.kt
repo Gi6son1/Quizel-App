@@ -79,5 +79,6 @@ private fun AppTitle(innerPadding: PaddingValues){
         text = stringResource(R.string.app_name),
         style = MaterialTheme.typography.titleLarge,
         fontSize = 100.sp,
+        color = MaterialTheme.colorScheme.onSurface
     )
 }

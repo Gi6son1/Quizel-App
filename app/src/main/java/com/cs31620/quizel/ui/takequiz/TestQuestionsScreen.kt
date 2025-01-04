@@ -195,7 +195,7 @@ private fun TestQuestionsScreen(
                     },
                 style = MaterialTheme.typography.titleLarge,
                 fontSize = 50.sp,
-                color = if (showNumberCorrect) Color.Black else Color.Transparent
+                color = if (showNumberCorrect) MaterialTheme.colorScheme.onSurface else Color.Transparent
             )
 
 

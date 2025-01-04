@@ -38,6 +38,7 @@ import androidx.compose.runtime.snapshots.SnapshotStateList
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.shadow
 import androidx.compose.ui.graphics.Color
+import androidx.compose.ui.graphics.ColorFilter
 import androidx.compose.ui.graphics.RectangleShape
 import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.res.painterResource
@@ -291,7 +292,7 @@ private fun QuestionEditScreen(
                                             alpha = if (answer.isCorrect) 1f else 0f
                                         )
                                         Text(
-                                            text = answer.text, color = Color.Black,
+                                            text = answer.text, color = MaterialTheme.colorScheme.onSurface,
                                             modifier = Modifier
                                                 .weight(6f)
                                                 .fillMaxSize()
@@ -315,7 +316,8 @@ private fun QuestionEditScreen(
                                                 contentDescription = stringResource(R.string.delete_icon),
                                                 modifier = Modifier
                                                     .padding(10.dp)
-                                                    .fillMaxSize()
+                                                    .fillMaxSize(),
+                                                colorFilter = ColorFilter.tint(color = MaterialTheme.colorScheme.surfaceBright)
                                             )
                                         }
                                     }

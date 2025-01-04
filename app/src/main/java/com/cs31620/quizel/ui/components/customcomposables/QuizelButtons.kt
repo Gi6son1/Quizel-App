@@ -17,6 +17,7 @@ import androidx.compose.runtime.Composable
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.alpha
 import androidx.compose.ui.graphics.Color
+import androidx.compose.ui.graphics.ColorFilter
 import androidx.compose.ui.graphics.painter.Painter
 import androidx.compose.ui.graphics.vector.ImageVector
 import androidx.compose.ui.res.stringResource
@@ -78,7 +79,8 @@ fun QuizelSimpleButton(
                     modifier = Modifier
                         .padding(image.second.dp)
                         .wrapContentSize()
-                        .alpha(if (enabled) 1f else 0.5f)
+                        .alpha(if (enabled) 1f else 0.5f),
+                    colorFilter = ColorFilter.tint(color = MaterialTheme.colorScheme.surfaceBright)
                 )
             }
             if (text != null) {
