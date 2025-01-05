@@ -14,7 +14,7 @@ data class Answer(
 ) : Parcelable {
 
     /**
-     * These are required so that the answer can be passed as a mutable state object in the test questions screen
+     * These are required so that the answer can be passed into the rememberSaveable function as a mutable state object a mutable state object
      */
     override fun writeToParcel(parcel: Parcel, flags: Int) {
         parcel.writeString(text)
