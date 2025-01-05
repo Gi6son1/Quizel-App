@@ -368,7 +368,7 @@ private fun QuestionArea(
                         start.linkTo(parent.start)
                         end.linkTo(parent.end)
                     }
-                    .padding(horizontal = 10.dp),
+                    .padding(horizontal = 15.dp),
                 text = if (question.title.isBlank()) {
                     stringResource(R.string.question_number, questionNumber)
 
@@ -389,12 +389,13 @@ private fun QuestionArea(
                 thickness = 2.dp
             )
             Column(modifier = Modifier
-                .padding(20.dp)
+                .padding(15.dp)
                 .constrainAs(questionDescription) {
                     top.linkTo(divider.bottom)
                     start.linkTo(parent.start)
                     end.linkTo(parent.end)
-                    bottom.linkTo(parent.bottom, margin = 30.dp)
+                    bottom.linkTo(parent.bottom, margin = 5.dp)
+                    height = Dimension.fillToConstraints
                 }
                 .verticalScroll(rememberScrollState())
             ) {

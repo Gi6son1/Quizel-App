@@ -366,7 +366,8 @@ private fun QuestionBankScreen(
                 actionDialogMessage = stringResource(R.string.delete__question_check),
                 performMainAction = { deleteQuestion ->
                     if (deleteQuestion) {
-                        deleteSelectedQuestion(selectedQuestion)
+                        deleteSelectedQuestion(selectedQuestion) //deletes question in db
+                        checkedQuestionStates.remove(selectedQuestion?.id) //removes entry in question map
                         Log.d(
                             "QuestionBankScreen",
                             "Question ${selectedQuestion?.description} deleted"

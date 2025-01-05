@@ -8,6 +8,7 @@ import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.PaddingValues
 import androidx.compose.foundation.layout.Row
+import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.fillMaxHeight
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
@@ -37,7 +38,6 @@ import androidx.compose.runtime.setValue
 import androidx.compose.runtime.snapshots.SnapshotStateList
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.shadow
-import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.graphics.ColorFilter
 import androidx.compose.ui.graphics.RectangleShape
 import androidx.compose.ui.platform.LocalContext
@@ -114,6 +114,8 @@ private fun QuestionEditScreen(
     updateQuestion: (Question) -> Unit = {},
     returnToBank: (Boolean) -> Unit = {}
 ) {
+    val titleCharLimit = 25
+
     TopLevelBackgroundScaffold { innerPadding ->
         var title by rememberSaveable(question) { mutableStateOf(question?.title ?: "") } //holds the title of the question
         val context = LocalContext.current //used to get strings
@@ -150,7 +152,7 @@ private fun QuestionEditScreen(
 
             OutlinedTextField( //title box
                 value = title,
-                onValueChange = { title = it },
+                onValueChange = { if (it.length <= titleCharLimit) title = it },
                 modifier = Modifier
                     .fillMaxWidth()
                     .shadow(5.dp, MaterialTheme.shapes.medium)
@@ -322,6 +324,7 @@ private fun QuestionEditScreen(
                                         }
                                     }
                                 }
+                                if (index == answers.lastIndex) Spacer(modifier = Modifier.height(5.dp)) //gives a bit of space below the last answer so it looks better in the column
                             }
                         }
                     }
