@@ -4,6 +4,7 @@ import androidx.activity.compose.BackHandler
 import androidx.compose.foundation.Image
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Column
+import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
@@ -240,10 +241,12 @@ private fun TestQuestionsScreen(
                         columns = GridCells.Fixed(2),
                         modifier = Modifier
                             .fillMaxSize()
-                            .padding(start = 5.dp, end = 5.dp, top = 5.dp),
+                            .padding(start = 5.dp, end = 5.dp),
                         horizontalArrangement = Arrangement.spacedBy(5.dp),
                         verticalArrangement = Arrangement.spacedBy(5.dp)
                     ) {
+                        item{Spacer(modifier = Modifier.height(0.dp))} //adds space at the top of the grid, no height needed as the column spacedBy sorts it
+                        item{Spacer(modifier = Modifier.height(0.dp))}
                         items(shuffledAnswers) { answer ->
                             QuizelSimpleButton(
                                 onClick = {
@@ -263,6 +266,8 @@ private fun TestQuestionsScreen(
                                 text = Pair(answer.text, 20),
                             )
                         }
+                        item{Spacer(modifier = Modifier.height(0.dp))} //adds space at the top of the grid, no height needed as the column spacedBy sorts it
+                        item{Spacer(modifier = Modifier.height(0.dp))}
                     }
                 }
                 if (selectedAnswer != null) { //if an answer is selected, display submit button

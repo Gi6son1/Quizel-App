@@ -7,6 +7,7 @@ import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.PaddingValues
 import androidx.compose.foundation.layout.Row
+import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
@@ -212,10 +213,11 @@ private fun QuestionBankScreen(
                         LazyColumn( //if there are questions, display them
                             modifier = Modifier
                                 .fillMaxSize()
-                                .padding(start = 10.dp, end = 10.dp, top = 10.dp),
+                                .padding(start = 10.dp, end = 10.dp),
                             verticalArrangement = Arrangement.spacedBy(10.dp),
                             state = state
                         ) {
+                            item { Spacer(modifier = Modifier.height(0.dp)) } //adds space at the bottom of the list, no height needed as the column spacedBy sorts it
                             items(questionList) { question ->
                                 Button( //each question as a button, if clicked, go to the edit screen with the selected question
                                     onClick = {
@@ -311,6 +313,7 @@ private fun QuestionBankScreen(
                                     }
                                 }
                             }
+                            item { Spacer(modifier = Modifier.height(0.dp)) } //adds space at the bottom of the list, no height needed as the column spacedBy sorts it
                         }
                     }
                 }

@@ -37,6 +37,7 @@ import androidx.compose.runtime.saveable.rememberSaveable
 import androidx.compose.runtime.setValue
 import androidx.compose.runtime.snapshots.SnapshotStateList
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.draw.clip
 import androidx.compose.ui.draw.shadow
 import androidx.compose.ui.graphics.ColorFilter
 import androidx.compose.ui.graphics.RectangleShape
@@ -265,17 +266,20 @@ private fun QuestionEditScreen(
                         Column(
                             modifier = Modifier
                                 .fillMaxSize()
-                                .padding(start = 5.dp, end = 5.dp, top = 12.dp)
+                                .padding(top = 5.dp)
+                                .clip(MaterialTheme.shapes.medium)
                                 .verticalScroll(rememberScrollState())
                                 .weight(8f),
                             verticalArrangement = Arrangement.spacedBy(7.dp)
                         ) {
+                            Spacer(modifier = Modifier.height(0.dp)) //adds space at the top of the list, no height needed as the column spacedBy sorts it
                             answers.forEachIndexed { index, answer -> //each answer is a button, on click -> sets as correct answer
                                 Button(
                                     onClick = { setCorrectAnswer(answers, index) },
                                     shape = MaterialTheme.shapes.medium,
                                     modifier = Modifier
                                         .fillMaxWidth()
+                                        .padding(start = 5.dp, end = 5.dp)
                                         .height(60.dp),
                                     elevation = ButtonDefaults.buttonElevation(10.dp),
                                     contentPadding = PaddingValues(0.dp),
@@ -324,8 +328,8 @@ private fun QuestionEditScreen(
                                         }
                                     }
                                 }
-                                if (index == answers.lastIndex) Spacer(modifier = Modifier.height(5.dp)) //gives a bit of space below the last answer so it looks better in the column
                             }
+                            Spacer(modifier = Modifier.height(0.dp)) //adds space at the bottom of the list, no height needed as the column spacedBy sorts it
                         }
                     }
                 }
