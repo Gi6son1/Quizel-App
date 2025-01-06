@@ -44,7 +44,7 @@ fun ActionCheckDialog(
     dialogOpen: (Boolean) -> Unit = {}, //method used for closing the dialog
     actionDialogMessage: String,
     mainActionButton: @Composable (onClick: () -> Unit, modifier: Modifier) -> Unit, //takes a clickable composable with a modifier
-    performMainAction: (Boolean) -> Unit = {false}, //sets to false by default
+    performMainAction: (Boolean) -> Unit = {}, //hoists state
 ) {
     if (dialogIsOpen) {
         Dialog(
