@@ -45,6 +45,7 @@ import com.cs31620.quizel.ui.components.Answer
  * @param response method used for returning the response to the caller, of type Any because it can be a string or an answer object
  * @param isAnswer whether or not this dialog is used to add an answer, set to false by default because this is only one special use case
  * @param placeholder the placeholder text for the input box, set to blank by default
+ * @param characterLimit the maximum number of characters allowed in the input box
  */
 @Composable
 fun TextInputDialog(
@@ -52,7 +53,8 @@ fun TextInputDialog(
     dialogOpen: (Boolean) -> Unit = {},
     response: (Any) -> Unit = {},
     isAnswer: Boolean = false,
-    placeholder: String = ""
+    placeholder: String = "",
+    characterLimit: Int
 ) {
     if (dialogIsOpen) {
         Dialog(
@@ -87,7 +89,7 @@ fun TextInputDialog(
                     Column {
                         TextField(
                             value = inputText,
-                            onValueChange = { inputText = it },
+                            onValueChange = { if (it.length <= characterLimit) inputText = it },
                             modifier = Modifier
                                 .fillMaxWidth()
                                 .height(63.dp)
@@ -170,5 +172,5 @@ fun TextInputDialog(
 @Preview
 @Composable
 private fun AddAnswerDialogPreview() {
-   TextInputDialog(dialogIsOpen = true)
+   TextInputDialog(dialogIsOpen = true, characterLimit = 500)
 }

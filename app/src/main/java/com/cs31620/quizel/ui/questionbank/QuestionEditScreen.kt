@@ -116,6 +116,8 @@ private fun QuestionEditScreen(
     returnToBank: (Boolean) -> Unit = {}
 ) {
     val titleCharLimit = 25
+    val descriptionCharLimit = 500 //setting character limits for the question and description
+    val answerCharLimit = 100
 
     TopLevelBackgroundScaffold { innerPadding ->
         var title by rememberSaveable(question) { mutableStateOf(question?.title ?: "") } //holds the title of the question
@@ -183,7 +185,7 @@ private fun QuestionEditScreen(
                 )
             OutlinedTextField( //description box
                 value = description,
-                onValueChange = { description = it },
+                onValueChange = { if (it.length <= descriptionCharLimit) description = it },
                 modifier = Modifier
                     .fillMaxWidth()
                     .shadow(5.dp, MaterialTheme.shapes.medium)
@@ -414,6 +416,7 @@ private fun QuestionEditScreen(
             dialogOpen = { isOpen -> showAddAnswerDialog = isOpen },
             isAnswer = true,
             placeholder = stringResource(R.string.enter_answer),
+            characterLimit = answerCharLimit,
             response = { answer -> addAnswerToAnswerList(answers, answer as Answer) }) //add answer to answer list once saved
 
         ActionCheckDialog(dialogIsOpen = showDiscardQuestionDialog, //discard question dialog

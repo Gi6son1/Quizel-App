@@ -102,6 +102,8 @@ private fun QuizResultsScreen(
     TopLevelBackgroundScaffold(showTitle = false) //hides the app title
     { innerPadding ->
 
+        val usernameCharLimit = 15
+
         BackHandler { //if user uses back button, go back to menu
             goHome(true)
         }
@@ -204,9 +206,9 @@ private fun QuizResultsScreen(
                 placeholder = stringResource(R.string.enter_name),
                 response = { name ->
                     changeName(name as String)
-                }
+                },
+                characterLimit = usernameCharLimit
             )
-
 
         }
     }
