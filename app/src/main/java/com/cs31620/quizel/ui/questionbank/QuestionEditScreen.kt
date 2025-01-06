@@ -115,9 +115,9 @@ private fun QuestionEditScreen(
     updateQuestion: (Question) -> Unit = {},
     returnToBank: (Boolean) -> Unit = {}
 ) {
-    val titleCharLimit = 25
+    val titleCharLimit = 30
     val descriptionCharLimit = 500 //setting character limits for the question and description
-    val answerCharLimit = 100
+    val answerCharLimit = 30
 
     TopLevelBackgroundScaffold { innerPadding ->
         var title by rememberSaveable(question) { mutableStateOf(question?.title ?: "") } //holds the title of the question

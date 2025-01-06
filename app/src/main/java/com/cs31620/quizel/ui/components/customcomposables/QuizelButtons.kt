@@ -21,6 +21,7 @@ import androidx.compose.ui.graphics.ColorFilter
 import androidx.compose.ui.graphics.painter.Painter
 import androidx.compose.ui.graphics.vector.ImageVector
 import androidx.compose.ui.res.stringResource
+import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.text.style.TextOverflow
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
@@ -49,7 +50,7 @@ fun QuizelSimpleButton(
     enabled: Boolean = true,
     modifier: Modifier = Modifier,
     shape: Shape = ButtonDefaults.shape,
-    contentPadding: PaddingValues = PaddingValues(0.dp),
+    contentPadding: PaddingValues = PaddingValues(2.dp),
 
 ){
     Button( //uses normal button composable with custom attributes
@@ -95,7 +96,8 @@ fun QuizelSimpleButton(
                         .alpha(if (enabled) 1f else 0.5f),
                     color = if (colour == MaterialTheme.colorScheme.surfaceDim ||
                         colour == MaterialTheme.colorScheme.surfaceBright) MaterialTheme.colorScheme.onSurface else MaterialTheme.colorScheme.surfaceBright,
-                    overflow = TextOverflow.Ellipsis, //prevents the text from overflowing over the button, turning it into a ... instead
+                    overflow = TextOverflow.Ellipsis, //prevents the text from overflowing over the button, turning it into a ... instead,
+                    textAlign = TextAlign.Center
                 )
             }
 
