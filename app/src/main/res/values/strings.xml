@@ -10,7 +10,7 @@
     <string name="enter_answer">Enter Answer</string>
     <string name="delete">Delete</string>
     <string name="new_question">New Question</string>
-    <string name="oh_no_empty_question_bank">Oh no, empty Question Bank!\nTo add questions to the bank, use the + New Answer button!</string>
+    <string name="oh_no_empty_question_bank">Oh no, empty Question Bank!\nTo add questions to the bank, use the + New Question button!</string>
     <string name="delete_icon">Delete icon</string>
     <string name="edit_icon">Edit icon</string>
     <string name="button_icon">Button Icon</string>
